@@ -11,6 +11,12 @@
 		ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B5EC2A0D5D170065CBB1 /* ContentView.swift */; };
 		ACA2B5EF2A0D5D190065CBB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACA2B5EE2A0D5D190065CBB1 /* Assets.xcassets */; };
 		ACA2B5F22A0D5D190065CBB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACA2B5F12A0D5D190065CBB1 /* Preview Assets.xcassets */; };
+		ACA2B5FA2A0D6A650065CBB1 /* SFProDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACA2B5F92A0D6A640065CBB1 /* SFProDisplay-Regular.ttf */; };
+		ACA2B5FC2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACA2B5FB2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf */; };
+		ACA2B6022A0D6C2E0065CBB1 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6012A0D6C2E0065CBB1 /* Font.swift */; };
+		ACA2B6042A0D6EB60065CBB1 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6032A0D6EB60065CBB1 /* Text.swift */; };
+		ACA2B6062A0D72ED0065CBB1 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6052A0D72ED0065CBB1 /* Button.swift */; };
+		ACA2B6092A0D73A60065CBB1 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6082A0D73A60065CBB1 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +25,13 @@
 		ACA2B5EC2A0D5D170065CBB1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		ACA2B5EE2A0D5D190065CBB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ACA2B5F12A0D5D190065CBB1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		ACA2B5F92A0D6A640065CBB1 /* SFProDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		ACA2B5FB2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
+		ACA2B5FD2A0D6AE00065CBB1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		ACA2B6012A0D6C2E0065CBB1 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		ACA2B6032A0D6EB60065CBB1 /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
+		ACA2B6052A0D72ED0065CBB1 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		ACA2B6082A0D73A60065CBB1 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +64,9 @@
 		ACA2B5E92A0D5D170065CBB1 /* MovieTime */ = {
 			isa = PBXGroup;
 			children = (
+				ACA2B5FE2A0D6BF20065CBB1 /* Extensions */,
+				ACA2B5FD2A0D6AE00065CBB1 /* Info.plist */,
+				ACA2B5F82A0D6A310065CBB1 /* Fonts */,
 				ACA2B5EA2A0D5D170065CBB1 /* MovieTimeApp.swift */,
 				ACA2B5EC2A0D5D170065CBB1 /* ContentView.swift */,
 				ACA2B5EE2A0D5D190065CBB1 /* Assets.xcassets */,
@@ -65,6 +81,26 @@
 				ACA2B5F12A0D5D190065CBB1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		ACA2B5F82A0D6A310065CBB1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				ACA2B5FB2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf */,
+				ACA2B5F92A0D6A640065CBB1 /* SFProDisplay-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		ACA2B5FE2A0D6BF20065CBB1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				ACA2B6012A0D6C2E0065CBB1 /* Font.swift */,
+				ACA2B6032A0D6EB60065CBB1 /* Text.swift */,
+				ACA2B6052A0D72ED0065CBB1 /* Button.swift */,
+				ACA2B6082A0D73A60065CBB1 /* Color.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,8 +161,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACA2B5FA2A0D6A650065CBB1 /* SFProDisplay-Regular.ttf in Resources */,
 				ACA2B5F22A0D5D190065CBB1 /* Preview Assets.xcassets in Resources */,
 				ACA2B5EF2A0D5D190065CBB1 /* Assets.xcassets in Resources */,
+				ACA2B5FC2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +175,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACA2B6062A0D72ED0065CBB1 /* Button.swift in Sources */,
 				ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */,
 				ACA2B5EB2A0D5D170065CBB1 /* MovieTimeApp.swift in Sources */,
+				ACA2B6042A0D6EB60065CBB1 /* Text.swift in Sources */,
+				ACA2B6022A0D6C2E0065CBB1 /* Font.swift in Sources */,
+				ACA2B6092A0D73A60065CBB1 /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,11 +312,14 @@
 				DEVELOPMENT_TEAM = XZ25FA7LUT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MovieTime/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -299,11 +344,14 @@
 				DEVELOPMENT_TEAM = XZ25FA7LUT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MovieTime/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
