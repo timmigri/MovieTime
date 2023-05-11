@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 
 extension Color {
-    static let appText = Color("appText")
+    static let appTextWhite = Color("appText")
+    static let appTextBlack = appSecondary300
     static let appPrimary = Color("appPrimary")
     static let appBackground = Color("appBackground")
     static let appSecondary300 = Color("appSecondary300")

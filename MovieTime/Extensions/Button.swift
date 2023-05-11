@@ -11,7 +11,7 @@ import SwiftUI
 extension Button {
     func mainStyle() -> some View {
         return self
-            .foregroundColor(.appText)
+            .foregroundColor(.appTextWhite)
             .font(.sf(.regular, size: 14))
     }
 }

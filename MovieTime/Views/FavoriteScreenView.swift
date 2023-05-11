@@ -12,7 +12,7 @@ struct FavoriteScreenView: View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             Text("Favorite Screen")
-                .foregroundColor(.appText)
+                .foregroundColor(.appTextWhite)
         }
     }
 }
