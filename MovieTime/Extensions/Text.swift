@@ -14,7 +14,7 @@ extension Text {
             .font(.sf(.bold, size: 24))
             .lineSpacing(32 - 24)
     }
-    
+
     func bodyText5() -> some View {
         return self
             .font(.sf(.regular, size: 14))

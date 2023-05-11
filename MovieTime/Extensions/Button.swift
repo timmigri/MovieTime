@@ -13,6 +13,5 @@ extension Button {
         return self
             .foregroundColor(.appText)
             .font(.sf(.regular, size: 14))
-            
     }
 }
