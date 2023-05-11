@@ -19,6 +19,10 @@
 		ACA2B6062A0D72ED0065CBB1 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6052A0D72ED0065CBB1 /* Button.swift */; };
 		ACA2B6092A0D73A60065CBB1 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6082A0D73A60065CBB1 /* Color.swift */; };
 		ACA2B60D2A0D85BF0065CBB1 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = ACA2B60C2A0D85BF0065CBB1 /* .swiftlint.yml */; };
+		ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */; };
+		ACA2B6122A0D8B5C0065CBB1 /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */; };
+		ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */; };
+		ACA2B6162A0D93A30065CBB1 /* FavoriteScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +41,10 @@
 		ACA2B6052A0D72ED0065CBB1 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		ACA2B6082A0D73A60065CBB1 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		ACA2B60C2A0D85BF0065CBB1 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenView.swift; sourceTree = "<group>"; };
+		ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
+		ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreenView.swift; sourceTree = "<group>"; };
+		ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreenView.swift; sourceTree = "<group>"; };
 		E2F6AA47F525A4217418C67F /* Pods-MovieTime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieTime.release.xcconfig"; path = "Target Support Files/Pods-MovieTime/Pods-MovieTime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +90,7 @@
 		ACA2B5E92A0D5D170065CBB1 /* MovieTime */ = {
 			isa = PBXGroup;
 			children = (
+				ACA2B60E2A0D8AA20065CBB1 /* Views */,
 				ACA2B5FE2A0D6BF20065CBB1 /* Extensions */,
 				ACA2B5FD2A0D6AE00065CBB1 /* Info.plist */,
 				ACA2B5F82A0D6A310065CBB1 /* Fonts */,
@@ -119,6 +128,17 @@
 				ACA2B6082A0D73A60065CBB1 /* Color.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		ACA2B60E2A0D8AA20065CBB1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */,
+				ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */,
+				ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */,
+				ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		CC5F4CAF141F4FB904099DF9 /* Pods */ = {
@@ -267,11 +287,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACA2B6062A0D72ED0065CBB1 /* Button.swift in Sources */,
+				ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */,
 				ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */,
+				ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */,
+				ACA2B6162A0D93A30065CBB1 /* FavoriteScreenView.swift in Sources */,
 				ACA2B5EB2A0D5D170065CBB1 /* MovieTimeApp.swift in Sources */,
 				ACA2B6042A0D6EB60065CBB1 /* Text.swift in Sources */,
 				ACA2B6022A0D6C2E0065CBB1 /* Font.swift in Sources */,
 				ACA2B6092A0D73A60065CBB1 /* Color.swift in Sources */,
+				ACA2B6122A0D8B5C0065CBB1 /* MainScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
