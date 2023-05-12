@@ -11,6 +11,7 @@
 		AC9103182A0EB63300B76BB3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9103172A0EB63300B76BB3 /* SearchViewModel.swift */; };
 		AC91031B2A0EBBA000B76BB3 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC91031A2A0EBBA000B76BB3 /* CustomButton.swift */; };
 		AC91031D2A0EC4E500B76BB3 /* CustomCheckbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC91031C2A0EC4E500B76BB3 /* CustomCheckbox.swift */; };
+		AC91031F2A0EE44200B76BB3 /* PictureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC91031E2A0EE44200B76BB3 /* PictureBox.swift */; };
 		AC93059C2A0E685A00DC687C /* FilterScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC93059B2A0E685A00DC687C /* FilterScreenView.swift */; };
 		AC9305A12A0E6D7D00DC687C /* FilterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9305A02A0E6D7D00DC687C /* FilterCategory.swift */; };
 		AC9305A32A0E6DCA00DC687C /* FilterCategoryExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9305A22A0E6DCA00DC687C /* FilterCategoryExt.swift */; };
@@ -37,6 +38,7 @@
 		AC9103172A0EB63300B76BB3 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		AC91031A2A0EBBA000B76BB3 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		AC91031C2A0EC4E500B76BB3 /* CustomCheckbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCheckbox.swift; sourceTree = "<group>"; };
+		AC91031E2A0EE44200B76BB3 /* PictureBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureBox.swift; sourceTree = "<group>"; };
 		AC93059B2A0E685A00DC687C /* FilterScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterScreenView.swift; sourceTree = "<group>"; };
 		AC9305A02A0E6D7D00DC687C /* FilterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCategory.swift; sourceTree = "<group>"; };
 		AC9305A22A0E6DCA00DC687C /* FilterCategoryExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCategoryExt.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			children = (
 				AC91031A2A0EBBA000B76BB3 /* CustomButton.swift */,
 				AC91031C2A0EC4E500B76BB3 /* CustomCheckbox.swift */,
+				AC91031E2A0EE44200B76BB3 /* PictureBox.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				AC93059C2A0E685A00DC687C /* FilterScreenView.swift in Sources */,
 				ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */,
 				AC91031B2A0EBBA000B76BB3 /* CustomButton.swift in Sources */,
+				AC91031F2A0EE44200B76BB3 /* PictureBox.swift in Sources */,
 				ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */,
 				AC9305A32A0E6DCA00DC687C /* FilterCategoryExt.swift in Sources */,
 				ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */,

@@ -26,16 +26,18 @@ struct SearchScreenView: View {
                     .frame(height: 44)
                     .accentColor(.appPrimary)
                     .foregroundColor(.appSecondary300)
-                
                     Image("FilterIcon")
                         .padding(.leading, 10)
                         .padding(.vertical, 10)
                         .animation(.easeInOut, value: 5)
                         .padding(.trailing, 10)
-                    
                 }
-                .overlay(RoundedRectangle(cornerRadius: 5)
-                    .stroke(searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                    .stroke(
+                        searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
+                    )
+                )
                 GeometryReader { geometry in
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack {
@@ -46,6 +48,17 @@ struct SearchScreenView: View {
                 }
                 .padding(.top, 32)
                 .frame(maxHeight: .infinity)
+//                PictureBox(
+//                    pictureName: "SearchPicture",
+//                    headlineText: "Search in MovieTime",
+//                    bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
+//                )
+
+//                PictureBox(
+//                    pictureName: "NoResultPicture",
+//                    headlineText: "No result",
+//                    bodyText: "No results found, Please try other words"
+//                )
             }
             .padding()
         }
@@ -69,7 +82,7 @@ struct SearchScreenView: View {
             }
         }
     }
-    
+
     func moviesSection(_ geometry: GeometryProxy) -> some View {
         return VStack(alignment: .leading) {
             Text("Movies & Series")
@@ -82,7 +95,7 @@ struct SearchScreenView: View {
             }
         }
     }
-    
+
     func testActor(_ geometry: GeometryProxy) -> some View {
         let padding: CGFloat = 10
         let width = (geometry.size.width - padding * 4) / 4
@@ -99,7 +112,7 @@ struct SearchScreenView: View {
         }
         .frame(maxWidth: width)
     }
-    
+
     func testMovie(_ geometry: GeometryProxy) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Image("MovieExample")
@@ -123,43 +136,6 @@ struct SearchScreenView: View {
             }
         }
     }
-
-    var noInputView: some View {
-        VStack {
-            Image("SearchPicture")
-                .padding(.bottom, 30)
-            Text("Search in MovieTime")
-                .heading2()
-                .multilineTextAlignment(.center)
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 10)
-            Text("By typing in search box, MovieTime search in movies, series and actors then show you the best results.")
-                .bodyText5()
-                .multilineTextAlignment(.center)
-                .foregroundColor(.appTextBlack)
-                .padding(.bottom, 10)
-        }
-        .frame(maxHeight: .infinity)
-    }
-    
-    var noResultView: some View {
-        VStack {
-            Image("NoResultPicture")
-                .padding(.bottom, 25)
-            Text("No result")
-                .heading2()
-                .multilineTextAlignment(.center)
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 10)
-            Text("No results found, Please try other words")
-                .bodyText5()
-                .multilineTextAlignment(.center)
-                .foregroundColor(.appTextBlack)
-                .padding(.bottom, 10)
-        }
-        .frame(maxHeight: .infinity)
-    }
-
 }
 
 struct SearchScreenView_Previews: PreviewProvider {
