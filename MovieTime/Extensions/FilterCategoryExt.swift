@@ -8,7 +8,7 @@
 import Foundation
 
 extension FilterCategory {
-    static func getCategories() -> [FilterCategory] {
+    static func generateCategories() -> [FilterCategory] {
         var categories = [FilterCategory]()
         categories.append(FilterCategory(pictureName: "ActionBackground", name: "Action", searchKey: "боевик"))
         categories.append(FilterCategory(pictureName: "WarBackground", name: "War", searchKey: "военный"))

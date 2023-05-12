@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct FilterScreenView: View {
+    @ObservedObject var searchViewModel = SearchViewModel()
+    
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 topRow
@@ -21,6 +23,10 @@ struct FilterScreenView: View {
                 Spacer()
             }
             .padding()
+            if searchViewModel.showFilterResultsButton {
+                CustomButton(action: { }, title: "Show Results")
+                    .padding()
+            }
         }
     }
 
@@ -32,38 +38,41 @@ struct FilterScreenView: View {
         .frame(height: 44)
         .padding(.bottom, 20)
     }
-    
+
     var sortKeyRow: some View {
         VStack(alignment: .leading) {
             Text("Sort by")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             HStack(spacing: 0) {
-                Color.appPrimary.overlay(
-                    Text("Title")
-                        .bodyText5()
-                        .foregroundColor(.appTextWhite)
-                )
-                .frame(width: 90, height: 36)
-                .cornerRadius(10, corners: .topLeft)
-                .cornerRadius(10, corners: .bottomLeft)
-                Color.appPrimary200.overlay(
-                    Text("Date")
-                        .bodyText5()
-                        .foregroundColor(.appPrimary)
-                ).frame(width: 90, height: 36)
-                Color.appPrimary200.overlay(
-                    Text("Rating")
-                        .bodyText5()
-                        .foregroundColor(.appPrimary)
-                )
-                .frame(width: 90, height: 36)
-                .cornerRadius(10, corners: .topRight)
-                .cornerRadius(10, corners: .bottomRight)
+                ForEach(searchViewModel.sortOptions.indices, id: \.self) { index in
+                    renderSortOption(index)
+                }
                 Spacer()
             }
         }
         .padding(.bottom, 20)
+    }
+
+    func renderSortOption(_ index: Int) -> some View {
+        let isActive = searchViewModel.isSortOptionActive(index)
+        let backgroundColor: Color = isActive ? .appPrimary : .appPrimary200
+        let textColor: Color = isActive ? .appTextWhite : .appPrimary
+        let leftCornerRadius: CGFloat = index == 0 ? 10 : 0
+        let rightCornerRadius: CGFloat = index == searchViewModel.sortOptions.count - 1 ? 10 : 0
+        return backgroundColor.overlay(
+            Text(searchViewModel.sortOptions[index].0)
+                .bodyText5()
+                .foregroundColor(textColor)
+        )
+        .frame(width: 90, height: 36)
+        .cornerRadius(leftCornerRadius, corners: .topLeft)
+        .cornerRadius(leftCornerRadius, corners: .bottomLeft)
+        .cornerRadius(rightCornerRadius, corners: .topRight)
+        .cornerRadius(rightCornerRadius, corners: .bottomRight)
+        .onTapGesture {
+            searchViewModel.onChooseSortOption(index)
+        }
     }
 
     var filterTextRow: some View {
@@ -72,22 +81,32 @@ struct FilterScreenView: View {
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
-            Button("Reset") {
-                
-            }.foregroundColor(.appPrimary)
+            if (searchViewModel.countChoosedFilterCategories > 0) {
+                Button("Reset") { searchViewModel.resetFilterCategories() }
+                    .foregroundColor(.appPrimary)
+            }
         }
         .padding(.bottom, 20)
     }
 
     var genres: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-            ForEach(FilterCategory.getCategories()) { category in
+            ForEach(searchViewModel.filterCategories) { category in
                 Image(category.pictureName)
                     .cornerRadius(8)
+                    .scaleEffect(1.1)
+                    .onTapGesture {
+                        searchViewModel.onChooseFilterCategory(category.id)
+                    }
                     .overlay(
-                    Text(category.name)
-                        .bodyText4()
-                        .foregroundColor(.appTextWhite)
+                        HStack(spacing: 10) {
+                            CustomCheckbox(checked: category.isChoosed, onCheck: { })
+                            Text(category.name)
+                                .bodyText4()
+                                .foregroundColor(searchViewModel.canChooseFilterCategory(category.isChoosed) ? .appTextWhite : .appSecondary300)
+                            Spacer()
+                        }
+                        .padding(.leading, 10)
                 )
             }
         }
