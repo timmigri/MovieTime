@@ -18,7 +18,7 @@ struct MainScreenView: View {
 
     var body: some View {
         TabView(selection: $selectedTabId) {
-            FilterScreenView()
+            SearchScreenView()
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 1 ? Constants.searchIcon : Constants.searchActiveIcon)
@@ -29,8 +29,8 @@ struct MainScreenView: View {
             FavoriteScreenView()
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 2 ? Constants.favoriteIcon : Constants.favoriteActiveIcon)
-                        Text(Constants.searchText)
+                        Image(selectedTabId != 2 ? Constants.bookmarkIcon : Constants.bookmarkActiveIcon)
+                        Text(Constants.bookmarkText)
                     }
                 }
                 .tag(2)
@@ -40,11 +40,11 @@ struct MainScreenView: View {
 
     private struct Constants {
         static let searchText = "Search"
-        static let favoriteText = "Favorite"
+        static let bookmarkText = "Bookmarks"
         static let searchIcon = "SearchIcon"
         static let searchActiveIcon = "SearchActiveIcon"
-        static let favoriteIcon = "FavoriteIcon"
-        static let favoriteActiveIcon = "FavoriteActiveIcon"
+        static let bookmarkIcon = "BookmarkIcon"
+        static let bookmarkActiveIcon = "BookmarkActiveIcon"
     }
 }
 

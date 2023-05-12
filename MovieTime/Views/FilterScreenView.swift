@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct FilterScreenView: View {
-    @ObservedObject var searchViewModel = SearchViewModel()
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @ObservedObject var searchViewModel = Injection.shared.container.resolve(SearchViewModel.self)!
+
     var body: some View {
         ZStack(alignment: .bottom) {
             Color.appBackground.ignoresSafeArea()
@@ -24,15 +25,24 @@ struct FilterScreenView: View {
             }
             .padding()
             if searchViewModel.showFilterResultsButton {
-                CustomButton(action: { }, title: "Show Results")
-                    .padding()
+                CustomButton(
+                    action: {
+                        self.presentationMode.wrappedValue.dismiss()
+                    },
+                    title: "Show Results"
+                )
+                .padding()
             }
         }
+        .navigationBarHidden(true)
     }
 
     var topRow: some View {
         HStack(alignment: .top) {
             Image("ArrowBackIcon")
+                .onTapGesture {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
             Spacer()
         }
         .frame(height: 44)
@@ -100,7 +110,7 @@ struct FilterScreenView: View {
                     }
                     .overlay(
                         HStack(spacing: 10) {
-                            CustomCheckbox(checked: category.isChoosed, onCheck: { })
+                            CustomCheckbox(checked: category.isChoosed, onCheck: { searchViewModel.onChooseFilterCategory(category.id) })
                             Text(category.name)
                                 .bodyText4()
                                 .foregroundColor(searchViewModel.canChooseFilterCategory(category.isChoosed) ? .appTextWhite : .appSecondary300)

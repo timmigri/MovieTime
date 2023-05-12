@@ -26,17 +26,19 @@ struct SearchScreenView: View {
                     .frame(height: 44)
                     .accentColor(.appPrimary)
                     .foregroundColor(.appSecondary300)
-                    Image("FilterIcon")
-                        .padding(.leading, 10)
-                        .padding(.vertical, 10)
-                        .animation(.easeInOut, value: 5)
-                        .padding(.trailing, 10)
+                    NavigationLink(destination: FilterScreenView()) {
+                        Image("FilterIcon")
+                            .padding(.leading, 10)
+                            .padding(.vertical, 10)
+                            .animation(.easeInOut, value: 5)
+                            .padding(.trailing, 10)
+                    }
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                    .stroke(
-                        searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
-                    )
+                        .stroke(
+                            searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
+                        )
                 )
                 GeometryReader { geometry in
                     ScrollView(.vertical, showsIndicators: false) {
@@ -48,17 +50,17 @@ struct SearchScreenView: View {
                 }
                 .padding(.top, 32)
                 .frame(maxHeight: .infinity)
-//                PictureBox(
-//                    pictureName: "SearchPicture",
-//                    headlineText: "Search in MovieTime",
-//                    bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
-//                )
-
-//                PictureBox(
-//                    pictureName: "NoResultPicture",
-//                    headlineText: "No result",
-//                    bodyText: "No results found, Please try other words"
-//                )
+                //                PictureBox(
+                //                    pictureName: "SearchPicture",
+                //                    headlineText: "Search in MovieTime",
+                //                    bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
+                //                )
+                
+                //                PictureBox(
+                //                    pictureName: "NoResultPicture",
+                //                    headlineText: "No result",
+                //                    bodyText: "No results found, Please try other words"
+                //                )
             }
             .padding()
         }

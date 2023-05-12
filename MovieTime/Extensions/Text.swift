@@ -21,6 +21,12 @@ extension Text {
             .lineSpacing(32 - 24)
     }
     
+    func heading3() -> some View {
+        return self
+            .font(.sf(.bold, size: 20))
+            .lineSpacing(26 - 20)
+    }
+    
     func bodyText() -> some View {
         return self
             .font(.sf(.regular, size: 18))
