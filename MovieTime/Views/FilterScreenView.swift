@@ -13,19 +13,56 @@ struct FilterScreenView: View {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 topRow
-                filterTextRow
-                genres
+                ScrollView(.vertical, showsIndicators: false) {
+                    sortKeyRow
+                    filterTextRow
+                    genres
+                }
+                Spacer()
             }
             .padding()
         }
     }
 
     var topRow: some View {
-        HStack {
+        HStack(alignment: .top) {
             Image("ArrowBackIcon")
             Spacer()
         }
         .frame(height: 44)
+        .padding(.bottom, 20)
+    }
+    
+    var sortKeyRow: some View {
+        VStack(alignment: .leading) {
+            Text("Sort by")
+                .bodyText2()
+                .foregroundColor(.appTextWhite)
+            HStack(spacing: 0) {
+                Color.appPrimary.overlay(
+                    Text("Title")
+                        .bodyText5()
+                        .foregroundColor(.appTextWhite)
+                )
+                .frame(width: 90, height: 36)
+                .cornerRadius(10, corners: .topLeft)
+                .cornerRadius(10, corners: .bottomLeft)
+                Color.appPrimary200.overlay(
+                    Text("Date")
+                        .bodyText5()
+                        .foregroundColor(.appPrimary)
+                ).frame(width: 90, height: 36)
+                Color.appPrimary200.overlay(
+                    Text("Rating")
+                        .bodyText5()
+                        .foregroundColor(.appPrimary)
+                )
+                .frame(width: 90, height: 36)
+                .cornerRadius(10, corners: .topRight)
+                .cornerRadius(10, corners: .bottomRight)
+                Spacer()
+            }
+        }
         .padding(.bottom, 20)
     }
 
@@ -45,8 +82,10 @@ struct FilterScreenView: View {
     var genres: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
             ForEach(FilterCategory.getCategories()) { category in
-                Image("ActionBackground").overlay(
-                    Text("Action")
+                Image(category.pictureName)
+                    .cornerRadius(8)
+                    .overlay(
+                    Text(category.name)
                         .bodyText4()
                         .foregroundColor(.appTextWhite)
                 )

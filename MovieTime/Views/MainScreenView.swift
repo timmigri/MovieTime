@@ -18,7 +18,7 @@ struct MainScreenView: View {
 
     var body: some View {
         TabView(selection: $selectedTabId) {
-            SearchScreenView()
+            FilterScreenView()
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 1 ? Constants.searchIcon : Constants.searchActiveIcon)
