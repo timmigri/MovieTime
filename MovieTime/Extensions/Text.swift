@@ -12,7 +12,7 @@ extension Text {
     func caption2() -> some View {
         return self
             .font(.sf(.regular, size: 12))
-            .lineSpacing(18 - 12)
+            .lineSpacing(16 - 12)
     }
     
     func heading2() -> some View {
@@ -21,10 +21,28 @@ extension Text {
             .lineSpacing(32 - 24)
     }
     
-    func bodyText3() -> some View {
+    func bodyText() -> some View {
+        return self
+            .font(.sf(.regular, size: 18))
+            .lineSpacing(22 - 18)
+    }
+    
+    func bodyText2() -> some View {
         return self
             .font(.sf(.bold, size: 18))
-            .lineSpacing(24 - 18)
+            .lineSpacing(22 - 18)
+    }
+    
+    func bodyText3() -> some View {
+        return self
+            .font(.sf(.regular, size: 16))
+            .lineSpacing(20 - 16)
+    }
+    
+    func bodyText4() -> some View {
+        return self
+            .font(.sf(.bold, size: 16))
+            .lineSpacing(20 - 16)
     }
 
     func bodyText5() -> some View {

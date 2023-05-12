@@ -36,8 +36,13 @@ struct SearchScreenView: View {
                 }
                 .overlay(RoundedRectangle(cornerRadius: 5)
                     .stroke(searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1))
-                ScrollView {
-                    actorsSection
+                GeometryReader { geometry in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack {
+                            actorsSection(geometry)
+                            moviesSection(geometry)
+                        }
+                    }
                 }
                 .padding(.top, 32)
                 .frame(maxHeight: .infinity)
@@ -45,29 +50,42 @@ struct SearchScreenView: View {
             .padding()
         }
     }
-    
-    var actorsSection: some View {
+
+    func actorsSection(_ geometry: GeometryProxy) -> some View {
         VStack(alignment: .leading) {
             Text("Actors")
-                .bodyText3()
+                .bodyText4()
                 .foregroundColor(.appTextWhite)
-            GeometryReader { geometry in
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 0) {
                     testActor(geometry)
                     testActor(geometry)
                     testActor(geometry)
                     testActor(geometry)
                     testActor(geometry)
+                    testActor(geometry)
                 }
+
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    func moviesSection(_ geometry: GeometryProxy) -> some View {
+        return VStack(alignment: .leading) {
+            Text("Movies & Series")
+                .bodyText4()
+                .foregroundColor(.appTextWhite)
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                testMovie(geometry)
+                testMovie(geometry)
+                testMovie(geometry)
+            }
+        }
     }
     
     func testActor(_ geometry: GeometryProxy) -> some View {
         let padding: CGFloat = 10
         let width = (geometry.size.width - padding * 4) / 4
-        print(width, geometry.size.width)
         return VStack {
             Image("ActorExample")
                 .frame(width: width, height: width)
@@ -77,6 +95,32 @@ struct SearchScreenView: View {
                 .lineLimit(2)
                 .foregroundColor(.appSecondary300)
                 .multilineTextAlignment(.center)
+                .padding(.bottom, 30)
+        }
+        .frame(maxWidth: width)
+    }
+    
+    func testMovie(_ geometry: GeometryProxy) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image("MovieExample")
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: geometry.size.width / 2 - 10)
+            Text("Black Lightning")
+                .bodyText3()
+                .foregroundColor(.appTextWhite)
+            HStack {
+                Text("4 seasons")
+                    .caption2()
+                    .foregroundColor(.appTextBlack)
+                Spacer()
+                HStack(spacing: 2) {
+                    Image("StarIcon")
+                    Text("4.1")
+                        .bodyText5()
+                        .foregroundColor(.appTextWhite)
+                }
+            }
         }
     }
 
