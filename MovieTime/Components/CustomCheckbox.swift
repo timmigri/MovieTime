@@ -10,7 +10,7 @@ import SwiftUI
 struct CustomCheckbox: View {
     let checked: Bool
     let onCheck: () -> Void
-    
+
     var body: some View {
         Image(checked ? "CheckboxCheckedIcon" : "CheckboxUncheckedIcon")
             .onTapGesture(perform: onCheck)

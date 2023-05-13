@@ -28,7 +28,7 @@ final class Injection {
         let container = Container()
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()
-        }
+        }.inObjectScope(.container)
         return container
     }
 }

@@ -26,7 +26,7 @@ struct MainScreenView: View {
                     }
                 }
                 .tag(1)
-            FavoriteScreenView()
+            MovieScreenView()
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 2 ? Constants.bookmarkIcon : Constants.bookmarkActiveIcon)

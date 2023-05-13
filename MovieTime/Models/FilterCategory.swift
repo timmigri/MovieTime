@@ -8,7 +8,7 @@
 import Foundation
 
 struct FilterCategory: Identifiable {
-    var id: String { pictureName }
+    var id: String { name }
     let pictureName: String
     let name: String
     let searchKey: String
