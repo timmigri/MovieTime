@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct SearchScreenView: View {
-    @State private var query: String = ""
     @State private var searchFieldFocused = false
+    @ObservedObject var searchViewModel = Injection.shared.container.resolve(SearchViewModel.self)!
+    
+    
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 HStack(spacing: 7) {
@@ -20,7 +22,10 @@ struct SearchScreenView: View {
                         .padding(.leading, 10)
                         .padding(.vertical, 10)
                         .animation(.easeInOut, value: 5)
-                    TextField("Search for Movies, Series", text: $query) {
+                        .onTapGesture {
+                            searchViewModel.onChangeSearchOptions()
+                        }
+                    TextField("Search for Movies, Series", text: $searchViewModel.query) {
                         searchFieldFocused = $0
                     }
                     .frame(height: 44)
@@ -40,29 +45,45 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                GeometryReader { geometry in
-                    ScrollView(.vertical, showsIndicators: false) {
-                        VStack {
-                            actorsSection(geometry)
-                            moviesSection(geometry)
+                if (searchViewModel.isLoadingMovies) {
+                    ProgressView()
+                        .progressViewStyle(
+                            CircularProgressViewStyle(tint: .appPrimary200))
+                        .frame(maxHeight: .infinity)
+                }
+                if (!searchViewModel.isLoadingMovies && searchViewModel.movies.count > 0) {
+                    GeometryReader { geometry in
+                        ScrollView(.vertical, showsIndicators: false) {
+                            VStack {
+                                //                            actorsSection(geometry)
+                                moviesSection(geometry)
+                            }
                         }
                     }
+                    .padding(.top, 32)
+                    .frame(maxHeight: .infinity)
                 }
-                .padding(.top, 32)
-                .frame(maxHeight: .infinity)
-                //                PictureBox(
-                //                    pictureName: "SearchPicture",
-                //                    headlineText: "Search in MovieTime",
-                //                    bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
-                //                )
                 
-                //                PictureBox(
-                //                    pictureName: "NoResultPicture",
-                //                    headlineText: "No result",
-                //                    bodyText: "No results found, Please try other words"
-                //                )
+                if (!searchViewModel.isLoadingMovies && searchViewModel.movies.count == 0) {
+                    if (searchViewModel.query.count == 0) {
+                        PictureBox(
+                            pictureName: "SearchPicture",
+                            headlineText: "Search in MovieTime",
+                            bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
+                        )
+                    } else {
+                        PictureBox(
+                            pictureName: "NoResultPicture",
+                            headlineText: "No result",
+                            bodyText: "No results found, Please try other words"
+                        )
+                    }
+                }
             }
             .padding()
+        }
+        .onAppear {
+            searchViewModel.onChangeSearchOptions()
         }
     }
 
@@ -91,9 +112,9 @@ struct SearchScreenView: View {
                 .bodyText4()
                 .foregroundColor(.appTextWhite)
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                testMovie(geometry)
-                testMovie(geometry)
-                testMovie(geometry)
+                ForEach(searchViewModel.movies) { movie in
+                    renderMovie(movie, geometry)
+                }
             }
         }
     }
@@ -115,15 +136,27 @@ struct SearchScreenView: View {
         .frame(maxWidth: width)
     }
 
-    func testMovie(_ geometry: GeometryProxy) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Image("MovieExample")
-                .resizable()
-                .scaledToFill()
-                .frame(maxWidth: geometry.size.width / 2 - 10)
-            Text("Black Lightning")
+    func renderMovie(_ movie: MovieModel, _ geometry: GeometryProxy) -> some View {
+        VStack(alignment: .leading) {
+            if let movieUrl = URL(string: movie.posterUrl) {
+                AsyncImage(
+                    url: movieUrl,
+                    placeholder: {
+                        ProgressView()
+                            .progressViewStyle(
+                                CircularProgressViewStyle(tint: .appPrimary200))
+                    },
+                    image: {
+                        Image(uiImage: $0)
+                            .resizable()
+                        
+                    })
+                .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
+            }
+            Text(movie.name)
                 .bodyText3()
                 .foregroundColor(.appTextWhite)
+            Spacer()
             HStack {
                 Text("4 seasons")
                     .caption2()
@@ -131,7 +164,7 @@ struct SearchScreenView: View {
                 Spacer()
                 HStack(spacing: 2) {
                     Image("StarIcon")
-                    Text("4.1")
+                    Text(String(format: "%.1f", movie.rating))
                         .bodyText5()
                         .foregroundColor(.appTextWhite)
                 }

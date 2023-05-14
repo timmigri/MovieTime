@@ -9,10 +9,15 @@ import Foundation
 import SwiftUI
 
 class SearchViewModel: ObservableObject {
-    let sortOptions = [("Title", "title"), ("Date", "date"), ("Rating", "rating")]
-    let maxFilterCategories = 3
+    let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
+    private let maxFilterCategories = 3
+    @Injected var networkManager: NetworkManager
+    @Injected var paginator: Paginator
     @Published var currentSortOptionIndex: Int?
     @Published var filterCategories = FilterCategory.generateCategories()
+    @Published var isLoadingMovies = false
+    @Published var movies: [MovieModel] = []
+    @Published var query: String = ""
 
     // Sort option
     func onChooseSortOption(_ index: Int) {
@@ -51,5 +56,21 @@ class SearchViewModel: ObservableObject {
 
     var countChoosedFilterCategories: Int {
         filterCategories.filter { $0.isChoosed }.count
+    }
+
+    // API
+    func onChangeSearchOptions() {
+        if isLoadingMovies || query.count == 0 { return }
+        movies = []
+        isLoadingMovies = true
+        let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
+        let genres = filterCategories.filter { $0.isChoosed }.map { $0.searchKey }
+        networkManager.loadMovies(query: query, sortField: sortField, genres: genres) { (_, res) in
+            self.movies += res
+            DispatchQueue.main.async {
+                print(self.paginator.value)
+                self.isLoadingMovies = false
+            }
+        }
     }
 }

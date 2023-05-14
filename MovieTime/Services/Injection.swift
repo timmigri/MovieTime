@@ -26,6 +26,12 @@ final class Injection {
 
     private func buildContainer() -> Container {
         let container = Container()
+        container.register(NetworkManager.self) { _ in
+            return NetworkManager()
+        }
+        container.register(Paginator.self) { _ in
+            return Paginator()
+        }.inObjectScope(.container)
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()
         }.inObjectScope(.container)
