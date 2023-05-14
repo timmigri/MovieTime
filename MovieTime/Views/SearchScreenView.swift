@@ -31,6 +31,9 @@ struct SearchScreenView: View {
                     .frame(height: 44)
                     .accentColor(.appPrimary)
                     .foregroundColor(.appSecondary300)
+                    .onChange(of: searchViewModel.query) { _ in
+                        searchViewModel.onChangeSearchOptions()
+                    }
                     NavigationLink(destination: FilterScreenView()) {
                         Image("FilterIcon")
                             .padding(.leading, 10)
@@ -45,39 +48,53 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                if (searchViewModel.isLoadingMovies) {
-                    ProgressView()
-                        .progressViewStyle(
-                            CircularProgressViewStyle(tint: .appPrimary200))
-                        .frame(maxHeight: .infinity)
-                }
-                if (!searchViewModel.isLoadingMovies && searchViewModel.movies.count > 0) {
+//                if (searchViewModel.isLoadingMovies) {
+//                    ProgressView()
+//                        .progressViewStyle(
+//                            CircularProgressViewStyle(tint: .appPrimary200))
+//                        .frame(maxHeight: .infinity)
+//                }
+                if (searchViewModel.movies.count > 0) {
                     GeometryReader { geometry in
-                        ScrollView(.vertical, showsIndicators: false) {
+//                        ScrollView(.vertical, showsIndicators: false) {
+//                            VStack {
+//                                moviesSection(geometry)
+//                            }
+//                        }
+                        ScrollView(.vertical) {
                             VStack {
-                                //                            actorsSection(geometry)
                                 moviesSection(geometry)
+                                if (searchViewModel.haveMoreMovies) {
+                                    ProgressView()
+                                        .progressViewStyle(
+                                            CircularProgressViewStyle(tint: .appPrimary200))
+                                        .padding(.top, 20)
+                                        .onAppear {
+                                            searchViewModel.loadMovies()
+                                        }
+                                }
                             }
                         }
+                        
                     }
                     .padding(.top, 32)
                     .frame(maxHeight: .infinity)
                 }
                 
-                if (!searchViewModel.isLoadingMovies && searchViewModel.movies.count == 0) {
-                    if (searchViewModel.query.count == 0) {
-                        PictureBox(
-                            pictureName: "SearchPicture",
-                            headlineText: "Search in MovieTime",
-                            bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
-                        )
-                    } else {
-                        PictureBox(
-                            pictureName: "NoResultPicture",
-                            headlineText: "No result",
-                            bodyText: "No results found, Please try other words"
-                        )
-                    }
+                if (searchViewModel.showSearchPicture) {
+                    PictureBox(
+                        pictureName: "SearchPicture",
+                        headlineText: "Search in MovieTime",
+                        bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
+                    )
+                }
+                
+                if (searchViewModel.showNoResultPicture) {
+                    PictureBox(
+                        pictureName: "NoResultPicture",
+                        headlineText: "No result",
+                        bodyText: "No results found, Please try other words"
+                    )
                 }
             }
             .padding()
@@ -149,7 +166,6 @@ struct SearchScreenView: View {
                     image: {
                         Image(uiImage: $0)
                             .resizable()
-                        
                     })
                 .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
             }

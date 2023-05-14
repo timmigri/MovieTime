@@ -47,4 +47,5 @@ struct RawMovieDataModel: Decodable {
 struct RawMoviesDataModel: Decodable {
     let docs: [RawMovieDataModel]
     let pages: Int
+    let page: Int
 }

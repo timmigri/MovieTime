@@ -18,7 +18,7 @@ class NetworkManager {
         var queryItems = [URLQueryItem]()
         queryItems.append(URLQueryItem(name: "page", value: "1"))
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
-        queryItems.append(URLQueryItem(name: "enName", value: query))
+        queryItems.append(URLQueryItem(name: "alternativeName", value: query))
         if let sortField {
             queryItems.append(URLQueryItem(name: "sortField", value: sortField))
         }
@@ -32,6 +32,7 @@ class NetworkManager {
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "accept")
         request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
+        print(requestUrl)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else { return }
             do {
@@ -40,7 +41,8 @@ class NetworkManager {
                 if let httpResponse = response as? HTTPURLResponse {
                     statusCode = httpResponse.statusCode
                 }
-                self.paginator.changeA()
+                print("\(moviesData.page)/\(moviesData.pages)")
+                self.paginator.setPage(forKey: .movieList, page: moviesData.page, pages: moviesData.pages)
                 completion(statusCode, MovieModel.processRawData(moviesData))
             } catch {
                 print("\(error)")

@@ -11,12 +11,13 @@ import SwiftUI
 class SearchViewModel: ObservableObject {
     let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
     private let maxFilterCategories = 3
+    private let minLengthOfQueryToSearch = 3
     @Injected var networkManager: NetworkManager
     @Injected var paginator: Paginator
     @Published var currentSortOptionIndex: Int?
     @Published var filterCategories = FilterCategory.generateCategories()
     @Published var isLoadingMovies = false
-    @Published var movies: [MovieModel] = []
+    @Published var movies = [MovieModel]()
     @Published var query: String = ""
 
     // Sort option
@@ -39,11 +40,11 @@ class SearchViewModel: ObservableObject {
     // Filter categories
     func onChooseFilterCategory(_ id: String) {
         if let index = filterCategories.firstIndex(where: { $0.id == id }) {
-            if (!canChooseFilterCategory(filterCategories[index].isChoosed)) { return }
+            if !canChooseFilterCategory(filterCategories[index].isChoosed) { return }
             filterCategories[index].isChoosed.toggle()
         }
     }
-    
+
     func resetFilterCategories() {
         for index in filterCategories.indices {
             filterCategories[index].isChoosed = false
@@ -60,17 +61,35 @@ class SearchViewModel: ObservableObject {
 
     // API
     func onChangeSearchOptions() {
-        if isLoadingMovies || query.count == 0 { return }
         movies = []
+        paginator.reset(forKey: .movieList)
+        loadMovies()
+    }
+    
+    func loadMovies() {
+        if isLoadingMovies || query.count < minLengthOfQueryToSearch { return }
         isLoadingMovies = true
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
         let genres = filterCategories.filter { $0.isChoosed }.map { $0.searchKey }
-        networkManager.loadMovies(query: query, sortField: sortField, genres: genres) { (_, res) in
-            self.movies += res
+        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (_, res) in
             DispatchQueue.main.async {
-                print(self.paginator.value)
+                self.movies += res
                 self.isLoadingMovies = false
             }
         }
+    }
+    
+    var haveMoreMovies: Bool {
+        return self.paginator.canGoNextPage(forKey: .movieList)
+    }
+    
+    var showNoResultPicture: Bool {
+        if (movies.count > 0) { return false }
+        return !isLoadingMovies && query.count >= minLengthOfQueryToSearch
+    }
+    
+    var showSearchPicture: Bool {
+        if (movies.count > 0) { return false }
+        return !isLoadingMovies && query.count < minLengthOfQueryToSearch
     }
 }

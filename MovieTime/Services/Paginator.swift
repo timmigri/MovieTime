@@ -8,13 +8,27 @@
 import Foundation
 
 class Paginator {
-    var value = 5
-    enum Keys {
+    enum Key {
         case movieList
     }
     
-    func changeA() {
-        value = 10
+    init() {
+        paginatorMap[.movieList] = (0, nil)
+    }
+    
+    private var paginatorMap = [Key:(page: Int, pages: Int?)]()
+    
+    func setPage(forKey: Key, page: Int, pages: Int) {
+        paginatorMap[forKey]!.page = max(paginatorMap[forKey]!.page, page)
+        paginatorMap[forKey]!.pages = pages
+    }
+
+    func canGoNextPage(forKey: Key) -> Bool {
+        let (page, pages) = paginatorMap[forKey]!
+        return pages == nil || page < pages!
+    }
+    
+    func reset(forKey: Key) {
+        paginatorMap[forKey] = (0, nil)
     }
 }
-
