@@ -14,9 +14,11 @@ class NetworkManager {
     let decoder = JSONDecoder()
 
     func loadMovies(query: String, sortField: String?, genres: [String],  completion: @escaping (Int, [MovieModel]) -> Void) {
+        let nextPage = paginator.getNextPage(forKey: .movieList)
+        if nextPage == nil { return }
         var components = URLComponents(string: baseUrl + "/v1.3/movie")!
         var queryItems = [URLQueryItem]()
-        queryItems.append(URLQueryItem(name: "page", value: "1"))
+        queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
         queryItems.append(URLQueryItem(name: "alternativeName", value: query))
         if let sortField {
@@ -35,6 +37,10 @@ class NetworkManager {
         print(requestUrl)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else { return }
+
+            let json = String(data: data, encoding: String.Encoding.utf8)
+            print("Failure Response: \(json)")
+
             do {
                 let moviesData = try self.decoder.decode(RawMoviesDataModel.self, from: data)
                 var statusCode = 400

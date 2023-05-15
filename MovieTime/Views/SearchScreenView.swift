@@ -48,38 +48,22 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-//                if (searchViewModel.isLoadingMovies) {
-//                    ProgressView()
-//                        .progressViewStyle(
-//                            CircularProgressViewStyle(tint: .appPrimary200))
-//                        .frame(maxHeight: .infinity)
-//                }
-                if (searchViewModel.movies.count > 0) {
+                if (searchViewModel.showMoviesSection) {
                     GeometryReader { geometry in
-//                        ScrollView(.vertical, showsIndicators: false) {
-//                            VStack {
-//                                moviesSection(geometry)
-//                            }
-//                        }
-                        ScrollView(.vertical) {
+                        ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 moviesSection(geometry)
-                                if (searchViewModel.haveMoreMovies) {
-                                    ProgressView()
-                                        .progressViewStyle(
-                                            CircularProgressViewStyle(tint: .appPrimary200))
+                                if (searchViewModel.isLoadingMovies) {
+                                    LoadingIndicator()
                                         .padding(.top, 20)
-                                        .onAppear {
-                                            searchViewModel.loadMovies()
-                                        }
                                 }
                             }
                         }
                         
                     }
                     .padding(.top, 32)
-                    .frame(maxHeight: .infinity)
                 }
+                
                 
                 if (searchViewModel.showSearchPicture) {
                     PictureBox(
@@ -158,11 +142,7 @@ struct SearchScreenView: View {
             if let movieUrl = URL(string: movie.posterUrl) {
                 AsyncImage(
                     url: movieUrl,
-                    placeholder: {
-                        ProgressView()
-                            .progressViewStyle(
-                                CircularProgressViewStyle(tint: .appPrimary200))
-                    },
+                    placeholder: { LoadingIndicator() },
                     image: {
                         Image(uiImage: $0)
                             .resizable()
@@ -174,7 +154,7 @@ struct SearchScreenView: View {
                 .foregroundColor(.appTextWhite)
             Spacer()
             HStack {
-                Text("4 seasons")
+                Text(movie.durationString)
                     .caption2()
                     .foregroundColor(.appTextBlack)
                 Spacer()
@@ -184,6 +164,11 @@ struct SearchScreenView: View {
                         .bodyText5()
                         .foregroundColor(.appTextWhite)
                 }
+            }
+        }
+        .onAppear {
+            if movie.id == searchViewModel.movies.last?.id {
+                searchViewModel.loadMovies()
             }
         }
     }

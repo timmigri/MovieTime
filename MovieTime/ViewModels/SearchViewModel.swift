@@ -71,6 +71,7 @@ class SearchViewModel: ObservableObject {
         isLoadingMovies = true
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
         let genres = filterCategories.filter { $0.isChoosed }.map { $0.searchKey }
+        // TODO: error handling
         networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (_, res) in
             DispatchQueue.main.async {
                 self.movies += res
@@ -80,7 +81,15 @@ class SearchViewModel: ObservableObject {
     }
     
     var haveMoreMovies: Bool {
-        return self.paginator.canGoNextPage(forKey: .movieList)
+        return self.paginator.getNextPage(forKey: .movieList) != nil
+    }
+    
+    var showMoviesSection: Bool {
+        return movies.count > 0 || isLoadingMovies
+    }
+    
+    var showLoadingIndicator: Bool {
+        return (movies.count > 0 || movies.count == 0 && query.count >= minLengthOfQueryToSearch) && haveMoreMovies
     }
     
     var showNoResultPicture: Bool {

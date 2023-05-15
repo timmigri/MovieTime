@@ -23,9 +23,11 @@ class Paginator {
         paginatorMap[forKey]!.pages = pages
     }
 
-    func canGoNextPage(forKey: Key) -> Bool {
+    func getNextPage(forKey: Key) -> Int? {
         let (page, pages) = paginatorMap[forKey]!
-        return pages == nil || page < pages!
+        if (pages == nil) { return 1 }
+        if (page < pages!) { return page + 1 }
+        return nil
     }
     
     func reset(forKey: Key) {
