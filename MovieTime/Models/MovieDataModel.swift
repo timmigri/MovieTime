@@ -11,25 +11,21 @@ struct MovieModel: Identifiable {
     let id: Int
     let movieLength: Int
     let name: String
-    let year: Int
     let posterUrl: String
     let rating: Float
 
     private init(rawData: RawMovieDataModel) {
         self.id = rawData.id
         self.name = rawData.name!
-        self.year = rawData.year!
         self.posterUrl = rawData.poster!.previewUrl
         self.rating = rawData.rating!.kp
         self.movieLength = rawData.movieLength!
-//        self.movieLength = 0
     }
 
     static func processRawData(_ rawData: RawMoviesDataModel) -> [MovieModel] {
         var movies = [MovieModel]()
         for rawMovie in rawData.docs {
             if rawMovie.name == nil { continue }
-            if rawMovie.year == nil { continue }
             if rawMovie.poster == nil { continue }
             if rawMovie.rating == nil { continue }
             if rawMovie.movieLength == nil { continue }
@@ -37,18 +33,21 @@ struct MovieModel: Identifiable {
         }
         return movies
     }
-    
+
     var durationString: String {
         let hoursString = movieLength >= 60 ? String(movieLength / 60) + "ч " : ""
         let minutesString = String(movieLength % 60) + "м"
         return hoursString + minutesString
+    }
+    
+    var formattedRatingString: String {
+        String(format: "%.1f", rating)
     }
 }
 
 struct RawMovieDataModel: Decodable {
     let id: Int
     let name: String?
-    let year: Int?
     let movieLength: Int?
     let rating: Rating?
     let poster: Poster?

@@ -10,8 +10,7 @@ import SwiftUI
 struct SearchScreenView: View {
     @State private var searchFieldFocused = false
     @ObservedObject var searchViewModel = Injection.shared.container.resolve(SearchViewModel.self)!
-    
-    
+
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -83,9 +82,6 @@ struct SearchScreenView: View {
             }
             .padding()
         }
-        .onAppear {
-            searchViewModel.onChangeSearchOptions()
-        }
     }
 
     func actorsSection(_ geometry: GeometryProxy) -> some View {
@@ -138,37 +134,41 @@ struct SearchScreenView: View {
     }
 
     func renderMovie(_ movie: MovieModel, _ geometry: GeometryProxy) -> some View {
-        VStack(alignment: .leading) {
-            if let movieUrl = URL(string: movie.posterUrl) {
-                AsyncImage(
-                    url: movieUrl,
-                    placeholder: { LoadingIndicator() },
-                    image: {
-                        Image(uiImage: $0)
-                            .resizable()
-                    })
-                .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
-            }
-            Text(movie.name)
-                .bodyText3()
-                .foregroundColor(.appTextWhite)
-            Spacer()
-            HStack {
-                Text(movie.durationString)
-                    .caption2()
-                    .foregroundColor(.appTextBlack)
+        NavigationLink(destination: MovieScreenView(
+            id: movie.id
+        )) {
+            VStack(alignment: .leading) {
+                if let movieUrl = URL(string: movie.posterUrl) {
+                    AsyncImage(
+                        url: movieUrl,
+                        placeholder: { LoadingIndicator() },
+                        image: {
+                            Image(uiImage: $0)
+                                .resizable()
+                        })
+                    .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
+                }
+                Text(movie.name)
+                    .bodyText3()
+                    .foregroundColor(.appTextWhite)
                 Spacer()
-                HStack(spacing: 2) {
-                    Image("StarIcon")
-                    Text(String(format: "%.1f", movie.rating))
-                        .bodyText5()
-                        .foregroundColor(.appTextWhite)
+                HStack {
+                    Text(movie.durationString)
+                        .caption2()
+                        .foregroundColor(.appTextBlack)
+                    Spacer()
+                    HStack(spacing: 2) {
+                        Image("StarIcon")
+                        Text(movie.formattedRatingString)
+                            .bodyText5()
+                            .foregroundColor(.appTextWhite)
+                    }
                 }
             }
-        }
-        .onAppear {
-            if movie.id == searchViewModel.movies.last?.id {
-                searchViewModel.loadMovies()
+            .onAppear {
+                if movie.id == searchViewModel.movies.last?.id {
+                    searchViewModel.loadMovies()
+                }
             }
         }
     }

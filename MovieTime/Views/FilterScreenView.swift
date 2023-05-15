@@ -15,7 +15,12 @@ struct FilterScreenView: View {
         ZStack(alignment: .bottom) {
             Color.appBackground.ignoresSafeArea()
             VStack {
-                topRow
+                CustomNavigationBar(
+                    onTapGesture: {
+                        searchViewModel.onChangeSearchOptions()
+                    },
+                    title: "Фильтры"
+                )
                 ScrollView(.vertical, showsIndicators: false) {
                     sortKeyRow
                     filterTextRow
@@ -27,6 +32,7 @@ struct FilterScreenView: View {
             if searchViewModel.showFilterResultsButton {
                 CustomButton(
                     action: {
+                        searchViewModel.onChangeSearchOptions()
                         self.presentationMode.wrappedValue.dismiss()
                     },
                     title: "Show Results"
@@ -35,18 +41,6 @@ struct FilterScreenView: View {
             }
         }
         .navigationBarHidden(true)
-    }
-
-    var topRow: some View {
-        HStack(alignment: .top) {
-            Image("ArrowBackIcon")
-                .onTapGesture {
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            Spacer()
-        }
-        .frame(height: 44)
-        .padding(.bottom, 20)
     }
 
     var sortKeyRow: some View {

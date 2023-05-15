@@ -29,6 +29,9 @@ final class Injection {
         container.register(NetworkManager.self) { _ in
             return NetworkManager()
         }
+        container.register(MovieDetailViewModel.self) { _, id in
+            return MovieDetailViewModel(id: id)
+        }
         container.register(Paginator.self) { _ in
             return Paginator()
         }.inObjectScope(.container)

@@ -8,75 +8,132 @@
 import SwiftUI
 
 struct MovieScreenView: View {
+    @StateObject var viewModel: MovieDetailViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+    init(id: Int) {
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(id: id))
+    }
+
     var body: some View {
         ZStack(alignment: .top) {
             Color.appBackground.ignoresSafeArea()
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ZStack(alignment: .bottomLeading) {
-                            Image("PosterExample")
-                                .resizable()
-                                .ignoresSafeArea()
-                                .overlay(
-                                    Color.appSecondary300.ignoresSafeArea().opacity(0.2)
-                                )
-                            VStack(alignment: .leading) {
-                                Text("The IT Crowd")
-                                    .heading3()
-                                    .foregroundColor(.appTextWhite)
-                                    .padding(.bottom, 3)
-                                HStack {
-                                    Text("2006")
-                                        .caption2()
-                                    Circle()
-                                        .fill(Color.appSecondary300)
-                                        .frame(width: 4, height: 4)
-                                    Text("Sitcom, Sitcom")
-                                        .caption2()
-                                    Circle()
-                                        .fill(Color.appSecondary300)
-                                        .frame(width: 4, height: 4)
-                                    Text("5 seasons")
-                                        .caption2()
-                                }
-                                .foregroundColor(.appSecondary300)
-                                HStack(spacing: 2) {
-                                    Image("StarIcon")
-                                    Text("4.1")
-                                        .bodyText5()
+            if (viewModel.isLoadingMovie) {
+                LoadingIndicator()
+                    .frame(maxHeight: .infinity)
+            }
+            if (!viewModel.isLoadingMovie && viewModel.movie == nil) {
+                VStack {
+                    PictureBox(
+                        pictureName: "NoResultPicture",
+                        headlineText: "No result",
+                        bodyText: "No results found, Please try again"
+                    )
+                }
+            }
+            if !viewModel.isLoadingMovie && viewModel.movie != nil {
+                let movie = viewModel.movie!
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            ZStack(alignment: .bottomLeading) {
+                                AsyncImage(
+                                    url: URL(string: movie.posterUrl)!,
+                                    placeholder: { Text("12") },
+                                    image: {
+                                        Image(uiImage: $0)
+                                            .resizable()
+                                    })
+    
+                                VStack(alignment: .leading) {
+                                    Text(movie.name)
+                                        .heading3()
                                         .foregroundColor(.appTextWhite)
+                                        .padding(.bottom, 3)
+                                    HStack {
+                                        Text(String(movie.year))
+                                            .caption2()
+                                        Circle()
+                                            .fill(Color.appSecondary300)
+                                            .frame(width: 4, height: 4)
+                                        Text(movie.genresString)
+                                            .caption2()
+                                        Circle()
+                                            .fill(Color.appSecondary300)
+                                            .frame(width: 4, height: 4)
+                                        Text(movie.durationString)
+                                            .caption2()
+                                    }
+                                    .foregroundColor(.appSecondary300)
+                                    HStack(spacing: 2) {
+                                        Image("StarIcon")
+                                        Text(movie.formattedRatingString)
+                                            .bodyText5()
+                                            .foregroundColor(.appTextWhite)
+                                    }
                                 }
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    Color.appBackground.opacity(0.75)
+                                )
                             }
-                            .padding(.bottom, 10)
-                            .padding(.leading, 20)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(height: geometry.size.height * 0.6, alignment: .bottom)
+                            descriptionView
+                            ratingView
+                            factsView
+                            
                         }
-                        .frame(maxHeight: geometry.size.height * 0.4)
-                        descriptionView
-                        ratingView
-                        factsView
-                        
+                        .background(
+                            GeometryReader { innerGeometry in
+                                let offset = innerGeometry.frame(in: .named("scroll")).minY
+                                Color.clear.preference(key: ScrollViewOffsetPreferenceKey.self, value: -offset)
+                            }
+                        )
+                    }
+                    .ignoresSafeArea()
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                        viewModel.onUpdateScrollPosition(value)
                     }
                 }
-                .ignoresSafeArea()
             }
-            HStack {
-                Image("ArrowBackIcon")
-                    .overlay(
-                        Circle()
-                            .fill(Color.appSecondary300.opacity(0.3))
-                            .frame(width: 45, height: 45)
+            GeometryReader { geometry in
+                if (viewModel.showAdvancedTopBar(geometry.size.height)) {
+                    HStack {
+                        Image("ArrowBackIcon")
+                            .background(
+                                Circle()
+                                    .fill(Color.appBackground)
+                                    .frame(width: 45, height: 45)
+                            )
+                            .onTapGesture {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                        Spacer()
+                        Image("BookmarkIcon")
+                            .background(
+                                Circle()
+                                    .fill(Color.appBackground)
+                                    .frame(width: 45, height: 45)
+                            )
+                        
+                    }
+                    .padding(.horizontal, 20)
+                } else {
+                    CustomNavigationBar(
+                        onTapGesture: { },
+                        title: viewModel.movie?.name
                     )
-                Spacer()
-                Image("BookmarkIcon")
-                    .overlay(
-                        Circle()
-                            .fill(Color.appSecondary300.opacity(0.3))
-                            .frame(width: 45, height: 45)
-                    )
-
+                    .padding(.horizontal)
+                }
             }
-            .padding(.horizontal, 20)
+        }
+        .navigationBarHidden(true)
+        .onAppear {
+            viewModel.loadMovie()
         }
     }
     
@@ -105,7 +162,7 @@ struct MovieScreenView: View {
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
                 .padding(.bottom, 8)
-            Text("The IT Crowd is a British sitcom originally broadcast by Channel 4, written an")
+            Text(viewModel.movie!.description)
                 .bodyText3()
                 .foregroundColor(.appTextBlack)
         }
@@ -114,42 +171,25 @@ struct MovieScreenView: View {
     }
     
     var factsView: some View {
-        VStack(alignment: .leading) {
-            Text("Facts")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 8)
-            
-            ZStack(alignment: .topLeading) {
-                Color.appSecondary
-                Text("The IT Crowd is a British sitcom originally broadcast by Channel 4, written anThe IT Crowd is a British sitcom originally broadcast by Channel 4, written an")
-                    .bodyText5()
-                    .foregroundColor(.appTextWhite)
-                    .padding(15)
-            }.frame(maxHeight: 100)
-            
-            ZStack(alignment: .topLeading) {
-                Color.appSecondary
-                Text("The IT Crowd is a British sitcom originally broadcast by Channel 4, n")
-                    .bodyText5()
-                    .foregroundColor(.appTextWhite)
-                    .padding(15)
-            }.frame(maxHeight: 200)
-            ZStack(alignment: .topLeading) {
-                Color.appSecondary
-                Text("The IT")
-                    .bodyText5()
-                    .foregroundColor(.appTextWhite)
-                    .padding(15)
-            }.frame(maxHeight: 100)
+        Group {
+            if let facts = viewModel.movie!.facts, facts.count > 0 {
+                VStack(alignment: .leading) {
+                    Text("Facts")
+                        .bodyText2()
+                        .foregroundColor(.appTextWhite)
+                        .padding(.bottom, 8)
+                    
+                    ForEach(facts.indices) { index in
+                        Text(facts[index])
+                            .bodyText5()
+                            .foregroundColor(.appTextWhite)
+                            .padding(15)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.appSecondary)
+                    }
+                }
+                .padding()
+            }
         }
-        .padding(.horizontal)
-        .padding(.top, 20)
-    }
-}
-
-struct MovieScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        MovieScreenView()
     }
 }
