@@ -22,15 +22,19 @@ class NetworkManager {
     }
 
     // TODO: error handling
-    func loadMovies(query: String, sortField: String?, genres: [String], completion: @escaping (Int, [MovieModel]) -> Void) {
+    func loadMovies(query: String, sortField: String?, genres: [String], completion: @escaping ([MovieModel]) -> Void) {
+        print("load movies")
         let nextPage = paginator.getNextPage(forKey: .movieList)
-        if nextPage == nil { return }
+        if nextPage == nil {
+            completion([])
+            return
+        }
 
         var components = URLComponents(string: baseUrl + "/v1.3/movie")!
         var queryItems = [URLQueryItem]()
         queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
-        queryItems.append(URLQueryItem(name: "alternativeName", value: query))
+        queryItems.append(URLQueryItem(name: "name", value: query))
         if let sortField {
             queryItems.append(URLQueryItem(name: "sortField", value: sortField))
         }
@@ -41,16 +45,15 @@ class NetworkManager {
 
         let request = makeURLRequestObject(url: components.url!)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data else { return }
+            guard let data else {
+                completion([])
+                return
+            }
 
             do {
                 let moviesData = try self.decoder.decode(RawMoviesDataModel.self, from: data)
-                var statusCode = 400
-                if let httpResponse = response as? HTTPURLResponse {
-                    statusCode = httpResponse.statusCode
-                }
                 self.paginator.setPage(forKey: .movieList, page: moviesData.page, pages: moviesData.pages)
-                completion(statusCode, MovieModel.processRawData(moviesData))
+                completion(MovieModel.processRawData(moviesData))
             } catch {
                 print("\(error)")
             }
@@ -69,6 +72,33 @@ class NetworkManager {
                 let movieDetail = try self.decoder.decode(RawMovieDetailModel.self, from: data)
 
                 completion(MovieDetailModel.processRawData(movieDetail)!)
+            } catch {
+                print("\(error)")
+            }
+        }
+        task.resume()
+    }
+    
+    // TODO: error handling
+    func loadActors(query: String, completion: @escaping (Int, [ActorModel]) -> Void) {
+        print("load actors")
+        let nextPage = paginator.getNextPage(forKey: .actorList)
+        if nextPage == nil { return }
+        var components = URLComponents(string: baseUrl + "/v1.2/person/search")!
+        var queryItems = [URLQueryItem]()
+        queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
+        queryItems.append(URLQueryItem(name: "limit", value: "10"))
+        queryItems.append(URLQueryItem(name: "query", value: query))
+        components.queryItems = queryItems
+        
+        let request = makeURLRequestObject(url: components.url!)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data else { return }
+            print(data)
+            do {
+                let actorsData = try self.decoder.decode(RawActorsDataModel.self, from: data)
+                self.paginator.setPage(forKey: .actorList, page: actorsData.page, pages: actorsData.pages)
+                completion(200, ActorModel.processRawData(actorsData.docs))
             } catch {
                 print("\(error)")
             }

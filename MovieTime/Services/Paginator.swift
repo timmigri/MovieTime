@@ -10,10 +10,12 @@ import Foundation
 class Paginator {
     enum Key {
         case movieList
+        case actorList
     }
     
     init() {
         paginatorMap[.movieList] = (0, nil)
+        paginatorMap[.actorList] = (0, nil)
     }
     
     private var paginatorMap = [Key:(page: Int, pages: Int?)]()

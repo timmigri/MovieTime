@@ -47,10 +47,11 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                if (searchViewModel.showMoviesSection) {
+                if (searchViewModel.showMoviesSection || true) {
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
+                                actorsSection(geometry)
                                 moviesSection(geometry)
                                 if (searchViewModel.isLoadingMovies) {
                                     LoadingIndicator()
@@ -64,7 +65,7 @@ struct SearchScreenView: View {
                 }
                 
                 
-                if (searchViewModel.showSearchPicture) {
+                if (searchViewModel.showSearchPicture && false) {
                     PictureBox(
                         pictureName: "SearchPicture",
                         headlineText: "Search in MovieTime",
@@ -90,13 +91,13 @@ struct SearchScreenView: View {
                 .bodyText4()
                 .foregroundColor(.appTextWhite)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 0) {
-                    testActor(geometry)
-                    testActor(geometry)
-                    testActor(geometry)
-                    testActor(geometry)
-                    testActor(geometry)
-                    testActor(geometry)
+                LazyHStack(alignment: .center, spacing: 10) {
+                    ForEach(searchViewModel.actors) { person in
+                        testActor(person, geometry)
+                    }
+                    if searchViewModel.isLoadingActors {
+                        LoadingIndicator()
+                    }
                 }
 
             }
@@ -116,13 +117,29 @@ struct SearchScreenView: View {
         }
     }
 
-    func testActor(_ geometry: GeometryProxy) -> some View {
-        let padding: CGFloat = 10
-        let width = (geometry.size.width - padding * 4) / 4
+    func testActor(_ person: ActorModel, _ geometry: GeometryProxy) -> some View {
+        let width = (geometry.size.width) / 4
         return VStack {
-            Image("ActorExample")
-                .frame(width: width, height: width)
-            Text("Dwayne Johnson")
+            if let photo = person.photo, let photoUrl = URL(string: photo) {
+                AsyncImage(
+                    url: photoUrl,
+                    placeholder: { LoadingIndicator() },
+                    image: {
+                        Image(uiImage: $0)
+                            .resizable()
+                    })
+                .frame(width: width, height: 3 / 2 * width)
+            } else {
+                Color.appSecondary
+                    .overlay(
+                        Image(systemName: "camera")
+                            .font(.system(size: 40))
+                            .foregroundColor(.appSecondary300)
+                    )
+                    .frame(width: width)
+                    .frame(height: 3 / 2 * width)
+            }
+            Text(person.name)
                 .caption2()
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(2)
@@ -130,7 +147,13 @@ struct SearchScreenView: View {
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 30)
         }
-        .frame(maxWidth: width)
+        .frame(maxWidth: width, alignment: .top)
+        .onAppear {
+            if person.id == searchViewModel.actors.last?.id {
+                print("load new")
+                searchViewModel.loadActors()
+            }
+        }
     }
 
     func renderMovie(_ movie: MovieModel, _ geometry: GeometryProxy) -> some View {

@@ -17,7 +17,9 @@ class SearchViewModel: ObservableObject {
     @Published var currentSortOptionIndex: Int?
     @Published var filterCategories = FilterCategory.generateCategories()
     @Published var isLoadingMovies = false
+    @Published var isLoadingActors = false
     @Published var movies = [MovieModel]()
+    @Published var actors = [ActorModel]()
     @Published var query: String = ""
 
     // Sort option
@@ -60,10 +62,17 @@ class SearchViewModel: ObservableObject {
     }
 
     // API
+    var isLoading: Bool {
+        isLoadingMovies || isLoadingActors
+    }
+    
     func onChangeSearchOptions() {
         movies = []
+        actors = []
         paginator.reset(forKey: .movieList)
+        paginator.reset(forKey: .actorList)
         loadMovies()
+        loadActors()
     }
     
     func loadMovies() {
@@ -72,10 +81,21 @@ class SearchViewModel: ObservableObject {
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
         let genres = filterCategories.filter { $0.isChoosed }.map { $0.searchKey }
         // TODO: error handling
-        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (_, res) in
+        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
             DispatchQueue.main.async {
                 self.movies += res
                 self.isLoadingMovies = false
+            }
+        }
+    }
+    
+    func loadActors() {
+        if isLoadingActors || query.count < minLengthOfQueryToSearch { return }
+        isLoadingActors = true
+        networkManager.loadActors(query: query.lowercased()) { (_, res) in
+            DispatchQueue.main.async {
+                self.actors += res
+                self.isLoadingActors = false
             }
         }
     }

@@ -184,7 +184,7 @@ struct MovieScreenView: View {
                             .bodyText5()
                             .foregroundColor(.appTextWhite)
                             .padding(15)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color.appSecondary)
                     }
                 }
