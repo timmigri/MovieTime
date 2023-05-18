@@ -121,13 +121,11 @@ struct SearchScreenView: View {
         let width = (geometry.size.width) / 4
         return VStack {
             if let photo = person.photo, let photoUrl = URL(string: photo) {
-                AsyncImage(
-                    url: photoUrl,
-                    placeholder: { LoadingIndicator() },
-                    image: {
-                        Image(uiImage: $0)
-                            .resizable()
-                    })
+                AsyncImage(url: photoUrl) { image in
+                    image.resizable()
+                } placeholder: {
+                    LoadingIndicator()
+                }
                 .frame(width: width, height: 3 / 2 * width)
             } else {
                 Color.appSecondary
@@ -162,13 +160,11 @@ struct SearchScreenView: View {
         )) {
             VStack(alignment: .leading) {
                 if let movieUrl = URL(string: movie.posterUrl) {
-                    AsyncImage(
-                        url: movieUrl,
-                        placeholder: { LoadingIndicator() },
-                        image: {
-                            Image(uiImage: $0)
-                                .resizable()
-                        })
+                    AsyncImage(url: movieUrl) { image in
+                        image.resizable()
+                    } placeholder: {
+                        LoadingIndicator()
+                    }
                     .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
                 }
                 Text(movie.name)

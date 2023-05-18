@@ -37,14 +37,11 @@ struct MovieScreenView: View {
                     ScrollView {
                         VStack(alignment: .leading) {
                             ZStack(alignment: .bottomLeading) {
-                                AsyncImage(
-                                    url: URL(string: movie.posterUrl)!,
-                                    placeholder: { Text("12") },
-                                    image: {
-                                        Image(uiImage: $0)
-                                            .resizable()
-                                    })
-    
+                                AsyncImage(url: URL(string: movie.posterUrl)!) { image in
+                                    image.resizable()
+                                } placeholder: {
+                                    LoadingIndicator()
+                                }
                                 VStack(alignment: .leading) {
                                     Text(movie.name)
                                         .heading3()
