@@ -39,9 +39,7 @@ struct MovieScreenView: View {
                             ZStack(alignment: .bottomLeading) {
                                 AsyncImage(url: URL(string: movie.posterUrl)!) { image in
                                     image.resizable()
-                                } placeholder: {
-                                    LoadingIndicator()
-                                }
+                                } placeholder: { }
                                 VStack(alignment: .leading) {
                                     Text(movie.name)
                                         .heading3()
@@ -78,9 +76,13 @@ struct MovieScreenView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .frame(height: geometry.size.height * 0.6, alignment: .bottom)
-                            descriptionView
-                            ratingView
-                            factsView
+                            Group {
+                                descriptionView
+                                renderActorsView(geometry)
+                                ratingView
+                                factsView
+                            }
+                            .padding(.horizontal)
                             
                         }
                         .background(
@@ -116,7 +118,6 @@ struct MovieScreenView: View {
                                     .fill(Color.appBackground)
                                     .frame(width: 45, height: 45)
                             )
-                        
                     }
                     .padding(.horizontal, 20)
                 } else {
@@ -133,13 +134,9 @@ struct MovieScreenView: View {
             viewModel.loadMovie()
         }
     }
-    
+
     var ratingView: some View {
-        VStack(alignment: .leading) {
-            Text("Rate")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 8)
+        SectionView(title: "Rate", paddingTop: 5, innerContent: AnyView(
             HStack(spacing: 3) {
                 Image(systemName: "star.fill")
                     .foregroundColor(.appPrimary)
@@ -148,34 +145,36 @@ struct MovieScreenView: View {
                     .foregroundColor(.appPrimary)
                     .font(.system(size: 32))
             }
-        }
-        .padding(.horizontal)
-        .padding(.top, 20)
+        ))
     }
-    
+
     var descriptionView: some View {
-        VStack(alignment: .leading) {
-            Text("Story")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 8)
+        SectionView(title: "Story", innerContent: AnyView(
             Text(viewModel.movie!.description)
                 .bodyText3()
                 .foregroundColor(.appTextBlack)
-        }
-        .padding(.horizontal)
-        .padding(.top, 20)
+        ))
+    }
+
+    func renderActorsView(_ geometry: GeometryProxy) -> some View {
+        return SectionView(title: "Actors", innerContent: AnyView(
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top, spacing: 10) {
+                    ForEach(viewModel.movie!.actors) { person in
+                        PersonCard(
+                            person: person,
+                            width: geometry.size.width / 4
+                        )
+                    }
+                }
+            }
+        ))
     }
     
     var factsView: some View {
         Group {
             if let facts = viewModel.movie!.facts, facts.count > 0 {
-                VStack(alignment: .leading) {
-                    Text("Facts")
-                        .bodyText2()
-                        .foregroundColor(.appTextWhite)
-                        .padding(.bottom, 8)
-                    
+                SectionView(title: "Facts", innerContent: AnyView(
                     ForEach(facts.indices) { index in
                         Text(facts[index])
                             .bodyText5()
@@ -184,9 +183,25 @@ struct MovieScreenView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color.appSecondary)
                     }
-                }
-                .padding()
+                ))
             }
         }
+    }
+}
+
+private struct SectionView: View {
+    let title: String
+    var paddingTop: CGFloat = 20.0
+    let innerContent: AnyView
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .bodyText2()
+                .foregroundColor(.appTextWhite)
+                .padding(.bottom, 8)
+            innerContent
+        }
+        .padding(.top, paddingTop)
     }
 }

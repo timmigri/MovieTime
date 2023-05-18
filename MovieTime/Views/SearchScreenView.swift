@@ -88,12 +88,21 @@ struct SearchScreenView: View {
     func actorsSection(_ geometry: GeometryProxy) -> some View {
         VStack(alignment: .leading) {
             Text("Actors")
-                .bodyText4()
+                .bodyText2()
                 .foregroundColor(.appTextWhite)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .center, spacing: 10) {
+                LazyHStack(alignment: .top, spacing: 10) {
                     ForEach(searchViewModel.actors) { person in
-                        testActor(person, geometry)
+                        PersonCard(
+                            person: person,
+                            width: geometry.size.width / 4
+                        )
+                        .onAppear {
+                            if person.id == searchViewModel.actors.last?.id {
+                                print("load new")
+                                searchViewModel.loadActors()
+                            }
+                        }
                     }
                     if searchViewModel.isLoadingActors {
                         LoadingIndicator()
@@ -102,54 +111,18 @@ struct SearchScreenView: View {
 
             }
         }
+        .padding(.bottom, 10)
     }
 
     func moviesSection(_ geometry: GeometryProxy) -> some View {
         return VStack(alignment: .leading) {
             Text("Movies & Series")
-                .bodyText4()
+                .bodyText2()
                 .foregroundColor(.appTextWhite)
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 ForEach(searchViewModel.movies) { movie in
                     renderMovie(movie, geometry)
                 }
-            }
-        }
-    }
-
-    func testActor(_ person: ActorModel, _ geometry: GeometryProxy) -> some View {
-        let width = (geometry.size.width) / 4
-        return VStack {
-            if let photo = person.photo, let photoUrl = URL(string: photo) {
-                AsyncImage(url: photoUrl) { image in
-                    image.resizable()
-                } placeholder: {
-                    LoadingIndicator()
-                }
-                .frame(width: width, height: 3 / 2 * width)
-            } else {
-                Color.appSecondary
-                    .overlay(
-                        Image(systemName: "camera")
-                            .font(.system(size: 40))
-                            .foregroundColor(.appSecondary300)
-                    )
-                    .frame(width: width)
-                    .frame(height: 3 / 2 * width)
-            }
-            Text(person.name)
-                .caption2()
-                .fixedSize(horizontal: false, vertical: true)
-                .lineLimit(2)
-                .foregroundColor(.appSecondary300)
-                .multilineTextAlignment(.center)
-                .padding(.bottom, 30)
-        }
-        .frame(maxWidth: width, alignment: .top)
-        .onAppear {
-            if person.id == searchViewModel.actors.last?.id {
-                print("load new")
-                searchViewModel.loadActors()
             }
         }
     }

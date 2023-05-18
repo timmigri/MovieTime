@@ -17,6 +17,7 @@ struct MovieDetailModel: Identifiable {
     let genres: [String]
     let posterUrl: String
     let rating: Float
+    let actors: [ActorModel]
 
     private init(rawData: RawMovieDetailModel) {
         self.id = rawData.id
@@ -28,6 +29,9 @@ struct MovieDetailModel: Identifiable {
         self.genres = rawData.genres!.map { $0.name }
         self.posterUrl = rawData.poster!.previewUrl
         self.rating = rawData.rating!.kp
+        self.actors = rawData.persons!.filter { $0.profession == "актеры" && $0.name != nil }.map {
+            ActorModel(id: $0.id, name: $0.name!, photo: $0.photo)
+        }
     }
 
     static func processRawData(_ rawMovie: RawMovieDetailModel) -> MovieDetailModel? {
@@ -38,6 +42,7 @@ struct MovieDetailModel: Identifiable {
         if rawMovie.genres == nil { return nil }
         if rawMovie.poster == nil { return nil }
         if rawMovie.rating == nil { return nil }
+        if rawMovie.persons == nil { return nil }
 
         return MovieDetailModel(rawData: rawMovie)
     }
@@ -67,6 +72,7 @@ struct RawMovieDetailModel: Decodable {
     let genres: [Genre]?
     let rating: Rating?
     let poster: Poster?
+    let persons: [Person]?
 
     struct Poster: Decodable {
         let previewUrl: String
@@ -74,6 +80,13 @@ struct RawMovieDetailModel: Decodable {
 
     struct Rating: Decodable {
         let kp: Float
+    }
+    
+    struct Person: Decodable {
+        let id: Int
+        let name: String?
+        let photo: String?
+        let profession: String?
     }
 
     struct Fact: Decodable {

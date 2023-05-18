@@ -18,6 +18,12 @@ struct ActorModel: Decodable, Identifiable {
         self.photo = rawData.photo
     }
     
+    init(id: Int, name: String, photo: String?) {
+        self.id = id
+        self.name = name
+        self.photo = photo
+    }
+    
     static func processRawData(_ rawData: [RawActorDataModel]) -> [ActorModel] {
         var actors = [ActorModel]()
         for rawActor in rawData {
