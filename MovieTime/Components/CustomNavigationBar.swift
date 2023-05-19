@@ -14,7 +14,7 @@ struct CustomNavigationBar: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            Image("ArrowBackIcon")
+            Image("Icons/ArrowBack")
                 .onTapGesture {
                     onTapGesture()
                     self.presentationMode.wrappedValue.dismiss()

@@ -14,7 +14,7 @@ struct MovieModel: Identifiable {
     let posterUrl: String
     let rating: Float
 
-    private init(rawData: RawMovieDataModel) {
+    private init(rawData: RawMovieModel) {
         self.id = rawData.id
         self.name = rawData.name!
         self.posterUrl = rawData.poster!.previewUrl
@@ -22,7 +22,7 @@ struct MovieModel: Identifiable {
         self.movieLength = rawData.movieLength!
     }
 
-    static func processRawData(_ rawData: RawMoviesDataModel) -> [MovieModel] {
+    static func processRawData(_ rawData: RawMoviesResultModel) -> [MovieModel] {
         var movies = [MovieModel]()
         for rawMovie in rawData.docs {
             if rawMovie.name == nil { continue }
@@ -45,7 +45,7 @@ struct MovieModel: Identifiable {
     }
 }
 
-struct RawMovieDataModel: Decodable {
+struct RawMovieModel: Decodable {
     let id: Int
     let name: String?
     let movieLength: Int?
@@ -61,8 +61,8 @@ struct RawMovieDataModel: Decodable {
     }
 }
 
-struct RawMoviesDataModel: Decodable {
-    let docs: [RawMovieDataModel]
+struct RawMoviesResultModel: Decodable {
+    let docs: [RawMovieModel]
     let pages: Int
     let page: Int
 }

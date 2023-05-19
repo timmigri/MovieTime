@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct ActorModel: Decodable, Identifiable {
+struct PersonModel: Decodable, Identifiable {
     let id: Int
     let name: String
     let photo: String?
 
-    private init(rawData: RawActorDataModel) {
+    private init(rawData: RawPersonModel) {
         self.id = rawData.id
         self.name = rawData.name!
         self.photo = rawData.photo
@@ -24,24 +24,24 @@ struct ActorModel: Decodable, Identifiable {
         self.photo = photo
     }
 
-    static func processRawData(_ rawData: [RawActorDataModel]) -> [ActorModel] {
-        var actors = [ActorModel]()
-        for rawActor in rawData {
-            if rawActor.name == nil || rawActor.name!.count == 0 { continue }
-            actors.append(ActorModel(rawData: rawActor))
+    static func processRawData(_ rawData: [RawPersonModel]) -> [PersonModel] {
+        var persons = [PersonModel]()
+        for rawPersons in rawData {
+            if rawPersons.name == nil || rawPersons.name!.count == 0 { continue }
+            persons.append(PersonModel(rawData: rawPersons))
         }
-        return actors
+        return persons
     }
 }
 
-struct RawActorDataModel: Decodable {
+struct RawPersonModel: Decodable {
     let id: Int
     let name: String?
     let photo: String?
 }
 
-struct RawActorsDataModel: Decodable {
-    let docs: [RawActorDataModel]
+struct RawPersonsResultModel: Decodable {
+    let docs: [RawPersonModel]
     let pages: Int
     let page: Int
 }

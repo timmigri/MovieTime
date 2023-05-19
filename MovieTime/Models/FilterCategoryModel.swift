@@ -7,10 +7,14 @@
 
 import Foundation
 
-struct FilterCategory: Identifiable {
+struct FilterCategoryModel: Identifiable {
     var id: String { name }
     let pictureName: String
     let name: String
     let searchKey: String
     var isChoosed: Bool = false
+
+    var pathToPicture: String {
+        "FilterBackgrounds/" + pictureName
+    }
 }

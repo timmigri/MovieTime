@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FilterScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var searchViewModel = Injection.shared.container.resolve(SearchViewModel.self)!
+    @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -17,22 +17,22 @@ struct FilterScreenView: View {
             VStack {
                 CustomNavigationBar(
                     onTapGesture: {
-                        searchViewModel.onChangeSearchOptions()
+                        viewModel.onChangeSearchOptions()
                     },
                     title: "Фильтры"
                 )
                 ScrollView(.vertical, showsIndicators: false) {
-                    sortKeyRow
-                    filterTextRow
-                    genres
+                    sortKeyRowView
+                    filterTextRowView
+                    genresListView
                 }
                 Spacer()
             }
             .padding()
-            if searchViewModel.showFilterResultsButton {
+            if viewModel.showFilterResultsButton {
                 CustomButton(
                     action: {
-                        searchViewModel.onChangeSearchOptions()
+                        viewModel.onChangeSearchOptions()
                         self.presentationMode.wrappedValue.dismiss()
                     },
                     title: "Show Results"
@@ -43,13 +43,13 @@ struct FilterScreenView: View {
         .navigationBarHidden(true)
     }
 
-    var sortKeyRow: some View {
+    var sortKeyRowView: some View {
         VStack(alignment: .leading) {
             Text("Sort by")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             HStack(spacing: 0) {
-                ForEach(searchViewModel.sortOptions.indices, id: \.self) { index in
+                ForEach(viewModel.sortOptions.indices, id: \.self) { index in
                     renderSortOption(index)
                 }
                 Spacer()
@@ -59,13 +59,13 @@ struct FilterScreenView: View {
     }
 
     func renderSortOption(_ index: Int) -> some View {
-        let isActive = searchViewModel.isSortOptionActive(index)
+        let isActive = viewModel.isSortOptionActive(index)
         let backgroundColor: Color = isActive ? .appPrimary : .appPrimary200
         let textColor: Color = isActive ? .appTextWhite : .appPrimary
         let leftCornerRadius: CGFloat = index == 0 ? 10 : 0
-        let rightCornerRadius: CGFloat = index == searchViewModel.sortOptions.count - 1 ? 10 : 0
+        let rightCornerRadius: CGFloat = index == viewModel.sortOptions.count - 1 ? 10 : 0
         return backgroundColor.overlay(
-            Text(searchViewModel.sortOptions[index].0)
+            Text(viewModel.sortOptions[index].0)
                 .bodyText5()
                 .foregroundColor(textColor)
         )
@@ -75,49 +75,51 @@ struct FilterScreenView: View {
         .cornerRadius(rightCornerRadius, corners: .topRight)
         .cornerRadius(rightCornerRadius, corners: .bottomRight)
         .onTapGesture {
-            searchViewModel.onChooseSortOption(index)
+            viewModel.onChooseSortOption(index)
         }
     }
 
-    var filterTextRow: some View {
+    var filterTextRowView: some View {
         HStack {
             Text("Choose genre")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
-            if searchViewModel.countChoosedFilterCategories > 0 {
-                Button("Reset") { searchViewModel.resetFilterCategories() }
+            if viewModel.countChoosedFilterCategories > 0 {
+                Button("Reset") { viewModel.resetFilterCategories() }
                     .foregroundColor(.appPrimary)
             }
         }
         .padding(.bottom, 20)
     }
 
-    var genres: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-            ForEach(searchViewModel.filterCategories) { category in
-                Image(category.pictureName)
-                    .cornerRadius(8)
-                    .scaleEffect(1.1)
-                    .onTapGesture {
-                        searchViewModel.onChooseFilterCategory(category.id)
-                    }
-                    .overlay(
-                        HStack(spacing: 10) {
-                            let textColor: Color = searchViewModel.getFilterCategoryTextColor(category)
-                            CustomCheckbox(
-                                checked: category.isChoosed,
-                                onCheck: {
-                                    searchViewModel.onChooseFilterCategory(category.id)
-                                }
-                            )
-                            Text(category.name)
-                                .bodyText4()
-                                .foregroundColor(textColor)
-                            Spacer()
-                        }
-                        .padding(.leading, 10)
+    var genresListView: some View {
+        LazyVGrid(
+            columns: [GridItem(.flexible()), GridItem(.flexible())],
+            spacing: 20
+        ) {
+            ForEach(viewModel.filterCategories) { category in
+                HStack(spacing: 10) {
+                    CustomCheckbox(
+                        checked: category.isChoosed,
+                        onCheck: {
+                            viewModel.onChooseFilterCategory(category.id)
+                        },
+                        title: category.name,
+                        isDisabled: !viewModel.canChooseFilterCategory(category)
+                    )
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 23)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    Image(category.pathToPicture)
+                        .resizable()
+                        .cornerRadius(8)
                 )
+                .onTapGesture {
+                    viewModel.onChooseFilterCategory(category.id)
+                }
             }
         }
     }

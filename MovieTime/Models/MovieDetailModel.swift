@@ -17,7 +17,7 @@ struct MovieDetailModel: Identifiable {
     let genres: [String]
     let posterUrl: String
     let rating: Float
-    let actors: [ActorModel]
+    let actors: [PersonModel]
 
     private init(rawData: RawMovieDetailModel) {
         self.id = rawData.id
@@ -32,7 +32,7 @@ struct MovieDetailModel: Identifiable {
         self.posterUrl = rawData.poster!.previewUrl
         self.rating = rawData.rating!.kp
         self.actors = rawData.persons!.filter { $0.profession == "актеры" && $0.name != nil }.map {
-            ActorModel(id: $0.id, name: $0.name!, photo: $0.photo)
+            PersonModel(id: $0.id, name: $0.name!, photo: $0.photo)
         }
     }
 

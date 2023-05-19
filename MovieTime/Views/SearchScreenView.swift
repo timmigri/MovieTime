@@ -16,7 +16,7 @@ struct SearchScreenView: View {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 HStack(spacing: 7) {
-                    Image("SearchIcon")
+                    Image("Icons/Search")
                         .padding(.leading, 10)
                         .padding(.vertical, 10)
                         .animation(.easeInOut, value: 5)
@@ -33,7 +33,7 @@ struct SearchScreenView: View {
                         searchViewModel.onChangeSearchOptions()
                     }
                     NavigationLink(destination: FilterScreenView()) {
-                        Image("FilterIcon")
+                        Image("Icons/Filter")
                             .padding(.leading, 10)
                             .padding(.vertical, 10)
                             .animation(.easeInOut, value: 5)
@@ -59,16 +59,16 @@ struct SearchScreenView: View {
                     }
                     .padding(.top, 32)
                 }
-                if searchViewModel.showSearchPicture && false {
+                if searchViewModel.showSearchPicture {
                     PictureBox(
-                        pictureName: "SearchPicture",
+                        pictureName: "Pictures/Search",
                         headlineText: "Search in MovieTime",
                         bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
                     )
                 }
                 if searchViewModel.showNoResultPicture {
                     PictureBox(
-                        pictureName: "NoResultPicture",
+                        pictureName: "Pictures/NoResult",
                         headlineText: "No result",
                         bodyText: "No results found, Please try other words"
                     )
@@ -92,7 +92,6 @@ struct SearchScreenView: View {
                         )
                         .onAppear {
                             if person.id == searchViewModel.actors.last?.id {
-                                print("load new")
                                 searchViewModel.loadActors()
                             }
                         }
@@ -134,6 +133,7 @@ struct SearchScreenView: View {
                 Text(movie.name)
                     .bodyText3()
                     .foregroundColor(.appTextWhite)
+                    .multilineTextAlignment(.leading)
                 Spacer()
                 HStack {
                     Text(movie.durationString)
@@ -141,7 +141,7 @@ struct SearchScreenView: View {
                         .foregroundColor(.appTextBlack)
                     Spacer()
                     HStack(spacing: 2) {
-                        Image("StarIcon")
+                        Image("Icons/MovieStar")
                         Text(movie.formattedRatingString)
                             .bodyText5()
                             .foregroundColor(.appTextWhite)

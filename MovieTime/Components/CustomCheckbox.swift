@@ -10,15 +10,31 @@ import SwiftUI
 struct CustomCheckbox: View {
     let checked: Bool
     let onCheck: () -> Void
+    var title: String?
+    var isDisabled: Bool = false
+
+    var titleColor: Color {
+        !isDisabled ? .appTextWhite : .appSecondary300
+    }
 
     var body: some View {
-        Image(checked ? "CheckboxCheckedIcon" : "CheckboxUncheckedIcon")
-            .onTapGesture(perform: onCheck)
+        HStack(spacing: 10) {
+            Image(checked ? "Icons/CheckboxActive" : "Icons/Checkbox")
+                .onTapGesture(perform: onCheck)
+            if let title {
+                Text(title)
+                    .bodyText4()
+                    .foregroundColor(titleColor)
+            }
+        }
     }
 }
 
 struct CustomCheckbox_Previews: PreviewProvider {
     static var previews: some View {
-        CustomCheckbox(checked: true, onCheck: { })
+        ZStack {
+            Color.appBackground.ignoresSafeArea()
+            CustomCheckbox(checked: true, onCheck: { }, title: "Hi", isDisabled: true)
+        }
     }
 }

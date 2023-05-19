@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct PersonCard: View {
-    let person: ActorModel
+    let person: PersonModel
     let width: CGFloat
 
     var body: some View {

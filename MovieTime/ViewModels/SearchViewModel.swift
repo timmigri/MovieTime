@@ -15,11 +15,11 @@ class SearchViewModel: ObservableObject {
     @Injected var networkManager: NetworkManager
     @Injected var paginator: Paginator
     @Published var currentSortOptionIndex: Int?
-    @Published var filterCategories = FilterCategory.generateCategories()
+    @Published var filterCategories = FilterCategoryModel.generateCategories()
     @Published var isLoadingMovies = false
     @Published var isLoadingActors = false
     @Published var movies = [MovieModel]()
-    @Published var actors = [ActorModel]()
+    @Published var actors = [PersonModel]()
     @Published var query: String = ""
 
     // Sort option
@@ -42,7 +42,7 @@ class SearchViewModel: ObservableObject {
     // Filter categories
     func onChooseFilterCategory(_ id: String) {
         if let index = filterCategories.firstIndex(where: { $0.id == id }) {
-            if !canChooseFilterCategory(filterCategories[index].isChoosed) { return }
+            if !canChooseFilterCategory(filterCategories[index]) { return }
             filterCategories[index].isChoosed.toggle()
         }
     }
@@ -53,12 +53,8 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    func canChooseFilterCategory(_ isChoosed: Bool) -> Bool {
-        return isChoosed || countChoosedFilterCategories < maxFilterCategories
-    }
-
-    func getFilterCategoryTextColor(_ category: FilterCategory) -> Color {
-        canChooseFilterCategory(category.isChoosed) ? .appTextWhite : .appSecondary300
+    func canChooseFilterCategory(_ category: FilterCategoryModel) -> Bool {
+        return category.isChoosed || countChoosedFilterCategories < maxFilterCategories
     }
 
     var countChoosedFilterCategories: Int {

@@ -20,103 +20,21 @@ struct MovieScreenView: View {
             Color.appBackground.ignoresSafeArea()
             LoadingIndicator(condition: viewModel.isLoadingMovie)
                 .frame(maxHeight: .infinity)
-            if !viewModel.isLoadingMovie && viewModel.movie == nil {
+            if viewModel.showNoResultPicture {
                 VStack {
                     PictureBox(
-                        pictureName: "NoResultPicture",
+                        pictureName: "Pictures/NoResult",
                         headlineText: "No result",
                         bodyText: "No results found, Please try again"
                     )
                 }
             }
-            if !viewModel.isLoadingMovie && viewModel.movie != nil {
-                let movie = viewModel.movie!
-                GeometryReader { geometry in
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            ZStack(alignment: .bottomLeading) {
-                                AsyncImage(url: URL(string: movie.posterUrl)!) { image in
-                                    image.resizable()
-                                } placeholder: { }
-                                VStack(alignment: .leading) {
-                                    Text(movie.name)
-                                        .heading3()
-                                        .foregroundColor(.appTextWhite)
-                                        .padding(.bottom, 3)
-                                    HStack {
-                                        Text(String(movie.year))
-                                            .caption2()
-                                        Circle()
-                                            .fill(Color.appSecondary300)
-                                            .frame(width: 4, height: 4)
-                                        Text(movie.genresString)
-                                            .caption2()
-                                        Circle()
-                                            .fill(Color.appSecondary300)
-                                            .frame(width: 4, height: 4)
-                                        Text(movie.durationString)
-                                            .caption2()
-                                    }
-                                    .foregroundColor(.appSecondary300)
-                                    HStack(spacing: 2) {
-                                        Image("StarIcon")
-                                        Text(movie.formattedRatingString)
-                                            .bodyText5()
-                                            .foregroundColor(.appTextWhite)
-                                    }
-                                }
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 20)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(
-                                    Color.appBackground.opacity(0.75)
-                                )
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .frame(height: geometry.size.height * 0.6, alignment: .bottom)
-                            Group {
-                                descriptionView
-                                renderActorsView(geometry)
-                                ratingView
-                                factsView
-                            }
-                            .padding(.horizontal)
-                        }
-                        .background(
-                            GeometryReader { innerGeometry in
-                                let offset = innerGeometry.frame(in: .named("scroll")).minY
-                                Color.clear.preference(key: ScrollViewOffsetPreferenceKey.self, value: -offset)
-                            }
-                        )
-                    }
-                    .ignoresSafeArea()
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
-                        viewModel.onUpdateScrollPosition(value)
-                    }
-                }
+            if viewModel.showMovieContent {
+                movieContentView
             }
             GeometryReader { geometry in
                 if viewModel.showAdvancedTopBar(geometry.size.height) {
-                    HStack {
-                        Image("ArrowBackIcon")
-                            .background(
-                                Circle()
-                                    .fill(Color.appBackground)
-                                    .frame(width: 45, height: 45)
-                            )
-                            .onTapGesture {
-                                self.presentationMode.wrappedValue.dismiss()
-                            }
-                        Spacer()
-                        Image("BookmarkIcon")
-                            .background(
-                                Circle()
-                                    .fill(Color.appBackground)
-                                    .frame(width: 45, height: 45)
-                            )
-                    }
-                    .padding(.horizontal, 20)
+                    advancedTopBarView
                 } else {
                     CustomNavigationBar(
                         onTapGesture: { },
@@ -127,9 +45,102 @@ struct MovieScreenView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear {
-            viewModel.loadMovie()
+        .onAppear(perform: viewModel.loadMovie)
+    }
+
+    var movieContentView: some View {
+        return GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .leading) {
+                    topImageBlockView
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(height: geometry.size.height * 0.6, alignment: .bottom)
+                    Group {
+                        descriptionView
+                        renderActorsView(geometry)
+                        ratingView
+                        factsView
+                    }
+                    .padding(.horizontal)
+                }
+                .background(
+                    GeometryReader { innerGeometry in
+                        let offset = innerGeometry.frame(in: .named("scroll")).minY
+                        Color.clear.preference(key: ScrollViewOffsetPreferenceKey.self, value: -offset)
+                    }
+                )
+            }
+            .ignoresSafeArea()
+            .coordinateSpace(name: "scroll")
+            .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                viewModel.onUpdateScrollPosition(value)
+            }
         }
+    }
+
+    var topImageBlockView: some View {
+        let movie = viewModel.movie!
+
+        return ZStack(alignment: .bottomLeading) {
+            AsyncImage(url: URL(string: movie.posterUrl)!) { image in
+                image.resizable()
+            } placeholder: { }
+            VStack(alignment: .leading) {
+                Text(movie.name)
+                    .heading3()
+                    .foregroundColor(.appTextWhite)
+                    .padding(.bottom, 3)
+                HStack {
+                    Text(String(movie.year))
+                        .caption2()
+                    Circle()
+                        .fill(Color.appSecondary300)
+                        .frame(width: 4, height: 4)
+                    Text(movie.genresString)
+                        .caption2()
+                    Circle()
+                        .fill(Color.appSecondary300)
+                        .frame(width: 4, height: 4)
+                    Text(movie.durationString)
+                        .caption2()
+                }
+                .foregroundColor(.appSecondary300)
+                HStack(spacing: 2) {
+                    Image("Icons/MovieStar")
+                    Text(movie.formattedRatingString)
+                        .bodyText5()
+                        .foregroundColor(.appTextWhite)
+                }
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                Color.appBackground.opacity(0.75)
+            )
+        }
+    }
+
+    var advancedTopBarView: some View {
+        HStack {
+            Image("Icons/ArrowBack")
+                .background(
+                    Circle()
+                        .fill(Color.appBackground)
+                        .frame(width: 45, height: 45)
+                )
+                .onTapGesture {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            Spacer()
+            Image("Icons/Bookmark")
+                .background(
+                    Circle()
+                        .fill(Color.appBackground)
+                        .frame(width: 45, height: 45)
+                )
+        }
+        .padding(.horizontal, 20)
     }
 
     var ratingView: some View {

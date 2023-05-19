@@ -57,7 +57,7 @@ class NetworkManager {
             }
 
             do {
-                let moviesData = try self.decoder.decode(RawMoviesDataModel.self, from: data)
+                let moviesData = try self.decoder.decode(RawMoviesResultModel.self, from: data)
                 self.paginator.setPage(forKey: .movieList, page: moviesData.page, pages: moviesData.pages)
                 completion(MovieModel.processRawData(moviesData))
             } catch {
@@ -86,7 +86,7 @@ class NetworkManager {
     }
 
     // TODO: error handling
-    func loadActors(query: String, completion: @escaping (Int, [ActorModel]) -> Void) {
+    func loadActors(query: String, completion: @escaping (Int, [PersonModel]) -> Void) {
         print("load actors")
         let nextPage = paginator.getNextPage(forKey: .actorList)
         if nextPage == nil { return }
@@ -102,9 +102,9 @@ class NetworkManager {
             guard let data else { return }
             print(data)
             do {
-                let actorsData = try self.decoder.decode(RawActorsDataModel.self, from: data)
+                let actorsData = try self.decoder.decode(RawPersonsResultModel.self, from: data)
                 self.paginator.setPage(forKey: .actorList, page: actorsData.page, pages: actorsData.pages)
-                completion(200, ActorModel.processRawData(actorsData.docs))
+                completion(200, PersonModel.processRawData(actorsData.docs))
             } catch {
                 print("\(error)")
             }

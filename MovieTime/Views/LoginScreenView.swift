@@ -13,7 +13,7 @@ struct LoginScreenView: View {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 PictureBox(
-                    pictureName: "LoginIcon",
+                    pictureName: "Pictures/Login",
                     headlineText: "MovieTime Login",
                     bodyText: "Login to your account to know everything about movie world"
                 )

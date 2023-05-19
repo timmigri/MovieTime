@@ -17,13 +17,22 @@ class MovieDetailViewModel: ObservableObject {
     @Injected var networkManager: NetworkManager
     let defaults = UserDefaults.standard
 
-    func showAdvancedTopBar(_ screenHeight: CGFloat) -> Bool {
-        return movie != nil && scrollViewOffset < screenHeight * 0.6
-    }
-
     init(id: Int) {
         self.id = id
         self.isLoadingMovie = false
+    }
+
+    // UI Conditions
+    func showAdvancedTopBar(_ screenHeight: CGFloat) -> Bool {
+        movie != nil && scrollViewOffset < screenHeight * 0.6
+    }
+
+    var showMovieContent: Bool {
+        !isLoadingMovie && movie != nil
+    }
+
+    var showNoResultPicture: Bool {
+        !isLoadingMovie && movie == nil
     }
 
     func loadMovie() {

@@ -21,8 +21,8 @@ struct MainScreenView: View {
             SearchScreenView()
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 1 ? Constants.searchIcon : Constants.searchActiveIcon)
-                        Text(Constants.searchText)
+                        Image(selectedTabId != 1 ? "Icons/Search" : "Icons/SearchActive")
+                        Text("Search")
                     }
                 }
                 .tag(1)
@@ -31,22 +31,13 @@ struct MainScreenView: View {
             )
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 2 ? Constants.bookmarkIcon : Constants.bookmarkActiveIcon)
-                        Text(Constants.bookmarkText)
+                        Image(selectedTabId != 2 ? "Icons/Bookmark" : "Icons/BookmarkActive")
+                        Text("Bookmarks")
                     }
                 }
                 .tag(2)
         }
         .accentColor(.appPrimary)
-    }
-
-    private struct Constants {
-        static let searchText = "Search"
-        static let bookmarkText = "Bookmarks"
-        static let searchIcon = "SearchIcon"
-        static let searchActiveIcon = "SearchActiveIcon"
-        static let bookmarkIcon = "BookmarkIcon"
-        static let bookmarkActiveIcon = "BookmarkActiveIcon"
     }
 }
 
