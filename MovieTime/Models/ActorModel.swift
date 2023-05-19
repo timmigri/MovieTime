@@ -11,23 +11,23 @@ struct ActorModel: Decodable, Identifiable {
     let id: Int
     let name: String
     let photo: String?
-    
+
     private init(rawData: RawActorDataModel) {
         self.id = rawData.id
         self.name = rawData.name!
         self.photo = rawData.photo
     }
-    
+
     init(id: Int, name: String, photo: String?) {
         self.id = id
         self.name = name
         self.photo = photo
     }
-    
+
     static func processRawData(_ rawData: [RawActorDataModel]) -> [ActorModel] {
         var actors = [ActorModel]()
         for rawActor in rawData {
-            if (rawActor.name == nil || rawActor.name!.count == 0) { continue }
+            if rawActor.name == nil || rawActor.name!.count == 0 { continue }
             actors.append(ActorModel(rawData: rawActor))
         }
         return actors

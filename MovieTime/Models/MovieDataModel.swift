@@ -39,7 +39,7 @@ struct MovieModel: Identifiable {
         let minutesString = String(movieLength % 60) + "м"
         return hoursString + minutesString
     }
-    
+
     var formattedRatingString: String {
         String(format: "%.1f", rating)
     }
@@ -51,13 +51,13 @@ struct RawMovieDataModel: Decodable {
     let movieLength: Int?
     let rating: Rating?
     let poster: Poster?
-    
+
     struct Poster: Decodable {
         let previewUrl: String
     }
-    
+
     struct Rating: Decodable {
-        let kp: Float
+        let kp: Float // swiftlint:disable:this identifier_name
     }
 }
 

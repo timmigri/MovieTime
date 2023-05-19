@@ -11,7 +11,7 @@ struct CustomNavigationBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     let onTapGesture: () -> Void
     let title: String?
-    
+
     var body: some View {
         ZStack(alignment: .leading) {
             Image("ArrowBackIcon")

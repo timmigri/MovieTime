@@ -11,7 +11,6 @@ struct SearchScreenView: View {
     @State private var searchFieldFocused = false
     @ObservedObject var searchViewModel = Injection.shared.container.resolve(SearchViewModel.self)!
 
-
     var body: some View {
         ZStack(alignment: .top) {
             Color.appBackground.ignoresSafeArea()
@@ -47,33 +46,27 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                if (searchViewModel.showMoviesSection || true) {
+                if searchViewModel.showMoviesSection || true {
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
                                 actorsSection(geometry)
                                 moviesSection(geometry)
-                                if (searchViewModel.isLoadingMovies) {
-                                    LoadingIndicator()
-                                        .padding(.top, 20)
-                                }
+                                LoadingIndicator(condition: searchViewModel.isLoadingMovies)
+                                    .padding(.top, 20)
                             }
                         }
-                        
                     }
                     .padding(.top, 32)
                 }
-                
-                
-                if (searchViewModel.showSearchPicture && false) {
+                if searchViewModel.showSearchPicture && false {
                     PictureBox(
                         pictureName: "SearchPicture",
                         headlineText: "Search in MovieTime",
                         bodyText: "By typing in search box, MovieTime search in movies, series and actors then show you the best results."
                     )
                 }
-                
-                if (searchViewModel.showNoResultPicture) {
+                if searchViewModel.showNoResultPicture {
                     PictureBox(
                         pictureName: "NoResultPicture",
                         headlineText: "No result",
@@ -104,9 +97,7 @@ struct SearchScreenView: View {
                             }
                         }
                     }
-                    if searchViewModel.isLoadingActors {
-                        LoadingIndicator()
-                    }
+                    LoadingIndicator(condition: searchViewModel.isLoadingActors)
                 }
 
             }

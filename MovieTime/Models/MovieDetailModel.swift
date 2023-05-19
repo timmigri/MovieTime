@@ -25,7 +25,9 @@ struct MovieDetailModel: Identifiable {
         self.year = rawData.year!
         self.movieLength = rawData.movieLength!
         self.description = rawData.description!
-        self.facts = Array(rawData.facts?.filter { !$0.spoiler && !$0.value.contains("<a href") }.map{ $0.value }.prefix(5) ?? [])
+        self.facts = Array(rawData.facts?.filter {
+            !$0.spoiler && !$0.value.contains("<a href")
+        }.map { $0.value }.prefix(5) ?? [])
         self.genres = rawData.genres!.map { $0.name }
         self.posterUrl = rawData.poster!.previewUrl
         self.rating = rawData.rating!.kp
@@ -56,7 +58,7 @@ struct MovieDetailModel: Identifiable {
     var formattedRatingString: String {
         String(format: "%.1f", rating)
     }
-    
+
     var genresString: String {
         genres.prefix(3).joined(separator: ", ")
     }
@@ -79,9 +81,9 @@ struct RawMovieDetailModel: Decodable {
     }
 
     struct Rating: Decodable {
-        let kp: Float
+        let kp: Float // swiftlint:disable:this identifier_name
     }
-    
+
     struct Person: Decodable {
         let id: Int
         let name: String?

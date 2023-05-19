@@ -85,7 +85,7 @@ struct FilterScreenView: View {
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
-            if (searchViewModel.countChoosedFilterCategories > 0) {
+            if searchViewModel.countChoosedFilterCategories > 0 {
                 Button("Reset") { searchViewModel.resetFilterCategories() }
                     .foregroundColor(.appPrimary)
             }
@@ -104,10 +104,16 @@ struct FilterScreenView: View {
                     }
                     .overlay(
                         HStack(spacing: 10) {
-                            CustomCheckbox(checked: category.isChoosed, onCheck: { searchViewModel.onChooseFilterCategory(category.id) })
+                            let textColor: Color = searchViewModel.getFilterCategoryTextColor(category)
+                            CustomCheckbox(
+                                checked: category.isChoosed,
+                                onCheck: {
+                                    searchViewModel.onChooseFilterCategory(category.id)
+                                }
+                            )
                             Text(category.name)
                                 .bodyText4()
-                                .foregroundColor(searchViewModel.canChooseFilterCategory(category.isChoosed) ? .appTextWhite : .appSecondary300)
+                                .foregroundColor(textColor)
                             Spacer()
                         }
                         .padding(.leading, 10)

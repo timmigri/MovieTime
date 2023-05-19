@@ -18,11 +18,9 @@ struct MovieScreenView: View {
     var body: some View {
         ZStack(alignment: .top) {
             Color.appBackground.ignoresSafeArea()
-            if (viewModel.isLoadingMovie) {
-                LoadingIndicator()
-                    .frame(maxHeight: .infinity)
-            }
-            if (!viewModel.isLoadingMovie && viewModel.movie == nil) {
+            LoadingIndicator(condition: viewModel.isLoadingMovie)
+                .frame(maxHeight: .infinity)
+            if !viewModel.isLoadingMovie && viewModel.movie == nil {
                 VStack {
                     PictureBox(
                         pictureName: "NoResultPicture",
@@ -83,7 +81,6 @@ struct MovieScreenView: View {
                                 factsView
                             }
                             .padding(.horizontal)
-                            
                         }
                         .background(
                             GeometryReader { innerGeometry in
@@ -100,7 +97,7 @@ struct MovieScreenView: View {
                 }
             }
             GeometryReader { geometry in
-                if (viewModel.showAdvancedTopBar(geometry.size.height)) {
+                if viewModel.showAdvancedTopBar(geometry.size.height) {
                     HStack {
                         Image("ArrowBackIcon")
                             .background(
@@ -166,12 +163,12 @@ struct MovieScreenView: View {
             }
         ))
     }
-    
+
     var factsView: some View {
         Group {
             if let facts = viewModel.movie!.facts, facts.count > 0 {
                 SectionView(title: "Facts", innerContent: AnyView(
-                    ForEach(facts.indices) { index in
+                    ForEach(facts.indices, id: \.self) { index in
                         Text(facts[index])
                             .bodyText5()
                             .foregroundColor(.appTextWhite)

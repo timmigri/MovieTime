@@ -11,7 +11,7 @@ import SwiftUI
 struct PersonCard: View {
     let person: ActorModel
     let width: CGFloat
-    
+
     var body: some View {
         VStack {
             if let photo = person.photo, let photoUrl = URL(string: photo) {

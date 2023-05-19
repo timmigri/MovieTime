@@ -17,7 +17,7 @@ struct RatingStars: View {
         }
         return "star"
     }
-    
+
     func isSelectedValue(forValue value: Int) -> Bool {
         if let rating {
             return rating == value
@@ -29,7 +29,6 @@ struct RatingStars: View {
         HStack(spacing: 5) {
             ForEach(1..<11) { value in
                 VStack {
-                    
                     Image(systemName: getImageName(forValue: value))
                         .foregroundColor(.appPrimary)
                         .font(.system(size: 20))
@@ -48,12 +47,3 @@ struct RatingStars: View {
         }
     }
 }
-
-//struct RatingStars_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ZStack {
-//            Color.appBackground.ignoresSafeArea()
-//            RatingStars(rating: 5)
-//        }
-//    }
-//}

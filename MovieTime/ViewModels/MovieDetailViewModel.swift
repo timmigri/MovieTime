@@ -39,16 +39,16 @@ class MovieDetailViewModel: ObservableObject {
             }
         }
     }
-    
+
     func onUpdateScrollPosition(_ value: CGFloat) {
         scrollViewOffset = value
     }
-    
+
     func getKeyForUserDefaults() -> String? {
         if movie == nil { return nil }
         return "movie_rating_" + String(movie!.id)
     }
-    
+
     func onChangeRating(value: Int?) {
         userRating = value
         if let key = getKeyForUserDefaults() {

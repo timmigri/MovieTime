@@ -35,6 +35,12 @@ class NetworkManager {
         queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
         queryItems.append(URLQueryItem(name: "name", value: query))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "1"))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "2"))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "3"))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "4"))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "5"))
+//        queryItems.append(URLQueryItem(name: "typeNumber", value: "6"))
         if let sortField {
             queryItems.append(URLQueryItem(name: "sortField", value: sortField))
         }
@@ -44,7 +50,7 @@ class NetworkManager {
         components.queryItems = queryItems
 
         let request = makeURLRequestObject(url: components.url!)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data else {
                 completion([])
                 return
@@ -78,7 +84,7 @@ class NetworkManager {
         }
         task.resume()
     }
-    
+
     // TODO: error handling
     func loadActors(query: String, completion: @escaping (Int, [ActorModel]) -> Void) {
         print("load actors")
@@ -90,9 +96,9 @@ class NetworkManager {
         queryItems.append(URLQueryItem(name: "limit", value: "10"))
         queryItems.append(URLQueryItem(name: "query", value: query))
         components.queryItems = queryItems
-        
+
         let request = makeURLRequestObject(url: components.url!)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data else { return }
             print(data)
             do {

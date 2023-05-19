@@ -57,6 +57,10 @@ class SearchViewModel: ObservableObject {
         return isChoosed || countChoosedFilterCategories < maxFilterCategories
     }
 
+    func getFilterCategoryTextColor(_ category: FilterCategory) -> Color {
+        canChooseFilterCategory(category.isChoosed) ? .appTextWhite : .appSecondary300
+    }
+
     var countChoosedFilterCategories: Int {
         filterCategories.filter { $0.isChoosed }.count
     }
@@ -65,7 +69,7 @@ class SearchViewModel: ObservableObject {
     var isLoading: Bool {
         isLoadingMovies || isLoadingActors
     }
-    
+
     func onChangeSearchOptions() {
         movies = []
         actors = []
@@ -74,7 +78,7 @@ class SearchViewModel: ObservableObject {
         loadMovies()
         loadActors()
     }
-    
+
     func loadMovies() {
         if isLoadingMovies || query.count < minLengthOfQueryToSearch { return }
         isLoadingMovies = true
@@ -88,7 +92,7 @@ class SearchViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadActors() {
         if isLoadingActors || query.count < minLengthOfQueryToSearch { return }
         isLoadingActors = true
@@ -99,26 +103,26 @@ class SearchViewModel: ObservableObject {
             }
         }
     }
-    
+
     var haveMoreMovies: Bool {
         return self.paginator.getNextPage(forKey: .movieList) != nil
     }
-    
+
     var showMoviesSection: Bool {
         return movies.count > 0 || isLoadingMovies
     }
-    
+
     var showLoadingIndicator: Bool {
         return (movies.count > 0 || movies.count == 0 && query.count >= minLengthOfQueryToSearch) && haveMoreMovies
     }
-    
+
     var showNoResultPicture: Bool {
-        if (movies.count > 0) { return false }
+        if movies.count > 0 { return false }
         return !isLoadingMovies && query.count >= minLengthOfQueryToSearch
     }
-    
+
     var showSearchPicture: Bool {
-        if (movies.count > 0) { return false }
+        if movies.count > 0 { return false }
         return !isLoadingMovies && query.count < minLengthOfQueryToSearch
     }
 }
