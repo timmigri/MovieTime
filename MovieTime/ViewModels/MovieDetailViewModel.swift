@@ -36,7 +36,6 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     func loadMovie() {
-        print("Load movie: \(id)")
         isLoadingMovie = true
         networkManager.loadMovie(id: id) { res in
             DispatchQueue.main.async {

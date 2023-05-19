@@ -9,7 +9,8 @@ import Foundation
 
 struct MovieModel: Identifiable {
     let id: Int
-    let movieLength: Int
+    let year: Int?
+    let movieLength: Int?
     let name: String
     let posterUrl: String
     let rating: Float
@@ -19,7 +20,8 @@ struct MovieModel: Identifiable {
         self.name = rawData.name!
         self.posterUrl = rawData.poster!.previewUrl
         self.rating = rawData.rating!.kp
-        self.movieLength = rawData.movieLength!
+        self.movieLength = rawData.movieLength
+        self.year = rawData.year
     }
 
     static func processRawData(_ rawData: RawMoviesResultModel) -> [MovieModel] {
@@ -28,16 +30,18 @@ struct MovieModel: Identifiable {
             if rawMovie.name == nil { continue }
             if rawMovie.poster == nil { continue }
             if rawMovie.rating == nil { continue }
-            if rawMovie.movieLength == nil { continue }
             movies.append(MovieModel(rawData: rawMovie))
         }
         return movies
     }
 
-    var durationString: String {
-        let hoursString = movieLength >= 60 ? String(movieLength / 60) + "ч " : ""
-        let minutesString = String(movieLength % 60) + "м"
-        return hoursString + minutesString
+    var durationString: String? {
+        if let movieLength {
+            let hoursString = movieLength >= 60 ? String(movieLength / 60) + " ч " : ""
+            let minutesString = String(movieLength % 60) + " м"
+            return hoursString + minutesString
+        }
+        return year != nil ? String(year!) + " г" : nil
     }
 
     var formattedRatingString: String {
@@ -47,6 +51,7 @@ struct MovieModel: Identifiable {
 
 struct RawMovieModel: Decodable {
     let id: Int
+    let year: Int?
     let name: String?
     let movieLength: Int?
     let rating: Rating?

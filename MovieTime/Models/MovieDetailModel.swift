@@ -11,7 +11,7 @@ struct MovieDetailModel: Identifiable {
     let id: Int
     let name: String
     let year: Int
-    let movieLength: Int
+    let movieLength: Int?
     let description: String
     let facts: [String]?
     let genres: [String]
@@ -23,7 +23,7 @@ struct MovieDetailModel: Identifiable {
         self.id = rawData.id
         self.name = rawData.name!
         self.year = rawData.year!
-        self.movieLength = rawData.movieLength!
+        self.movieLength = rawData.movieLength
         self.description = rawData.description!
         self.facts = Array(rawData.facts?.filter {
             !$0.spoiler && !$0.value.contains("<a href")
@@ -39,7 +39,6 @@ struct MovieDetailModel: Identifiable {
     static func processRawData(_ rawMovie: RawMovieDetailModel) -> MovieDetailModel? {
         if rawMovie.name == nil { return nil }
         if rawMovie.year == nil { return nil }
-        if rawMovie.movieLength == nil { return nil }
         if rawMovie.description == nil { return nil }
         if rawMovie.genres == nil { return nil }
         if rawMovie.poster == nil { return nil }
@@ -49,10 +48,13 @@ struct MovieDetailModel: Identifiable {
         return MovieDetailModel(rawData: rawMovie)
     }
 
-    var durationString: String {
-        let hoursString = movieLength >= 60 ? String(movieLength / 60) + "ч " : ""
-        let minutesString = String(movieLength % 60) + "м"
-        return hoursString + minutesString
+    var durationString: String? {
+        if let movieLength {
+            let hoursString = movieLength >= 60 ? String(movieLength / 60) + "ч " : ""
+            let minutesString = String(movieLength % 60) + "м"
+            return hoursString + minutesString
+        }
+        return nil
     }
 
     var formattedRatingString: String {

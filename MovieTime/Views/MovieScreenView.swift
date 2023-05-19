@@ -24,8 +24,8 @@ struct MovieScreenView: View {
                 VStack {
                     PictureBox(
                         pictureName: "Pictures/NoResult",
-                        headlineText: "No result",
-                        bodyText: "No results found, Please try again"
+                        headlineText: "Ничего:(",
+                        bodyText: "Произошла ошибка со стороны сервера, из-за которой не возможно показать фильм."
                     )
                 }
             }
@@ -40,9 +40,9 @@ struct MovieScreenView: View {
                         onTapGesture: { },
                         title: viewModel.movie?.name
                     )
-                    .padding(.horizontal)
                 }
             }
+            .padding(.horizontal)
         }
         .navigationBarHidden(true)
         .onAppear(perform: viewModel.loadMovie)
@@ -62,6 +62,7 @@ struct MovieScreenView: View {
                         factsView
                     }
                     .padding(.horizontal)
+                    .padding(.bottom, 20)
                 }
                 .background(
                     GeometryReader { innerGeometry in
@@ -98,11 +99,13 @@ struct MovieScreenView: View {
                         .frame(width: 4, height: 4)
                     Text(movie.genresString)
                         .caption2()
-                    Circle()
-                        .fill(Color.appSecondary300)
-                        .frame(width: 4, height: 4)
-                    Text(movie.durationString)
-                        .caption2()
+                    if let duration = movie.durationString {
+                        Circle()
+                            .fill(Color.appSecondary300)
+                            .frame(width: 4, height: 4)
+                        Text(duration)
+                            .caption2()
+                    }
                 }
                 .foregroundColor(.appSecondary300)
                 HStack(spacing: 2) {
@@ -129,6 +132,7 @@ struct MovieScreenView: View {
                         .fill(Color.appBackground)
                         .frame(width: 45, height: 45)
                 )
+                .padding(.leading, 8)
                 .onTapGesture {
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -140,7 +144,6 @@ struct MovieScreenView: View {
                         .frame(width: 45, height: 45)
                 )
         }
-        .padding(.horizontal, 20)
     }
 
     var ratingView: some View {

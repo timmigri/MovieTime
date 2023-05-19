@@ -61,11 +61,25 @@ class SearchViewModel: ObservableObject {
         filterCategories.filter { $0.isChoosed }.count
     }
 
-    // API
-    var isLoading: Bool {
-        isLoadingMovies || isLoadingActors
+    var showMoviesSection: Bool {
+        return movies.count > 0 || isLoadingMovies
     }
 
+    var showActorsSection: Bool {
+        return actors.count > 0 || isLoadingActors
+    }
+
+    var showNoResultPicture: Bool {
+        if showMoviesSection || showActorsSection { return false }
+        return query.count >= minLengthOfQueryToSearch
+    }
+
+    var showSearchPicture: Bool {
+        if showMoviesSection || showActorsSection { return false }
+        return query.count < minLengthOfQueryToSearch
+    }
+
+    // API
     func onChangeSearchOptions() {
         movies = []
         actors = []
@@ -98,27 +112,5 @@ class SearchViewModel: ObservableObject {
                 self.isLoadingActors = false
             }
         }
-    }
-
-    var haveMoreMovies: Bool {
-        return self.paginator.getNextPage(forKey: .movieList) != nil
-    }
-
-    var showMoviesSection: Bool {
-        return movies.count > 0 || isLoadingMovies
-    }
-
-    var showLoadingIndicator: Bool {
-        return (movies.count > 0 || movies.count == 0 && query.count >= minLengthOfQueryToSearch) && haveMoreMovies
-    }
-
-    var showNoResultPicture: Bool {
-        if movies.count > 0 { return false }
-        return !isLoadingMovies && query.count >= minLengthOfQueryToSearch
-    }
-
-    var showSearchPicture: Bool {
-        if movies.count > 0 { return false }
-        return !isLoadingMovies && query.count < minLengthOfQueryToSearch
     }
 }
