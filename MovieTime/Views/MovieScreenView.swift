@@ -83,9 +83,13 @@ struct MovieScreenView: View {
         let movie = viewModel.movie!
 
         return ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: URL(string: movie.posterUrl)!) { image in
-                image.resizable()
-            } placeholder: { }
+            AsyncImage(
+                 url: URL(string: movie.posterUrl)!,
+                 placeholder: { },
+                 image: {
+                     Image(uiImage: $0)
+                         .resizable()
+                 })
             VStack(alignment: .leading) {
                 Text(movie.name)
                     .heading3()

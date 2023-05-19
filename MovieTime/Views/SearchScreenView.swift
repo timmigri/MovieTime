@@ -127,12 +127,17 @@ struct SearchScreenView: View {
         )) {
             VStack(alignment: .leading) {
                 if let movieUrl = URL(string: movie.posterUrl) {
-                    AsyncImage(url: movieUrl) { image in
-                        image.resizable()
-                    } placeholder: {
-                        LoadingIndicator()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
+                    AsyncImage(
+                         url: movieUrl,
+                         placeholder: {
+                             LoadingIndicator()
+                             .frame(maxWidth: .infinity, alignment: .center)
+                         },
+                         image: {
+                             Image(uiImage: $0)
+                                 .resizable()
+                         }
+                    )
                     .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
                 }
                 Text(movie.name)

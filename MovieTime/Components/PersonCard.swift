@@ -15,11 +15,13 @@ struct PersonCard: View {
     var body: some View {
         VStack {
             if let photo = person.photo, let photoUrl = URL(string: photo) {
-                AsyncImage(url: photoUrl) { image in
-                    image.resizable()
-                } placeholder: {
-                    LoadingIndicator()
-                }
+                AsyncImage(
+                     url: photoUrl,
+                     placeholder: { LoadingIndicator() },
+                     image: {
+                         Image(uiImage: $0)
+                             .resizable()
+                     })
                 .frame(width: width, height: 3 / 2 * width)
             } else {
                 let ratio: CGFloat = 3 / 2
