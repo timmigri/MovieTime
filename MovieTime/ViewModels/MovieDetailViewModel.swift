@@ -13,8 +13,10 @@ class MovieDetailViewModel: ObservableObject {
     @Published var isLoadingMovie: Bool
     @Published var movie: MovieDetailModel?
     @Published var scrollViewOffset: CGFloat = 0.0
+    @Published var userRating: Int?
     @Injected var networkManager: NetworkManager
-    
+    let defaults = UserDefaults.standard
+
     func showAdvancedTopBar(_ screenHeight: CGFloat) -> Bool {
         return movie != nil && scrollViewOffset < screenHeight * 0.6
     }
@@ -29,14 +31,28 @@ class MovieDetailViewModel: ObservableObject {
         isLoadingMovie = true
         networkManager.loadMovie(id: id) { res in
             DispatchQueue.main.async {
-                print(res)
                 self.movie = res
                 self.isLoadingMovie = false
+                if let key = self.getKeyForUserDefaults() {
+                    self.userRating = self.defaults.integer(forKey: key)
+                }
             }
         }
     }
     
     func onUpdateScrollPosition(_ value: CGFloat) {
         scrollViewOffset = value
+    }
+    
+    func getKeyForUserDefaults() -> String? {
+        if movie == nil { return nil }
+        return "movie_rating_" + String(movie!.id)
+    }
+    
+    func onChangeRating(value: Int?) {
+        userRating = value
+        if let key = getKeyForUserDefaults() {
+            defaults.set(value, forKey: key)
+        }
     }
 }

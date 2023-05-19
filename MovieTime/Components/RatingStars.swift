@@ -8,13 +8,52 @@
 import SwiftUI
 
 struct RatingStars: View {
+    let rating: Int?
+    let onChange: (Int?) -> Void
+
+    func getImageName(forValue value: Int) -> String {
+        if let rating, value <= rating {
+            return "star.fill"
+        }
+        return "star"
+    }
+    
+    func isSelectedValue(forValue value: Int) -> Bool {
+        if let rating {
+            return rating == value
+        }
+        return false
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(spacing: 5) {
+            ForEach(1..<11) { value in
+                VStack {
+                    
+                    Image(systemName: getImageName(forValue: value))
+                        .foregroundColor(.appPrimary)
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            if let rating, value == rating {
+                                onChange(nil)
+                            } else {
+                                onChange(value)
+                            }
+                        }
+                    Text(String(value))
+                        .font(.sf(.regular, size: 10))
+                        .foregroundColor(.appSecondary300)
+                }
+            }
+        }
     }
 }
 
-struct RatingStars_Previews: PreviewProvider {
-    static var previews: some View {
-        RatingStars()
-    }
-}
+//struct RatingStars_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ZStack {
+//            Color.appBackground.ignoresSafeArea()
+//            RatingStars(rating: 5)
+//        }
+//    }
+//}

@@ -137,14 +137,10 @@ struct MovieScreenView: View {
 
     var ratingView: some View {
         SectionView(title: "Rate", paddingTop: 5, innerContent: AnyView(
-            HStack(spacing: 3) {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.appPrimary)
-                    .font(.system(size: 32))
-                Image(systemName: "star")
-                    .foregroundColor(.appPrimary)
-                    .font(.system(size: 32))
-            }
+            RatingStars(
+                rating: viewModel.userRating,
+                onChange: viewModel.onChangeRating
+            )
         ))
     }
 
