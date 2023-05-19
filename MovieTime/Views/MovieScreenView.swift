@@ -50,11 +50,11 @@ struct MovieScreenView: View {
 
     var movieContentView: some View {
         return GeometryReader { geometry in
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading) {
                     topImageBlockView
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(height: geometry.size.height * 0.6, alignment: .bottom)
+                        .frame(height: geometry.size.height * 0.7, alignment: .bottom)
                     Group {
                         descriptionView
                         renderActorsView(geometry)
@@ -85,7 +85,7 @@ struct MovieScreenView: View {
         return ZStack(alignment: .bottomLeading) {
             AsyncImage(
                  url: URL(string: movie.posterUrl)!,
-                 placeholder: { },
+                 placeholder: { LoadingIndicator() },
                  image: {
                      Image(uiImage: $0)
                          .resizable()
@@ -151,7 +151,7 @@ struct MovieScreenView: View {
     }
 
     var ratingView: some View {
-        SectionView(title: "Rate", paddingTop: 5, innerContent: AnyView(
+        SectionView(title: "Ваша оценка", paddingTop: 5, innerContent: AnyView(
             RatingStars(
                 rating: viewModel.userRating,
                 onChange: viewModel.onChangeRating
@@ -160,7 +160,7 @@ struct MovieScreenView: View {
     }
 
     var descriptionView: some View {
-        SectionView(title: "Story", innerContent: AnyView(
+        SectionView(title: "Описание", innerContent: AnyView(
             Text(viewModel.movie!.description)
                 .bodyText3()
                 .foregroundColor(.appTextBlack)
@@ -168,7 +168,7 @@ struct MovieScreenView: View {
     }
 
     func renderActorsView(_ geometry: GeometryProxy) -> some View {
-        return SectionView(title: "Actors", innerContent: AnyView(
+        return SectionView(title: "Актеры", innerContent: AnyView(
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 10) {
                     ForEach(viewModel.movie!.actors) { person in
@@ -185,7 +185,7 @@ struct MovieScreenView: View {
     var factsView: some View {
         Group {
             if let facts = viewModel.movie!.facts, facts.count > 0 {
-                SectionView(title: "Facts", innerContent: AnyView(
+                SectionView(title: "Факты", innerContent: AnyView(
                     ForEach(facts.indices, id: \.self) { index in
                         Text(facts[index])
                             .bodyText5()

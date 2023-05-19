@@ -22,7 +22,7 @@ struct MainScreenView: View {
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 1 ? "Icons/Search" : "Icons/SearchActive")
-                        Text("Search")
+                        Text("Поиск")
                     }
                 }
                 .tag(1)
@@ -32,7 +32,7 @@ struct MainScreenView: View {
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 2 ? "Icons/Bookmark" : "Icons/BookmarkActive")
-                        Text("Bookmarks")
+                        Text("Избранное")
                     }
                 }
                 .tag(2)

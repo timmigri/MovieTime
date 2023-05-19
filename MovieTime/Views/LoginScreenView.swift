@@ -14,10 +14,10 @@ struct LoginScreenView: View {
             VStack {
                 PictureBox(
                     pictureName: "Pictures/Login",
-                    headlineText: "MovieTime Login",
-                    bodyText: "Login to your account to know everything about movie world"
+                    headlineText: "Вход в MovieTime",
+                    bodyText: "Войдите в MovieTime, чтобы узнать много нового о мире фильмов и сериалов."
                 )
-                CustomButton(action: { }, title: "Login with")
+                CustomButton(action: { }, title: "Войти с помощью")
             }
             .padding()
         }

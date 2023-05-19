@@ -35,7 +35,7 @@ struct FilterScreenView: View {
                         viewModel.onChangeSearchOptions()
                         self.presentationMode.wrappedValue.dismiss()
                     },
-                    title: "Show Results"
+                    title: "Показать результаты"
                 )
                 .padding()
             }
@@ -45,7 +45,7 @@ struct FilterScreenView: View {
 
     var sortKeyRowView: some View {
         VStack(alignment: .leading) {
-            Text("Sort by")
+            Text("Сортировать по")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             HStack(spacing: 0) {
@@ -81,12 +81,12 @@ struct FilterScreenView: View {
 
     var filterTextRowView: some View {
         HStack {
-            Text("Choose genre")
+            Text("Выберите жанры")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
             if viewModel.countChoosedFilterCategories > 0 {
-                Button("Reset") { viewModel.resetFilterCategories() }
+                Button("Очистить") { viewModel.resetFilterCategories() }
                     .foregroundColor(.appPrimary)
             }
         }
