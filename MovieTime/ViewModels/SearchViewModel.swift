@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-let noResultsPictureOffsetConstant: CGFloat = 13
-
 class SearchViewModel: ObservableObject {
     let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
     private let maxFilterCategories = 3
@@ -18,17 +16,16 @@ class SearchViewModel: ObservableObject {
     @Injected private var paginator: Paginator
     @Injected private var rateMovie: RateMovie
 
-    @Published var currentSortOptionIndex: Int?
-    @Published var filterCategories = FilterCategoryModel.generateCategories()
-    @Published var isLoadingMovies = false
-    @Published var isLoadingActors = false
-    @Published var movies = [MovieModel]()
-    @Published var actors = [PersonModel]()
+    @Published private(set) var currentSortOptionIndex: Int?
+    @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
+    @Published private(set) var isLoadingMovies = false
+    @Published private(set) var isLoadingActors = false
+    @Published private(set) var movies = [MovieModel]()
+    @Published private(set) var actors = [PersonModel]()
     @Published var query: String = ""
 
     // Animation
-    @Published var filterCategoriesVisibility: [Bool] = Array(repeating: false, count: FilterCategoryModel.generateCategories().count)
-    @Published var noResultsPictureOffset: CGFloat = noResultsPictureOffsetConstant
+    @Published private(set) var filterCategoriesVisibility: [Bool] = Array(repeating: false, count: FilterCategoryModel.generateCategories().count)
 
     func onAppearFilterScreenView() {
         for index in filterCategoriesVisibility.indices { filterCategoriesVisibility[index] = false }
@@ -113,7 +110,6 @@ class SearchViewModel: ObservableObject {
         paginator.reset(forKey: .actorList)
         loadMovies()
         loadActors()
-        noResultsPictureOffset = noResultsPictureOffsetConstant
     }
 
     func loadMovies() {

@@ -75,14 +75,6 @@ struct SearchScreenView: View {
                         headlineText: "Ничего:(",
                         bodyText: "Ничего не найдено, попробуйте другие слова."
                     )
-                    .offset(y: viewModel.noResultsPictureOffset)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation(.linear(duration: 0.1).repeatCount(5)) {
-                                self.viewModel.noResultsPictureOffset = 0
-                            }
-                        }
-                    }
                 }
             }
             .padding()

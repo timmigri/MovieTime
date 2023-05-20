@@ -51,7 +51,7 @@ struct MovieScreenView: View {
     var movieContentView: some View {
         return GeometryReader { geometry in
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading) {
+                LazyVStack(alignment: .leading) {
                     topImageBlockView
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: geometry.size.height * 0.7, alignment: .bottom)
@@ -147,6 +147,8 @@ struct MovieScreenView: View {
                         .fill(Color.appBackground)
                         .frame(width: 45, height: 45)
                 )
+                .scaleEffect(viewModel.bookmarkButtonScale)
+                .onTapGesture(perform: viewModel.onTapBookmarkButton)
         }
     }
 
@@ -204,6 +206,7 @@ private struct SectionView: View {
     let title: String
     var paddingTop: CGFloat = 20.0
     let innerContent: AnyView
+    @State var opacity: CGFloat = 0
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -214,5 +217,13 @@ private struct SectionView: View {
             innerContent
         }
         .padding(.top, paddingTop)
+        .opacity(opacity)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation {
+                    opacity = 1
+                }
+            }
+        }
     }
 }

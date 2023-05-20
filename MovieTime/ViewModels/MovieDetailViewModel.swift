@@ -10,13 +10,15 @@ import SwiftUI
 
 class MovieDetailViewModel: ObservableObject {
     let id: Int
-    @Published var isLoadingMovie: Bool
-    @Published var movie: MovieDetailModel?
-    @Published var scrollViewOffset: CGFloat = 0.0
-    @Published var userRating: Int = 0
+    @Published private(set) var isLoadingMovie: Bool
+    @Published private(set) var movie: MovieDetailModel?
+    @Published private(set) var scrollViewOffset: CGFloat = 0.0
+    @Published private(set) var userRating: Int = 0
     @Injected private var rateMovie: RateMovie
     @Injected private var networkManager: NetworkManager
-    let defaults = UserDefaults.standard
+
+    // Animation
+    @Published var bookmarkButtonScale: CGFloat = 1
 
     init(id: Int) {
         self.id = id
@@ -34,6 +36,18 @@ class MovieDetailViewModel: ObservableObject {
 
     var showNoResultPicture: Bool {
         !isLoadingMovie && movie == nil
+    }
+    
+    func onTapBookmarkButton() {
+        let duration = 0.3
+        withAnimation(.easeInOut(duration: duration)) {
+            bookmarkButtonScale = 1.2
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+            withAnimation(.easeInOut(duration: duration)) {
+                self.bookmarkButtonScale = 1
+            }
+        }
     }
 
     func loadMovie() {
