@@ -12,8 +12,10 @@ class SearchViewModel: ObservableObject {
     let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
     private let maxFilterCategories = 3
     private let minLengthOfQueryToSearch = 3
-    @Injected var networkManager: NetworkManager
-    @Injected var paginator: Paginator
+    @Injected private var networkManager: NetworkManager
+    @Injected private var paginator: Paginator
+    @Injected private var rateMovie: RateMovie
+    
     @Published var currentSortOptionIndex: Int?
     @Published var filterCategories = FilterCategoryModel.generateCategories()
     @Published var isLoadingMovies = false
@@ -35,16 +37,16 @@ class SearchViewModel: ObservableObject {
         return currentSortOptionIndex != nil && currentSortOptionIndex! == index
     }
 
-    var showFilterResultsButton: Bool {
+    var isSomeFilterActive: Bool {
         currentSortOptionIndex != nil || countChoosedFilterCategories > 0
     }
 
     // Filter categories
-    func onChooseFilterCategory(_ id: String) {
-        if let index = filterCategories.firstIndex(where: { $0.id == id }) {
-            if !canChooseFilterCategory(filterCategories[index]) { return }
+    func onChooseFilterCategory(_ id: String) -> Bool {
+        if let index = filterCategories.firstIndex(where: { $0.id == id }), canChooseFilterCategory(filterCategories[index]) {
             filterCategories[index].isChoosed.toggle()
         }
+        return isSomeFilterActive
     }
 
     func resetFilterCategories() {

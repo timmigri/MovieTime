@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RatingStars: View {
     let rating: Int?
-    let onChange: (Int?) -> Void
+    let onChange: (Int) -> Void
 
     func getImageName(forValue value: Int) -> String {
         if let rating, value <= rating {
@@ -34,7 +34,7 @@ struct RatingStars: View {
                         .font(.system(size: 20))
                         .onTapGesture {
                             if let rating, value == rating {
-                                onChange(nil)
+                                onChange(0)
                             } else {
                                 onChange(value)
                             }

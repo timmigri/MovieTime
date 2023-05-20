@@ -33,7 +33,8 @@ struct SearchScreenView: View {
                         viewModel.onChangeSearchOptions()
                     }
                     NavigationLink(destination: FilterScreenView()) {
-                        Image("Icons/Filter")
+                        let icon = viewModel.isSomeFilterActive ? "Icons/FilterActive" : "Icons/Filter"
+                        Image(icon)
                             .padding(.leading, 10)
                             .padding(.vertical, 10)
                             .animation(.easeInOut, value: 5)
@@ -50,7 +51,7 @@ struct SearchScreenView: View {
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
-                                if (viewModel.showActorsSection) {
+                                if viewModel.showActorsSection {
                                     actorsSection(geometry)
                                 }
                                 if viewModel.showMoviesSection {

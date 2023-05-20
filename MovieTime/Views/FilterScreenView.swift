@@ -11,6 +11,8 @@ struct FilterScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
 
+    @State var buttonScale: CGFloat = 0
+
     var body: some View {
         ZStack(alignment: .bottom) {
             Color.appBackground.ignoresSafeArea()
@@ -29,7 +31,7 @@ struct FilterScreenView: View {
                 Spacer()
             }
             .padding()
-            if viewModel.showFilterResultsButton {
+//            if viewModel.isSomeFilterActive {
                 CustomButton(
                     action: {
                         viewModel.onChangeSearchOptions()
@@ -37,8 +39,9 @@ struct FilterScreenView: View {
                     },
                     title: "Показать результаты"
                 )
+                .scaleEffect(buttonScale, anchor: .center)
                 .padding()
-            }
+//            }
         }
         .navigationBarHidden(true)
     }
@@ -103,7 +106,10 @@ struct FilterScreenView: View {
                     CustomCheckbox(
                         checked: category.isChoosed,
                         onCheck: {
-                            viewModel.onChooseFilterCategory(category.id)
+                            let showButton = viewModel.onChooseFilterCategory(category.id)
+                            withAnimation(.easeInOut(duration: 0.1)) {
+                                buttonScale = showButton ? 1 : 0.001
+                            }
                         },
                         title: category.name,
                         isDisabled: !viewModel.canChooseFilterCategory(category)

@@ -29,15 +29,18 @@ final class Injection {
         container.register(NetworkManager.self) { _ in
             return NetworkManager()
         }
-        container.register(MovieDetailViewModel.self) { _, id in
-            return MovieDetailViewModel(id: id)
-        }
+        container.register(RateMovie.self) { _ in
+            return RateMovie()
+        }.inObjectScope(.container)
         container.register(Paginator.self) { _ in
             return Paginator()
         }.inObjectScope(.container)
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()
         }.inObjectScope(.container)
+        container.register(MovieDetailViewModel.self) { _, id in
+            return MovieDetailViewModel(id: id)
+        }
         return container
     }
 }
