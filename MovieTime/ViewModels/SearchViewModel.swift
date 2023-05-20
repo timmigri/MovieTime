@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+let noResultsPictureOffsetConstant: CGFloat = 13
+
 class SearchViewModel: ObservableObject {
     let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
     private let maxFilterCategories = 3
@@ -15,7 +17,7 @@ class SearchViewModel: ObservableObject {
     @Injected private var networkManager: NetworkManager
     @Injected private var paginator: Paginator
     @Injected private var rateMovie: RateMovie
-    
+
     @Published var currentSortOptionIndex: Int?
     @Published var filterCategories = FilterCategoryModel.generateCategories()
     @Published var isLoadingMovies = false
@@ -24,12 +26,31 @@ class SearchViewModel: ObservableObject {
     @Published var actors = [PersonModel]()
     @Published var query: String = ""
 
+    // Animation
+    @Published var filterCategoriesVisibility: [Bool] = Array(repeating: false, count: FilterCategoryModel.generateCategories().count)
+    @Published var noResultsPictureOffset: CGFloat = noResultsPictureOffsetConstant
+
+    func onAppearFilterScreenView() {
+        for index in filterCategoriesVisibility.indices { filterCategoriesVisibility[index] = false }
+        let totalDuration: CGFloat = 0.5
+        for index in filterCategoriesVisibility.indices {
+            let after: CGFloat = totalDuration * CGFloat(index + 1) / CGFloat(filterCategoriesVisibility.count)
+            DispatchQueue.main.asyncAfter(deadline: .now() + after) {
+                withAnimation {
+                    self.filterCategoriesVisibility[index] = true
+                }
+            }
+        }
+    }
+
     // Sort option
     func onChooseSortOption(_ index: Int) {
-        if currentSortOptionIndex != nil && currentSortOptionIndex! == index {
-            currentSortOptionIndex = nil
-        } else {
-            currentSortOptionIndex = index
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if currentSortOptionIndex != nil && currentSortOptionIndex! == index {
+                currentSortOptionIndex = nil
+            } else {
+                currentSortOptionIndex = index
+            }
         }
     }
 
@@ -42,16 +63,19 @@ class SearchViewModel: ObservableObject {
     }
 
     // Filter categories
-    func onChooseFilterCategory(_ id: String) -> Bool {
+    func onChooseFilterCategory(_ id: String) {
         if let index = filterCategories.firstIndex(where: { $0.id == id }), canChooseFilterCategory(filterCategories[index]) {
-            filterCategories[index].isChoosed.toggle()
+            withAnimation(.easeInOut(duration: 0.2)) {
+                filterCategories[index].isChoosed.toggle()
+            }
         }
-        return isSomeFilterActive
     }
 
     func resetFilterCategories() {
-        for index in filterCategories.indices {
-            filterCategories[index].isChoosed = false
+        withAnimation(.easeInOut(duration: 0.2)) {
+            for index in filterCategories.indices {
+                filterCategories[index].isChoosed = false
+            }
         }
     }
 
@@ -89,6 +113,7 @@ class SearchViewModel: ObservableObject {
         paginator.reset(forKey: .actorList)
         loadMovies()
         loadActors()
+        noResultsPictureOffset = noResultsPictureOffsetConstant
     }
 
     func loadMovies() {

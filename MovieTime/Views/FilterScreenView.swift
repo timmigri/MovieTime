@@ -11,8 +11,6 @@ struct FilterScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
 
-    @State var buttonScale: CGFloat = 0
-
     var body: some View {
         ZStack(alignment: .bottom) {
             Color.appBackground.ignoresSafeArea()
@@ -26,22 +24,24 @@ struct FilterScreenView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     sortKeyRowView
                     filterTextRowView
-                    genresListView
+                    filterCategoriesListView
                 }
                 Spacer()
             }
             .padding()
-//            if viewModel.isSomeFilterActive {
-                CustomButton(
-                    action: {
-                        viewModel.onChangeSearchOptions()
-                        self.presentationMode.wrappedValue.dismiss()
-                    },
-                    title: "Показать результаты"
-                )
-                .scaleEffect(buttonScale, anchor: .center)
-                .padding()
-//            }
+            .onAppear {
+                viewModel.onAppearFilterScreenView()
+            }
+
+            CustomButton(
+                action: {
+                    viewModel.onChangeSearchOptions()
+                    self.presentationMode.wrappedValue.dismiss()
+                },
+                title: "Показать результаты"
+            )
+            .scaleEffect(viewModel.isSomeFilterActive ? 1 : 0.001, anchor: .center)
+            .padding()
         }
         .navigationBarHidden(true)
     }
@@ -96,20 +96,17 @@ struct FilterScreenView: View {
         .padding(.bottom, 20)
     }
 
-    var genresListView: some View {
+    var filterCategoriesListView: some View {
         LazyVGrid(
             columns: [GridItem(.flexible()), GridItem(.flexible())],
             spacing: 20
         ) {
-            ForEach(viewModel.filterCategories) { category in
+            ForEach(viewModel.filterCategories.indices, id: \.self) { index in
+                let category = viewModel.filterCategories[index]
                 HStack(spacing: 10) {
                     CustomCheckbox(
                         checked: category.isChoosed,
-                        onCheck: {
-                            let showButton = viewModel.onChooseFilterCategory(category.id)
-                            withAnimation(.easeInOut(duration: 0.1)) {
-                                buttonScale = showButton ? 1 : 0.001
-                            }
+                        onCheck: { viewModel.onChooseFilterCategory(category.id)
                         },
                         title: category.name,
                         isDisabled: !viewModel.canChooseFilterCategory(category)
@@ -126,6 +123,7 @@ struct FilterScreenView: View {
                 .onTapGesture {
                     viewModel.onChooseFilterCategory(category.id)
                 }
+                .opacity(viewModel.filterCategoriesVisibility[index] ? 1 : 0)
             }
         }
     }
