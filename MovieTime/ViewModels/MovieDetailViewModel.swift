@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class MovieDetailViewModel: ObservableObject {
-    let id: Int
+    let id: Int?
     @Published private(set) var isLoadingMovie: Bool
     @Published private(set) var movie: MovieDetailModel?
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
@@ -20,7 +20,7 @@ class MovieDetailViewModel: ObservableObject {
     // Animation
     @Published var bookmarkButtonScale: CGFloat = 1
 
-    init(id: Int) {
+    init(id: Int?) {
         self.id = id
         self.isLoadingMovie = false
     }
@@ -36,6 +36,18 @@ class MovieDetailViewModel: ObservableObject {
 
     var showNoResultPicture: Bool {
         !isLoadingMovie && movie == nil
+    }
+
+    var showActorsCondition: (Bool, [PersonModel]) {
+        guard let movie else { return (false, []) }
+        guard let actors = movie.actors else { return (false, []) }
+        return (actors.count > 0, actors)
+    }
+
+    var showDescriptionCondition: (Bool, String) {
+        guard let movie else { return (false, "") }
+        guard let description = movie.description else { return (false, "") }
+        return (description.count > 0, description)
     }
 
     func onTapBookmarkButton() {

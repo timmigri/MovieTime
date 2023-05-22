@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class SearchViewModel: ObservableObject {
     let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
@@ -23,6 +24,25 @@ class SearchViewModel: ObservableObject {
     @Published private(set) var movies = [MovieModel]()
     @Published private(set) var actors = [PersonModel]()
     @Published var query: String = ""
+    @Published var isUserTyping = false
+
+    @Published var debouncedText = "" {
+        didSet {
+            onChangeSearchOptions()
+            isUserTyping = false
+        }
+    }
+
+    private var subscriptions = Set<AnyCancellable>()
+
+    init() {
+        $query
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] text in
+                self?.debouncedText = text
+            } )
+            .store(in: &subscriptions)
+    }
 
     // Animation
     @Published private(set) var filterCategoriesVisibility: [Bool] = Array(
@@ -97,13 +117,13 @@ class SearchViewModel: ObservableObject {
     }
 
     var showNoResultPicture: Bool {
-        if showMoviesSection || showActorsSection { return false }
+        if showMoviesSection || showActorsSection || isUserTyping { return false }
         return query.count >= minLengthOfQueryToSearch
     }
 
     var showSearchPicture: Bool {
         if showMoviesSection || showActorsSection { return false }
-        return query.count < minLengthOfQueryToSearch
+        return !showNoResultPicture
     }
 
     // API

@@ -25,3 +25,14 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
+
+extension View {
+    @ViewBuilder func conditionTransform<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}

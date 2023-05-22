@@ -29,8 +29,9 @@ struct SearchScreenView: View {
                     .frame(height: 44)
                     .accentColor(.appPrimary)
                     .foregroundColor(.appSecondary300)
+                    .autocorrectionDisabled(true)
                     .onChange(of: viewModel.query) { _ in
-                        viewModel.onChangeSearchOptions()
+                        viewModel.isUserTyping = true
                     }
                     NavigationLink(destination: FilterScreenView()) {
                         let icon = viewModel.isSomeFilterActive ? "Icons/FilterActive" : "Icons/Filter"
@@ -63,11 +64,20 @@ struct SearchScreenView: View {
                     .padding(.top, 32)
                 }
                 if viewModel.showSearchPicture {
-                    PictureBox(
-                        pictureName: "Pictures/Search",
-                        headlineText: "Поиск в MovieTime",
-                        bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу." // swiftlint:disable:this line_length
-                    )
+                    VStack {
+                        PictureBox(
+                            pictureName: "Pictures/Search",
+                            headlineText: "Поиск в MovieTime",
+                            bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
+                            takeAllSpace: false
+                        )
+                        NavigationLink(destination: MovieScreenView(
+                            id: nil
+                        )) {
+                            Text("Покажи случайный фильм")
+                                .bodyText5()
+                        }
+                    }.frame(maxHeight: .infinity)
                 }
                 if viewModel.showNoResultPicture {
                     PictureBox(

@@ -11,6 +11,7 @@ struct PictureBox: View {
     let pictureName: String
     let headlineText: String
     let bodyText: String
+    var takeAllSpace: Bool = true
 
     var body: some View {
         VStack {
@@ -27,7 +28,9 @@ struct PictureBox: View {
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 10)
         }
-        .frame(maxHeight: .infinity)
+        .conditionTransform(takeAllSpace) { view in
+            view.frame(maxHeight: .infinity)
+        }
     }
 }
 

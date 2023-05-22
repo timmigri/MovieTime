@@ -11,7 +11,7 @@ struct MovieScreenView: View {
     @StateObject var viewModel: MovieDetailViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    init(id: Int) {
+    init(id: Int?) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(id: id))
     }
 
@@ -162,18 +162,26 @@ struct MovieScreenView: View {
     }
 
     var descriptionView: some View {
-        SectionView(title: "Описание", innerContent: AnyView(
-            Text(viewModel.movie!.description)
+        let (condition, description) = viewModel.showDescriptionCondition
+        return SectionView(
+            title: "Описание",
+            showCondition: condition,
+            innerContent: AnyView(
+            Text(description)
                 .bodyText3()
                 .foregroundColor(.appTextBlack)
         ))
     }
 
     func renderActorsView(_ geometry: GeometryProxy) -> some View {
-        return SectionView(title: "Актеры", innerContent: AnyView(
+        let (condition, actors) = viewModel.showActorsCondition
+        return SectionView(
+            title: "Актеры",
+            showCondition: condition,
+            innerContent: AnyView(
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 10) {
-                    ForEach(viewModel.movie!.actors) { person in
+                    ForEach(actors) { person in
                         PersonCard(
                             person: person,
                             width: geometry.size.width / 4
@@ -204,24 +212,27 @@ struct MovieScreenView: View {
 
 private struct SectionView: View {
     let title: String
+    var showCondition: Bool = true
     var paddingTop: CGFloat = 20.0
     let innerContent: AnyView
     @State var opacity: CGFloat = 0
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(title)
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-                .padding(.bottom, 8)
-            innerContent
-        }
-        .padding(.top, paddingTop)
-        .opacity(opacity)
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation {
-                    opacity = 1
+        if (showCondition) {
+            VStack(alignment: .leading) {
+                Text(title)
+                    .bodyText2()
+                    .foregroundColor(.appTextWhite)
+                    .padding(.bottom, 8)
+                innerContent
+            }
+            .padding(.top, paddingTop)
+            .opacity(opacity)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation {
+                        opacity = 1
+                    }
                 }
             }
         }

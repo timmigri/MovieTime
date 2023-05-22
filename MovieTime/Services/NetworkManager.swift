@@ -65,11 +65,16 @@ class NetworkManager {
         task.resume()
     }
 
-    func loadMovie(id: Int, completion: @escaping (MovieDetailModel?) -> Void) {
-        let url = URL(string: baseUrl + "/v1.3/movie/" + String(id))
+    func loadMovie(id: Int?, completion: @escaping (MovieDetailModel?) -> Void) {
+        let urlId = id == nil ? "random" : String(id!)
+        let url = URL(string: baseUrl + "/v1.3/movie/" + urlId)
         let request = makeURLRequestObject(url: url!)
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data else { return }
+            guard let data else {
+                completion(nil)
+                return
+            }
+            
             do {
                 let movieDetail = try self.decoder.decode(RawMovieDetailModel.self, from: data)
                 completion(MovieDetailModel.processRawData(movieDetail))
