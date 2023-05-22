@@ -35,6 +35,9 @@ final class Injection {
         container.register(Paginator.self) { _ in
             return Paginator()
         }.inObjectScope(.container)
+        container.register(AuthViewModel.self) { _ in
+            return AuthViewModel()
+        }.inObjectScope(.container)
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()
         }.inObjectScope(.container)

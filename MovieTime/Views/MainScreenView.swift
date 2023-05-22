@@ -36,6 +36,14 @@ struct MainScreenView: View {
                     }
                 }
                 .tag(2)
+            ProfileScreenView()
+                .tabItem {
+                    HStack {
+                        Image(selectedTabId != 3 ? "Icons/Profile" : "Icons/ProfileActive")
+                        Text("Профиль")
+                    }
+                }
+                .tag(3)
         }
         .accentColor(.appPrimary)
     }
