@@ -78,7 +78,7 @@ struct FilterScreenView: View {
         .cornerRadius(rightCornerRadius, corners: .topRight)
         .cornerRadius(rightCornerRadius, corners: .bottomRight)
         .onTapGesture {
-            viewModel.onChooseSortOption(index)
+            viewModel.onSelectSortOption(index)
         }
     }
 
@@ -88,7 +88,7 @@ struct FilterScreenView: View {
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
-            if viewModel.countChoosedFilterCategories > 0 {
+            if viewModel.countSelectedFilterCategories > 0 {
                 Button("Очистить") { viewModel.resetFilterCategories() }
                     .foregroundColor(.appPrimary)
             }
@@ -105,11 +105,11 @@ struct FilterScreenView: View {
                 let category = viewModel.filterCategories[index]
                 HStack(spacing: 10) {
                     CustomCheckbox(
-                        checked: category.isChoosed,
+                        checked: category.isSelected,
                         onCheck: { viewModel.onChooseFilterCategory(category.id)
                         },
                         title: category.name,
-                        isDisabled: !viewModel.canChooseFilterCategory(category)
+                        isDisabled: !viewModel.canSelectFilterCategory(category)
                     )
                 }
                 .padding(.horizontal, 10)

@@ -25,7 +25,10 @@ class SearchViewModel: ObservableObject {
     @Published var query: String = ""
 
     // Animation
-    @Published private(set) var filterCategoriesVisibility: [Bool] = Array(repeating: false, count: FilterCategoryModel.generateCategories().count)
+    @Published private(set) var filterCategoriesVisibility: [Bool] = Array(
+        repeating: false,
+        count: FilterCategoryModel.generateCategories().count
+    )
 
     func onAppearFilterScreenView() {
         for index in filterCategoriesVisibility.indices { filterCategoriesVisibility[index] = false }
@@ -41,7 +44,7 @@ class SearchViewModel: ObservableObject {
     }
 
     // Sort option
-    func onChooseSortOption(_ index: Int) {
+    func onSelectSortOption(_ index: Int) {
         withAnimation(.easeInOut(duration: 0.2)) {
             if currentSortOptionIndex != nil && currentSortOptionIndex! == index {
                 currentSortOptionIndex = nil
@@ -56,14 +59,15 @@ class SearchViewModel: ObservableObject {
     }
 
     var isSomeFilterActive: Bool {
-        currentSortOptionIndex != nil || countChoosedFilterCategories > 0
+        currentSortOptionIndex != nil || countSelectedFilterCategories > 0
     }
 
     // Filter categories
     func onChooseFilterCategory(_ id: String) {
-        if let index = filterCategories.firstIndex(where: { $0.id == id }), canChooseFilterCategory(filterCategories[index]) {
+        if let index = filterCategories.firstIndex(where: { $0.id == id }),
+           canSelectFilterCategory(filterCategories[index]) {
             withAnimation(.easeInOut(duration: 0.2)) {
-                filterCategories[index].isChoosed.toggle()
+                filterCategories[index].isSelected.toggle()
             }
         }
     }
@@ -71,17 +75,17 @@ class SearchViewModel: ObservableObject {
     func resetFilterCategories() {
         withAnimation(.easeInOut(duration: 0.2)) {
             for index in filterCategories.indices {
-                filterCategories[index].isChoosed = false
+                filterCategories[index].isSelected = false
             }
         }
     }
 
-    func canChooseFilterCategory(_ category: FilterCategoryModel) -> Bool {
-        return category.isChoosed || countChoosedFilterCategories < maxFilterCategories
+    func canSelectFilterCategory(_ category: FilterCategoryModel) -> Bool {
+        return category.isSelected || countSelectedFilterCategories < maxFilterCategories
     }
 
-    var countChoosedFilterCategories: Int {
-        filterCategories.filter { $0.isChoosed }.count
+    var countSelectedFilterCategories: Int {
+        filterCategories.filter { $0.isSelected }.count
     }
 
     var showMoviesSection: Bool {
@@ -116,7 +120,7 @@ class SearchViewModel: ObservableObject {
         if isLoadingMovies || query.count < minLengthOfQueryToSearch { return }
         isLoadingMovies = true
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
-        let genres = filterCategories.filter { $0.isChoosed }.map { $0.searchKey }
+        let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
         // TODO: error handling
         networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
             DispatchQueue.main.async {

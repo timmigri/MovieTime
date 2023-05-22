@@ -37,7 +37,7 @@ class MovieDetailViewModel: ObservableObject {
     var showNoResultPicture: Bool {
         !isLoadingMovie && movie == nil
     }
-    
+
     func onTapBookmarkButton() {
         let duration = 0.3
         withAnimation(.easeInOut(duration: duration)) {

@@ -66,7 +66,7 @@ struct SearchScreenView: View {
                     PictureBox(
                         pictureName: "Pictures/Search",
                         headlineText: "Поиск в MovieTime",
-                        bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу."
+                        bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу." // swiftlint:disable:this line_length
                     )
                 }
                 if viewModel.showNoResultPicture {

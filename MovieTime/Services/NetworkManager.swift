@@ -10,14 +10,13 @@ import Foundation
 class NetworkManager {
     @Injected var paginator: Paginator
     let baseUrl = "https://api.kinopoisk.dev"
-    let apiKey = "EHFMXJT-TQN4X5B-GT5DC5N-GJWM6CV"
     let decoder = JSONDecoder()
 
     func makeURLRequestObject(url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "accept")
-        request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
+        request.setValue(AppConfig.apiKey, forHTTPHeaderField: "X-API-KEY")
         return request
     }
 
@@ -84,7 +83,10 @@ class NetworkManager {
     // TODO: error handling
     func loadActors(query: String, completion: @escaping (Int, [PersonModel]) -> Void) {
         let nextPage = paginator.getNextPage(forKey: .actorList)
-        if nextPage == nil { return }
+        if nextPage == nil {
+            completion(200, [])
+            return
+        }
         var components = URLComponents(string: baseUrl + "/v1.2/person/search")!
         var queryItems = [URLQueryItem]()
         queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
@@ -95,7 +97,6 @@ class NetworkManager {
         let request = makeURLRequestObject(url: components.url!)
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
             guard let data else { return }
-            print(data)
             do {
                 let actorsData = try self.decoder.decode(RawPersonsResultModel.self, from: data)
                 self.paginator.setPage(forKey: .actorList, page: actorsData.page, pages: actorsData.pages)
