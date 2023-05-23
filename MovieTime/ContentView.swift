@@ -14,7 +14,7 @@ struct ContentView: View {
         if authViewModel.isUserLoggedIn {
             NavigationView {
                 MainScreenView()
-            }
+            }.id(authViewModel.navigationViewUUID)
         } else {
             LoginScreenView()
         }

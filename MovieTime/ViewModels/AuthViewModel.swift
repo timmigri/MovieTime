@@ -12,8 +12,14 @@ import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var authUser: AuthProviderProtocol?
-    @Published var isShowingAuthVK = false
+    @Published var isShowingAuthVK = false {
+        willSet {
+            if self.isShowingAuthVK { self.isLoadingAuth = false }
+        }
+    }
     @Published var vkAuthWebView: VKAuthWebView?
+    @Published var navigationViewUUID = UUID()
+    @Published var isLoadingAuth = false
 
     enum LoginSource {
         case vkontakte
@@ -23,14 +29,15 @@ class AuthViewModel: ObservableObject {
     var isUserLoggedIn: Bool {
         authUser != nil
     }
-    
+
     func login(rootViewController: UIViewController, _ loginSource: LoginSource) {
-        
+        isLoadingAuth = true
         switch loginSource {
         case .google:
             let googleAuthProvider = GoogleAuthProvider()
             googleAuthProvider.login(rootViewController: rootViewController) { isSuccess in
                 if isSuccess { self.authUser = googleAuthProvider }
+                self.isLoadingAuth = false
             }
         case .vkontakte:
             let vkAuthProvider = VKAuthProvider()
@@ -38,6 +45,8 @@ class AuthViewModel: ObservableObject {
                 vkAuthProvider.setToken(token)
                 vkAuthProvider.login(rootViewController: rootViewController) { isSuccess in
                     if isSuccess { self.authUser = vkAuthProvider }
+                    self.isShowingAuthVK = false
+                    self.isLoadingAuth = false
                 }
             }
             isShowingAuthVK = true
@@ -48,18 +57,28 @@ class AuthViewModel: ObservableObject {
         guard let provider = authUser else { return }
         provider.logout()
         authUser = nil
+        navigationViewUUID = UUID()
     }
 
     func restoreAuth() {
-        let googleAuthProvider = GoogleAuthProvider()
-        let vkAuthProvider = VKAuthProvider()
-        googleAuthProvider.restoreAuth { isSuccess in
-            if isSuccess && self.authUser == nil { self.authUser = googleAuthProvider }
+        isLoadingAuth = true
+        var providers = [AuthProviderProtocol]()
+        var counter = 0
+        providers.append(GoogleAuthProvider())
+        providers.append(VKAuthProvider())
+
+        for provider in providers {
+            provider.restoreAuth { isSuccess in
+                counter += 1
+                guard self.authUser == nil else { return }
+                if isSuccess {
+                    self.authUser = provider
+                    self.isLoadingAuth = false
+                } else if counter == providers.count {
+                    self.isLoadingAuth = false
+                }
+            }
         }
-        vkAuthProvider.restoreAuth { isSuccess in
-            if isSuccess && self.authUser == nil { self.authUser = vkAuthProvider }
-        }
-        
     }
 }
 
@@ -102,6 +121,7 @@ class VKAuthProvider: AuthProviderProtocol {
             completion(false)
             return
         }
+        WebCacheCleaner.clean()
         UserDefaults.standard.setValue(token, forKey: storageKey)
         completion(true)
     }
@@ -140,7 +160,7 @@ struct VKAuthWebView: UIViewRepresentable {
             URLQueryItem(name: "response_type", value: "token")
         ]
 
-        let urlRequest = URLRequest(url: urlComponents.url!)
+        let urlRequest = URLRequest(url: urlComponents.url!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         webView.load(urlRequest)
         return webView
     }
@@ -185,4 +205,19 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
         }
         decisionHandler(.cancel)
     }
+}
+
+final class WebCacheCleaner {
+    
+    static func clean() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        print("[WebCacheCleaner] All cookies deleted")
+        
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+    }
+    
 }

@@ -21,25 +21,45 @@ struct LoginScreenView: View {
                     headlineText: "Вход в MovieTime",
                     bodyText: "Войдите в MovieTime, чтобы узнать много нового о мире фильмов и сериалов."
                 )
+                Divider()
+                    .frame(height: 2)
+                    .frame(maxWidth: .infinity)
+                    .overlay(Color.appTextBlack.overlay(Text("Войти с помощью соцсетей")
+                        .foregroundColor(.appTextBlack)
+                        .bodyText5()
+                        .padding(.horizontal, 10)
+                        .background(Color.appBackground)
+                    ))
+                    .padding(.bottom, 30)
                 HStack(spacing: 15) {
                     GoogleSignInButton(
                         style: .icon,
                         action: { login(.google) })
                     .clipShape(Circle())
-                    
+
                     Circle()
-                        .fill(.blue)
+                        .fill(Color(red: 81 / 255, green: 129 / 255, blue: 184 / 255))
                         .frame(width: 40, height: 40)
                         .sheet(isPresented: $authViewModel.isShowingAuthVK) {
                             authViewModel.vkAuthWebView
                         }
+                        .overlay(
+                            Image("Icons/VK")
+                        )
+                        .onTapGesture {
+                            login(.vkontakte)
+                        }
+
                 }
-//                CustomButton(action: { login(.vkontakte) }, title: "Войти с помощью")
-//                    .sheet(isPresented: $authViewModel.isShowingAuthVK) {
-//                        authViewModel.vkAuthWebView
-//                    }
             }
             .padding()
+            .conditionTransform(authViewModel.isLoadingAuth) { view in
+                view.overlay(
+                    Color.appBackground.opacity(0.9).overlay(
+                        LoadingIndicator()
+                    )
+                )
+            }
         }
     }
 
