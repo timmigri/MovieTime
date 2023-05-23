@@ -7,18 +7,40 @@
 
 import Foundation
 import GoogleSignIn
+import WebKit
+import SwiftUI
 
 class AuthViewModel: ObservableObject {
     @Published var authUser: AuthProviderProtocol?
+    @Published var isShowingAuthVK = false
+    @Published var vkAuthWebView: VKAuthWebView?
+
+    enum LoginSource {
+        case vkontakte
+        case google
+    }
 
     var isUserLoggedIn: Bool {
         authUser != nil
     }
     
-    func login(rootViewController: UIViewController) {
-        let googleAuthProvider = GoogleAuthProvider()
-        googleAuthProvider.login(rootViewController: rootViewController) { res in
-            if (res) { self.authUser = googleAuthProvider }
+    func login(rootViewController: UIViewController, _ loginSource: LoginSource) {
+        
+        switch loginSource {
+        case .google:
+            let googleAuthProvider = GoogleAuthProvider()
+            googleAuthProvider.login(rootViewController: rootViewController) { isSuccess in
+                if isSuccess { self.authUser = googleAuthProvider }
+            }
+        case .vkontakte:
+            let vkAuthProvider = VKAuthProvider()
+            vkAuthWebView = VKAuthWebView { token in
+                vkAuthProvider.setToken(token)
+                vkAuthProvider.login(rootViewController: rootViewController) { isSuccess in
+                    if isSuccess { self.authUser = vkAuthProvider }
+                }
+            }
+            isShowingAuthVK = true
         }
     }
 
@@ -30,9 +52,14 @@ class AuthViewModel: ObservableObject {
 
     func restoreAuth() {
         let googleAuthProvider = GoogleAuthProvider()
-        googleAuthProvider.restoreAuth { res in
-            if res { self.authUser = googleAuthProvider }
+        let vkAuthProvider = VKAuthProvider()
+        googleAuthProvider.restoreAuth { isSuccess in
+            if isSuccess && self.authUser == nil { self.authUser = googleAuthProvider }
         }
+        vkAuthProvider.restoreAuth { isSuccess in
+            if isSuccess && self.authUser == nil { self.authUser = vkAuthProvider }
+        }
+        
     }
 }
 
@@ -43,7 +70,7 @@ protocol AuthProviderProtocol {
 }
 
 class GoogleAuthProvider: AuthProviderProtocol {
-    var user: GIDGoogleUser?
+    private var user: GIDGoogleUser?
 
     func login(rootViewController: UIViewController, completion: @escaping (Bool) -> Void) {
         GIDSignIn.sharedInstance.signIn(
@@ -64,6 +91,98 @@ class GoogleAuthProvider: AuthProviderProtocol {
             completion(user != nil)
         }
     }
+}
+
+class VKAuthProvider: AuthProviderProtocol {
+    private let storageKey = "vk_auth_token"
+    private var token: String?
+
+    func login(rootViewController: UIViewController, completion: @escaping (Bool) -> Void) {
+        guard let token else {
+            completion(false)
+            return
+        }
+        UserDefaults.standard.setValue(token, forKey: storageKey)
+        completion(true)
+    }
+
+    func setToken(_ token: String) {
+        self.token = token
+    }
+
+    func logout() {
+        token = nil
+        UserDefaults.standard.removeObject(forKey: storageKey)
+    }
+
+    func restoreAuth(completion: @escaping (Bool) -> Void) {
+        let token = UserDefaults.standard.string(forKey: storageKey)
+        self.token = token
+        completion(token != nil)
+    }
+}
+
+struct VKAuthWebView: UIViewRepresentable {
+    var authCompletion: (String) -> Void
+
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.navigationDelegate = context.coordinator
+
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "oauth.vk.com"
+        urlComponents.path = "/authorize"
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: AppConfig.vkAppId),
+            URLQueryItem(name: "redirect_uri", value: "http://oauth.vk.com/blank.html"),
+            URLQueryItem(name: "display", value: "mobile"),
+            URLQueryItem(name: "response_type", value: "token")
+        ]
+
+        let urlRequest = URLRequest(url: urlComponents.url!)
+        webView.load(urlRequest)
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+
+    }
+
+    func makeCoordinator() -> WebViewCoordinator {
+        return WebViewCoordinator(authCompletion: authCompletion)
+    }
+
+    typealias UIViewType = WKWebView
+}
+
+class WebViewCoordinator: NSObject, WKNavigationDelegate {
+    var authCompletion: (String) -> Void
     
+    init(authCompletion: @escaping (String) -> Void) {
+        self.authCompletion = authCompletion
+    }
     
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        
+        guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment else {
+            decisionHandler(.allow)
+            return
+        }
+        
+        let params = fragment.components(separatedBy: "&")
+            .map { $0.components(separatedBy: "=") }
+            .reduce([String:String]()) { res, param in
+                var dict = res
+                let key = param[0]
+                let value = param[1]
+                dict[key] = value
+                return dict
+            }
+        
+        if let accessToken = params["access_token"] {
+            authCompletion(accessToken)
+        }
+        decisionHandler(.cancel)
+    }
 }

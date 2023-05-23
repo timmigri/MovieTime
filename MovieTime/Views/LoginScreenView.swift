@@ -21,18 +21,33 @@ struct LoginScreenView: View {
                     headlineText: "Вход в MovieTime",
                     bodyText: "Войдите в MovieTime, чтобы узнать много нового о мире фильмов и сериалов."
                 )
-                GoogleSignInButton(action: signIn)
-                CustomButton(action: { }, title: "Войти с помощью")
+                HStack(spacing: 15) {
+                    GoogleSignInButton(
+                        style: .icon,
+                        action: { login(.google) })
+                    .clipShape(Circle())
+                    
+                    Circle()
+                        .fill(.blue)
+                        .frame(width: 40, height: 40)
+                        .sheet(isPresented: $authViewModel.isShowingAuthVK) {
+                            authViewModel.vkAuthWebView
+                        }
+                }
+//                CustomButton(action: { login(.vkontakte) }, title: "Войти с помощью")
+//                    .sheet(isPresented: $authViewModel.isShowingAuthVK) {
+//                        authViewModel.vkAuthWebView
+//                    }
             }
             .padding()
         }
     }
 
-    func signIn() {
+    private func login(_ source: AuthViewModel.LoginSource) {
         guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
             return
         }
-        authViewModel.login(rootViewController: rootViewController)
+        authViewModel.login(rootViewController: rootViewController, source)
     }
 }
 
