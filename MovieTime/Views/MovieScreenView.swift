@@ -129,26 +129,29 @@ struct MovieScreenView: View {
     }
 
     var advancedTopBarView: some View {
-        HStack {
-            Image("Icons/ArrowBack")
+        func renderButton(icon: String) -> some View {
+            Image(icon)
                 .background(
                     Circle()
-                        .fill(Color.appBackground)
+                        .fill(Color.appBackground.opacity(0.95))
                         .frame(width: 45, height: 45)
                 )
+        }
+
+        return HStack {
+            renderButton(icon: "Icons/ArrowBack")
                 .padding(.leading, 8)
                 .onTapGesture {
                     presentationMode.wrappedValue.dismiss()
                 }
             Spacer()
-            Image("Icons/Bookmark")
-                .background(
-                    Circle()
-                        .fill(Color.appBackground)
-                        .frame(width: 45, height: 45)
-                )
-                .scaleEffect(viewModel.bookmarkButtonScale)
-                .onTapGesture(perform: viewModel.onTapBookmarkButton)
+            HStack(spacing: 20) {
+                renderButton(icon: "Icons/BookmarkMovie")
+                    .scaleEffect(viewModel.bookmarkButtonScale)
+                    .onTapGesture(perform: viewModel.onTapBookmarkButton)
+                renderButton(icon: "Icons/Share")
+                    .onTapGesture(perform: shareMovie)
+            }
         }
     }
 
@@ -207,6 +210,13 @@ struct MovieScreenView: View {
                 ))
             }
         }
+    }
+    
+    func shareMovie() {
+        guard let source = UIApplication.shared.windows.last?.rootViewController else {
+            return
+        }
+        viewModel.shareMovie(source: source)
     }
 }
 

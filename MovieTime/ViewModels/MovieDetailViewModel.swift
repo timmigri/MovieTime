@@ -85,4 +85,16 @@ class MovieDetailViewModel: ObservableObject {
             rateMovie.setRating(forId: movie.id, value: value)
         }
     }
+    
+    func shareMovie(source: UIViewController) {
+        guard let movie else {
+            return
+        }
+        var items = [Any]()
+        items.append(URL(string: "https://www.google.com")!)
+        items.append("Рекомендую: \(movie.name) (\(movie.year))")
+        let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        vc.popoverPresentationController?.sourceView = source.view
+        source.present(vc, animated: true)
+    }
 }
