@@ -13,11 +13,12 @@
      init(
          url: URL,
          @ViewBuilder placeholder: () -> Placeholder,
-         @ViewBuilder image: @escaping (UIImage) -> Image = Image.init(uiImage:)
+         @ViewBuilder image: @escaping (UIImage) -> Image = Image.init(uiImage:),
+         onFinishLoading: @escaping (UIImage?) -> Void = { _ in }
      ) {
          self.placeholder = placeholder()
          self.image = image
-         _loader = StateObject(wrappedValue: ImageLoader(url: url, cache: Environment(\.imageCache).wrappedValue))
+         _loader = StateObject(wrappedValue: ImageLoader(url: url, cache: Environment(\.imageCache).wrappedValue, onFinishLoading: onFinishLoading))
      }
 
      var body: some View {
@@ -54,18 +55,20 @@
 
  class ImageLoader: ObservableObject {
      @Published var image: UIImage?
-
+     
      private(set) var isLoading = false
 
      private let url: URL
      private var cache: ImageCache?
      private var cancellable: AnyCancellable?
+     private var onFinishLoading: (UIImage?) -> Void
 
      private static let imageProcessingQueue = DispatchQueue(label: "image-processing")
 
-     init(url: URL, cache: ImageCache? = nil) {
+     init(url: URL, cache: ImageCache? = nil, onFinishLoading: @escaping (UIImage?) -> Void) {
          self.url = url
          self.cache = cache
+         self.onFinishLoading = onFinishLoading
      }
 
      deinit {
@@ -89,7 +92,10 @@
                            receiveCancel: { [weak self] in self?.onFinish() })
              .subscribe(on: Self.imageProcessingQueue)
              .receive(on: DispatchQueue.main)
-             .sink { [weak self] in self?.image = $0 }
+             .sink { [weak self] in
+                 self?.image = $0
+                 self?.onFinishLoading($0)
+             }
      }
 
      func cancel() {

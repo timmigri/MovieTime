@@ -9,6 +9,6 @@ import Foundation
 import RealmSwift
 
 class UserRatingDBModel: Object {
-    @Persisted var kpMovieId: Int = 0
-    @Persisted var rating: Int = 0
+    @Persisted var kpMovieId: Int
+    @Persisted var rating: Int
 }

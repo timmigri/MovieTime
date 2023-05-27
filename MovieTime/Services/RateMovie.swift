@@ -13,7 +13,6 @@ struct RateMovie {
 
     func getRating(forId id: Int) -> Int {
         guard let realm else { return 0 }
-        print("Objects: ", realm.objects(UserRatingDBModel.self))
         return getUserRatingById(id: id)?.rating ?? 0
     }
 

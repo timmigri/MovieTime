@@ -15,8 +15,10 @@ class MovieDetailViewModel: ObservableObject {
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
     @Injected private var rateMovie: RateMovie
+    @Injected private var bookmarkMovieService: BookmarkMovieService
     @Injected private var networkManager: NetworkManager
-
+    @Published var isBookmarked: Bool = false
+    
     // Animation
     @Published var bookmarkButtonScale: CGFloat = 1
 
@@ -51,15 +53,37 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     func onTapBookmarkButton() {
-        let duration = 0.3
-        withAnimation(.easeInOut(duration: duration)) {
-            bookmarkButtonScale = 1.2
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+        guard let movie = self.movie else { return }
+        let res = bookmarkMovieService.toggleBookmark(forMovieId: movie.id, movie: movie)
+        guard let res else { return }
+
+        isBookmarked = res
+        if res {
+            let duration = 0.3
             withAnimation(.easeInOut(duration: duration)) {
-                self.bookmarkButtonScale = 1
+                bookmarkButtonScale = 1.2
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+                withAnimation(.easeInOut(duration: duration)) {
+                    self.bookmarkButtonScale = 1
+                }
             }
         }
+    }
+
+    var posterUrl: URL? {
+        guard let movie else { return nil }
+        guard let posterUrl = movie.posterUrl else { return nil }
+        return URL(string: posterUrl)
+    }
+
+    var showBookmarkButton: Bool {
+        if posterUrl == nil { return true }
+        return false
+    }
+
+    func onFinishLoadingPoster(image: UIImage?) {
+
     }
 
     func loadMovie() {
@@ -70,6 +94,7 @@ class MovieDetailViewModel: ObservableObject {
                 self.isLoadingMovie = false
                 if let res {
                     self.userRating = self.rateMovie.getRating(forId: res.id)
+                    self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: res.id)
                 }
             }
         }
@@ -85,7 +110,7 @@ class MovieDetailViewModel: ObservableObject {
             rateMovie.setRating(forId: movie.id, value: value)
         }
     }
-    
+
     func shareMovie(source: UIViewController) {
         guard let movie else {
             return

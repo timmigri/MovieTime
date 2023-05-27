@@ -26,17 +26,27 @@ final class Injection {
 
     private func buildContainer() -> Container {
         let container = Container()
+
+        // Services
         container.register(NetworkManager.self) { _ in
             return NetworkManager()
         }
         container.register(RateMovie.self) { _ in
             return RateMovie()
         }.inObjectScope(.container)
+        container.register(BookmarkMovieService.self) { _ in
+            return BookmarkMovieService()
+        }.inObjectScope(.container)
         container.register(Paginator.self) { _ in
             return Paginator()
         }.inObjectScope(.container)
+
+        // View models
         container.register(AuthViewModel.self) { _ in
             return AuthViewModel()
+        }.inObjectScope(.container)
+        container.register(BookmarkViewModel.self) { _ in
+            return BookmarkViewModel()
         }.inObjectScope(.container)
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()

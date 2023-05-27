@@ -15,7 +15,7 @@ struct MovieDetailModel: Identifiable {
     let description: String?
     let facts: [String]?
     let genres: [String]
-    let posterUrl: String
+    let posterUrl: String?
     let rating: Float
     let actors: [PersonModel]?
 
@@ -40,6 +40,19 @@ struct MovieDetailModel: Identifiable {
         }
     }
 
+    private init(dbModel: MovieDBModel) {
+        self.id = dbModel.kpId
+        self.name = dbModel.name
+        self.year = dbModel.year
+        self.movieLength = dbModel.movieLength
+        self.description = dbModel.description
+        self.rating = dbModel.rating
+        self.genres = []
+        self.actors = nil
+        self.posterUrl = nil
+        self.facts = nil
+    }
+
     static func processRawData(_ rawMovie: RawMovieDetailModel) -> MovieDetailModel? {
         if rawMovie.name == nil { return nil }
         if rawMovie.year == nil { return nil }
@@ -48,6 +61,10 @@ struct MovieDetailModel: Identifiable {
         if rawMovie.rating == nil { return nil }
 
         return MovieDetailModel(rawData: rawMovie)
+    }
+
+    static func processDbData(_ dbModel: MovieDBModel) -> MovieDetailModel {
+        return MovieDetailModel(dbModel: dbModel)
     }
 
     var durationString: String? {

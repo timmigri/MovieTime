@@ -10,6 +10,9 @@
 		0013C35791FF3D32612DD64E /* Pods_MovieTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54BD298F3BBB263F13CE27C3 /* Pods_MovieTime.framework */; };
 		AC0E5A982A229A390055C0F5 /* UserRatingDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0E5A972A229A390055C0F5 /* UserRatingDBModel.swift */; };
 		AC0E5A9A2A22A9590055C0F5 /* MovieDBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0E5A992A22A9590055C0F5 /* MovieDBModel.swift */; };
+		AC0E5A9C2A22AB210055C0F5 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0E5A9B2A22AB210055C0F5 /* BookmarkViewModel.swift */; };
+		AC0E5A9E2A22AC0E0055C0F5 /* BookmarkMovieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0E5A9D2A22AC0E0055C0F5 /* BookmarkMovieService.swift */; };
+		AC0E5AA02A22BAA40055C0F5 /* MovieCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0E5A9F2A22BAA40055C0F5 /* MovieCard.swift */; };
 		AC42073A2A12D54600974A6B /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4207392A12D54600974A6B /* CustomNavigationBar.swift */; };
 		AC42073C2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC42073B2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift */; };
 		AC9103182A0EB63300B76BB3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9103172A0EB63300B76BB3 /* SearchViewModel.swift */; };
@@ -49,7 +52,7 @@
 		ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */; };
 		ACA2B6122A0D8B5C0065CBB1 /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */; };
 		ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */; };
-		ACA2B6162A0D93A30065CBB1 /* FavoriteScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */; };
+		ACA2B6162A0D93A30065CBB1 /* BookmarkScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B6152A0D93A30065CBB1 /* BookmarkScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +60,9 @@
 		54BD298F3BBB263F13CE27C3 /* Pods_MovieTime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieTime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC0E5A972A229A390055C0F5 /* UserRatingDBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRatingDBModel.swift; sourceTree = "<group>"; };
 		AC0E5A992A22A9590055C0F5 /* MovieDBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDBModel.swift; sourceTree = "<group>"; };
+		AC0E5A9B2A22AB210055C0F5 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
+		AC0E5A9D2A22AC0E0055C0F5 /* BookmarkMovieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkMovieService.swift; sourceTree = "<group>"; };
+		AC0E5A9F2A22BAA40055C0F5 /* MovieCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCard.swift; sourceTree = "<group>"; };
 		AC4207392A12D54600974A6B /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		AC42073B2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetPreferenceKey.swift; sourceTree = "<group>"; };
 		AC9103172A0EB63300B76BB3 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
@@ -99,7 +105,7 @@
 		ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenView.swift; sourceTree = "<group>"; };
 		ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
 		ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreenView.swift; sourceTree = "<group>"; };
-		ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteScreenView.swift; sourceTree = "<group>"; };
+		ACA2B6152A0D93A30065CBB1 /* BookmarkScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkScreenView.swift; sourceTree = "<group>"; };
 		E2F6AA47F525A4217418C67F /* Pods-MovieTime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieTime.release.xcconfig"; path = "Target Support Files/Pods-MovieTime/Pods-MovieTime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -138,6 +144,7 @@
 				AC9103172A0EB63300B76BB3 /* SearchViewModel.swift */,
 				AC97C6272A125AD600BC19BE /* MovieDetailViewModel.swift */,
 				AC9973162A1BFF51006871CF /* AuthViewModel.swift */,
+				AC0E5A9B2A22AB210055C0F5 /* BookmarkViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -145,6 +152,7 @@
 		AC9103192A0EBB9500B76BB3 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AC99272C2A181917004AFB53 /* AsyncImage.swift */,
 				AC91031A2A0EBBA000B76BB3 /* CustomButton.swift */,
 				AC91031C2A0EC4E500B76BB3 /* CustomCheckbox.swift */,
 				AC91031E2A0EE44200B76BB3 /* PictureBox.swift */,
@@ -153,6 +161,7 @@
 				AC42073B2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift */,
 				AC94143D2A16E0E00093F260 /* PersonCard.swift */,
 				AC94143F2A16E5E50093F260 /* RatingStars.swift */,
+				AC0E5A9F2A22BAA40055C0F5 /* MovieCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -163,8 +172,8 @@
 				AC9103222A0EECDE00B76BB3 /* Injection.swift */,
 				AC98B1FC2A10168B003CCD30 /* NetworkManager.swift */,
 				AC98B2062A10511B003CCD30 /* Paginator.swift */,
-				AC99272C2A181917004AFB53 /* AsyncImage.swift */,
 				AC99272E2A181F36004AFB53 /* RateMovie.swift */,
+				AC0E5A9D2A22AC0E0055C0F5 /* BookmarkMovieService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -256,7 +265,7 @@
 				ACA2B60F2A0D8ABE0065CBB1 /* LoginScreenView.swift */,
 				ACA2B6112A0D8B5C0065CBB1 /* MainScreenView.swift */,
 				ACA2B6132A0D93810065CBB1 /* SearchScreenView.swift */,
-				ACA2B6152A0D93A30065CBB1 /* FavoriteScreenView.swift */,
+				ACA2B6152A0D93A30065CBB1 /* BookmarkScreenView.swift */,
 				AC93059B2A0E685A00DC687C /* FilterScreenView.swift */,
 				AC9103242A0EF35000B76BB3 /* MovieScreenView.swift */,
 				AC99731A2A1C151B006871CF /* ProfileScreenView.swift */,
@@ -424,11 +433,14 @@
 				AC9103252A0EF35000B76BB3 /* MovieScreenView.swift in Sources */,
 				ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */,
 				AC9103182A0EB63300B76BB3 /* SearchViewModel.swift in Sources */,
+				AC0E5A9E2A22AC0E0055C0F5 /* BookmarkMovieService.swift in Sources */,
 				AC97C62A2A126BD100BC19BE /* MovieDetailModel.swift in Sources */,
 				AC42073C2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift in Sources */,
-				ACA2B6162A0D93A30065CBB1 /* FavoriteScreenView.swift in Sources */,
+				ACA2B6162A0D93A30065CBB1 /* BookmarkScreenView.swift in Sources */,
 				ACA2B5EB2A0D5D170065CBB1 /* MovieTimeApp.swift in Sources */,
+				AC0E5AA02A22BAA40055C0F5 /* MovieCard.swift in Sources */,
 				AC91031D2A0EC4E500B76BB3 /* CustomCheckbox.swift in Sources */,
+				AC0E5A9C2A22AB210055C0F5 /* BookmarkViewModel.swift in Sources */,
 				AC97C6282A125AD600BC19BE /* MovieDetailViewModel.swift in Sources */,
 				AC99272D2A181917004AFB53 /* AsyncImage.swift in Sources */,
 				AC98B1FD2A10168B003CCD30 /* NetworkManager.swift in Sources */,

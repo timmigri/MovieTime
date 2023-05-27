@@ -83,13 +83,15 @@ struct MovieScreenView: View {
         let movie = viewModel.movie!
 
         return ZStack(alignment: .bottomLeading) {
-            AsyncImage(
-                 url: URL(string: movie.posterUrl)!,
-                 placeholder: { LoadingIndicator() },
-                 image: {
-                     Image(uiImage: $0)
-                         .resizable()
-                 })
+            if let url = viewModel.posterUrl {
+                AsyncImage(
+                    url: url,
+                    placeholder: { LoadingIndicator() },
+                    image: {
+                        Image(uiImage: $0)
+                            .resizable()
+                    })
+            }
             VStack(alignment: .leading) {
                 Text(movie.name)
                     .heading3()
@@ -146,9 +148,11 @@ struct MovieScreenView: View {
                 }
             Spacer()
             HStack(spacing: 20) {
-                renderButton(icon: "Icons/BookmarkMovie")
-                    .scaleEffect(viewModel.bookmarkButtonScale)
-                    .onTapGesture(perform: viewModel.onTapBookmarkButton)
+                if viewModel.showBookmarkButton {
+                    renderButton(icon: viewModel.isBookmarked ? "Icons/BookmarkActive" : "Icons/BookmarkMovie")
+                        .scaleEffect(viewModel.bookmarkButtonScale)
+                        .onTapGesture(perform: viewModel.onTapBookmarkButton)
+                }
                 renderButton(icon: "Icons/Share")
                     .onTapGesture(perform: shareMovie)
             }

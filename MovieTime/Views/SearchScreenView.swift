@@ -136,41 +136,7 @@ struct SearchScreenView: View {
         NavigationLink(destination: MovieScreenView(
             id: movie.id
         )) {
-            VStack(alignment: .leading) {
-                if let movieUrl = URL(string: movie.posterUrl) {
-                    AsyncImage(
-                         url: movieUrl,
-                         placeholder: {
-                             LoadingIndicator()
-                             .frame(maxWidth: .infinity, alignment: .center)
-                         },
-                         image: {
-                             Image(uiImage: $0)
-                                 .resizable()
-                         }
-                    )
-                    .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
-                }
-                Text(movie.name)
-                    .bodyText3()
-                    .foregroundColor(.appTextWhite)
-                    .multilineTextAlignment(.leading)
-                Spacer()
-                HStack {
-                    if let duration = movie.durationString {
-                        Text(duration)
-                            .caption2()
-                            .foregroundColor(.appTextBlack)
-                    }
-                    Spacer()
-                    HStack(spacing: 2) {
-                        Image("Icons/MovieStar")
-                        Text(movie.formattedRatingString)
-                            .bodyText5()
-                            .foregroundColor(.appTextWhite)
-                    }
-                }
-            }
+            MovieCard(movie: movie, geometry: geometry)
             .onAppear {
                 if movie.id == viewModel.movies.last?.id {
                     viewModel.loadMovies()

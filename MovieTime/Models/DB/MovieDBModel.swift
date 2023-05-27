@@ -14,7 +14,6 @@ class MovieDBModel: Object {
     @Persisted var name: String
     @Persisted var year: Int
     @Persisted var movieLength: Int?
-    @Persisted var movieDescription: String
+    @Persisted var movieDescription: String?
     @Persisted var rating: Float
 }
-
