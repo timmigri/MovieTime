@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class SearchViewModel: ObservableObject {
-    let sortOptions = [("Title", "name"), ("Year", "year"), ("Rating", "rating.kp")]
+    let sortOptions = [("Названию", "name"), ("Году", "year"), ("Рейтингу", "rating.kp")]
     private let maxFilterCategories = 3
     private let minLengthOfQueryToSearch = 3
     @Injected private var networkManager: NetworkManager
