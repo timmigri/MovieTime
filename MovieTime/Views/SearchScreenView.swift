@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchScreenView: View {
-    @State private var searchFieldFocused = false
+    @FocusState private var searchFieldFocused: Bool
     @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
 
     var body: some View {
@@ -23,13 +23,19 @@ struct SearchScreenView: View {
                         .onTapGesture {
                             viewModel.onChangeSearchOptions()
                         }
-                    TextField("Поиск фильмов, сериалов, актеров...", text: $viewModel.query) {
-                        searchFieldFocused = $0
+                    TextField(text: $viewModel.query) {
+                        Text("Поиск фильмов, сериалов, актеров...")
+                            .foregroundColor(.appSecondary300.opacity(0.5))
+                            .bodyText3()
                     }
                     .frame(height: 44)
                     .accentColor(.appPrimary)
                     .foregroundColor(.appSecondary300)
                     .autocorrectionDisabled(true)
+                    .focused($searchFieldFocused)
+                    .onChange(of: searchFieldFocused) { isFocused in
+                        searchFieldFocused = isFocused
+                    }
                     .onChange(of: viewModel.query) { _ in
                         viewModel.isUserTyping = true
                     }

@@ -8,11 +8,22 @@
 import Foundation
 
 class BookmarkViewModel: ObservableObject {
-    @Published var movieList: [MovieDetailModel] = []
+    @Published private(set) var movieList: [MovieDetailModel] = []
+    @Published var query: String = ""
+    @Published var isLoadingMovies = false
     @Injected var bookmarkService: BookmarkMovieService
 
     func getMovieListFromDB() {
-        movieList = bookmarkService.getMoviesList()
-        print(movieList)
+        isLoadingMovies = true
+        movieList = bookmarkService.getMoviesList(query: query)
+        isLoadingMovies = false
+    }
+
+    func onChangeSearchOptions() {
+        getMovieListFromDB()
+    }
+    
+    var showNoBookmarkPicture: Bool {
+        !isLoadingMovies && movieList.count == 0 && query.count == 0
     }
 }

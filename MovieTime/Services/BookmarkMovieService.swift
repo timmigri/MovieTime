@@ -36,7 +36,6 @@ class BookmarkMovieService {
                 movieDb.movieLength = movie.movieLength
                 movieDb.movieDescription = movie.description
                 movieDb.rating = movie.rating
-                print(movie.posterImage)
                 movieDb.image = movie.posterImage
                 realm.add(movieDb)
                 res = true
@@ -45,8 +44,13 @@ class BookmarkMovieService {
         return res
     }
     
-    func getMoviesList() -> [MovieDetailModel] {
+    func getMoviesList(query: String) -> [MovieDetailModel] {
         guard let realm = self.realm else { return [] }
-        return Array(realm.objects(MovieDBModel.self)).map { MovieDetailModel.processDbData($0) }
+        var dbResult = realm.objects(MovieDBModel.self)
+        if query.count > 0 {
+            dbResult = dbResult.filter("name CONTAINS %@", "*\(query)*")
+        }
+        print(dbResult)
+        return Array(dbResult).map { MovieDetailModel.processDbData($0) }
     }
 }
