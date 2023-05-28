@@ -22,11 +22,7 @@ class BookmarkMovieService {
 
     // return true if now movie is bookmarked
     func toggleBookmark(forMovieId id: Int, movie: MovieDetailModel) -> Bool? {
-        guard let realm else {
-            print("amogues")
-            return nil
-        }
-//        UIImagePNGRepresentation
+        guard let realm else { return nil }
         var res: Bool?
         try? realm.write {
             if let movie = getMovieById(id: id) {
@@ -40,6 +36,8 @@ class BookmarkMovieService {
                 movieDb.movieLength = movie.movieLength
                 movieDb.movieDescription = movie.description
                 movieDb.rating = movie.rating
+                print(movie.posterImage)
+                movieDb.image = movie.posterImage
                 realm.add(movieDb)
                 res = true
             }

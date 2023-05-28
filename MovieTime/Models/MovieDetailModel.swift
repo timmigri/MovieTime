@@ -19,6 +19,8 @@ struct MovieDetailModel: Identifiable {
     let rating: Float
     let actors: [PersonModel]?
 
+    var posterImage: Data?
+
     private init(rawData: RawMovieDetailModel) {
         self.id = rawData.id
         self.name = rawData.name!
@@ -45,8 +47,9 @@ struct MovieDetailModel: Identifiable {
         self.name = dbModel.name
         self.year = dbModel.year
         self.movieLength = dbModel.movieLength
-        self.description = dbModel.description
+        self.description = dbModel.movieDescription
         self.rating = dbModel.rating
+        self.posterImage = dbModel.image
         self.genres = []
         self.actors = nil
         self.posterUrl = nil

@@ -51,8 +51,8 @@ final class Injection {
         container.register(SearchViewModel.self) { _ in
             return SearchViewModel()
         }.inObjectScope(.container)
-        container.register(MovieDetailViewModel.self) { _, id in
-            return MovieDetailViewModel(id: id)
+        container.register(MovieDetailViewModel.self) { _, source in
+            return MovieDetailViewModel(source: source)
         }
         return container
     }

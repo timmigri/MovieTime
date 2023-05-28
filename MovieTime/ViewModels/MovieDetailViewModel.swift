@@ -9,8 +9,13 @@ import Foundation
 import SwiftUI
 
 class MovieDetailViewModel: ObservableObject {
-    let id: Int?
-    @Published private(set) var isLoadingMovie: Bool
+    enum Source {
+        case network(kpId: Int?)
+        case database(movie: MovieDetailModel)
+    }
+    
+    let source: Source
+    @Published private(set) var isLoadingMovie: Bool = false
     @Published private(set) var movie: MovieDetailModel?
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
@@ -18,13 +23,12 @@ class MovieDetailViewModel: ObservableObject {
     @Injected private var bookmarkMovieService: BookmarkMovieService
     @Injected private var networkManager: NetworkManager
     @Published var isBookmarked: Bool = false
-    
+
     // Animation
     @Published var bookmarkButtonScale: CGFloat = 1
 
-    init(id: Int?) {
-        self.id = id
-        self.isLoadingMovie = false
+    init(source: Source) {
+        self.source = source
     }
 
     // UI Conditions
@@ -79,24 +83,32 @@ class MovieDetailViewModel: ObservableObject {
 
     var showBookmarkButton: Bool {
         if posterUrl == nil { return true }
-        return false
+        return movie?.posterImage != nil
     }
 
     func onFinishLoadingPoster(image: UIImage?) {
-
+        guard let image else { return }
+        movie?.posterImage = image.pngData()
     }
 
     func loadMovie() {
-        isLoadingMovie = true
-        networkManager.loadMovie(id: id) { res in
-            DispatchQueue.main.async {
-                self.movie = res
-                self.isLoadingMovie = false
-                if let res {
-                    self.userRating = self.rateMovie.getRating(forId: res.id)
-                    self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: res.id)
+        switch source {
+        case .network(let kpId):
+            isLoadingMovie = true
+            networkManager.loadMovie(id: kpId) { res in
+                DispatchQueue.main.async {
+                    self.movie = res
+                    self.isLoadingMovie = false
+                    if let res {
+                        self.userRating = self.rateMovie.getRating(forId: res.id)
+                        self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: res.id)
+                    }
                 }
             }
+        case .database(let movie):
+            self.movie = movie
+            self.userRating = self.rateMovie.getRating(forId: movie.id)
+            self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: movie.id)
         }
     }
 

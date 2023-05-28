@@ -11,8 +11,8 @@ struct MovieScreenView: View {
     @StateObject var viewModel: MovieDetailViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    init(id: Int?) {
-        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(id: id))
+    init(source: MovieDetailViewModel.Source) {
+        _viewModel = StateObject(wrappedValue: MovieDetailViewModel(source: source))
     }
 
     var body: some View {
@@ -79,19 +79,32 @@ struct MovieScreenView: View {
         }
     }
 
+    var posterPicture: some View {
+        let movie = viewModel.movie!
+
+        return Group {
+            if let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
+                Image(uiImage: uiImage)
+                    .resizable()
+            } else if let url = viewModel.posterUrl {
+                AsyncImage(
+                    url: url,
+                    placeholder: { EmptyView() },
+                    image: {
+                        Image(uiImage: $0)
+                            .resizable()
+                    },
+                    onFinishLoading: viewModel.onFinishLoadingPoster
+                )
+            }
+        }
+    }
+
     var topImageBlockView: some View {
         let movie = viewModel.movie!
 
         return ZStack(alignment: .bottomLeading) {
-            if let url = viewModel.posterUrl {
-                AsyncImage(
-                    url: url,
-                    placeholder: { LoadingIndicator() },
-                    image: {
-                        Image(uiImage: $0)
-                            .resizable()
-                    })
-            }
+            posterPicture
             VStack(alignment: .leading) {
                 Text(movie.name)
                     .heading3()

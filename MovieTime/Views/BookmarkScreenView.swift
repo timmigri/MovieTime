@@ -26,7 +26,7 @@ struct BookmarkScreenView: View {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                             ForEach(viewModel.movieList) { movie in
                                 NavigationLink(destination: MovieScreenView(
-                                    id: movie.id
+                                    source: .database(movie: movie)
                                 )) {
                                     MovieCard(movie: MovieModel(movieDetailModel: movie), geometry: geometry)
                                 }
@@ -34,6 +34,7 @@ struct BookmarkScreenView: View {
                         }
                     }
                 }
+                .padding()
             }
         }
         .onAppear {

@@ -80,6 +80,7 @@
 
          if let image = cache?[url] {
              self.image = image
+             self.onFinishLoading(image)
              return
          }
 

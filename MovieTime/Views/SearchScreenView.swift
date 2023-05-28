@@ -72,7 +72,7 @@ struct SearchScreenView: View {
                             takeAllSpace: false
                         )
                         NavigationLink(destination: MovieScreenView(
-                            id: nil
+                            source: .network(kpId: nil)
                         )) {
                             Text("Покажи случайный фильм")
                                 .bodyText5()
@@ -134,7 +134,7 @@ struct SearchScreenView: View {
 
     func renderMovie(_ movie: MovieModel, _ geometry: GeometryProxy) -> some View {
         NavigationLink(destination: MovieScreenView(
-            id: movie.id
+            source: .network(kpId: movie.id)
         )) {
             MovieCard(movie: movie, geometry: geometry)
             .onAppear {
