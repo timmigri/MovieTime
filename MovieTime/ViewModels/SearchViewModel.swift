@@ -16,35 +16,29 @@ class SearchViewModel: ObservableObject {
     @Injected private var paginator: Paginator
     @Injected private var rateMovie: RateMovie
 
+    @Published private(set) var personState: PersonState = .blank
     @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
     @Published private(set) var isLoadingMovies = false
-    @Published private(set) var isLoadingActors = false
     @Published private(set) var movies = [MovieModel]()
-    @Published private(set) var actors = [PersonModel]()
     @Published var sortOptions = [
         CustomSelect.SelectOption(title: "Названию", key: "name"),
         CustomSelect.SelectOption(title: "Году", key: "year"),
         CustomSelect.SelectOption(title: "Рейтингу", key: "rating.kp")
     ]
-    @Published var query: String = ""
+    @Published var query = ""
     @Published var isUserTyping = false
-
-    @Published private var debouncedText = "" {
-        didSet {
-            if debouncedText != oldValue {
-                onChangeSearchOptions()
-                isUserTyping = false
-            }
-        }
-    }
-
+    private var oldQuery = ""
     private var subscriptions = Set<AnyCancellable>()
 
     init() {
         $query
             .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .sink(receiveValue: { [weak self] text in
-                self?.debouncedText = text
+                if text != self?.oldQuery {
+                    self?.onChangeSearchOptions()
+                }
+                self?.oldQuery = text
+                self?.isUserTyping = false
             })
             .store(in: &subscriptions)
     }
@@ -119,25 +113,20 @@ class SearchViewModel: ObservableObject {
         return movies.count > 0 || isLoadingMovies
     }
 
-    var showActorsSection: Bool {
-        return actors.count > 0 || isLoadingActors
-    }
-
-    var showNoResultPicture: Bool {
-        if showMoviesSection || showActorsSection || isUserTyping { return false }
-        return query.count >= minLengthOfQueryToSearch
-    }
-
-    var showSearchPicture: Bool {
-        if showMoviesSection || showActorsSection { return false }
-        return !showNoResultPicture
-    }
+//    var showNoResultPicture: Bool {
+//        if showMoviesSection || showActorsSection || isUserTyping { return false }
+//        return query.count >= minLengthOfQueryToSearch
+//    }
+//
+//    var showSearchPicture: Bool {
+//        if showMoviesSection || showActorsSection { return false }
+//        return !showNoResultPicture
+//    }
 
     // API
     func onChangeSearchOptions() {
-        print("loading movies.")
         movies = []
-        actors = []
+        personState = .blank
         paginator.reset(forKey: .movieList)
         paginator.reset(forKey: .actorList)
         loadMovies()
@@ -159,12 +148,46 @@ class SearchViewModel: ObservableObject {
     }
 
     func loadActors() {
-        if isLoadingActors || query.count < minLengthOfQueryToSearch { return }
-        isLoadingActors = true
-        networkManager.loadActors(query: query.lowercased()) { (_, res) in
-            DispatchQueue.main.async {
-                self.actors += res
-                self.isLoadingActors = false
+        if personState.isLoading || query.count < minLengthOfQueryToSearch { return }
+        var persons = personState.persons
+        personState = .success(persons: persons, isLoadingNext: true)
+        networkManager.fetchPersons(query) { [weak self] result in
+            guard let self else { return }
+
+            switch result {
+            case .success(let personsResponse):
+                persons += DTOConverter.convert(personsResponse)
+                self.personState = .success(persons: persons, isLoadingNext: false)
+            case .failure(let error):
+                print(error.localizedDescription)
+                self.personState = .error(error: "Произошла ошибка при загрузке актеров.")
+            }
+        }
+    }
+}
+
+extension SearchViewModel {
+    enum PersonState {
+        static let blank = PersonState.success(persons: [], isLoadingNext: false)
+
+        case success(persons: [PersonModel], isLoadingNext: Bool)
+        case error(error: String)
+
+        var persons: [PersonModel] {
+            switch self {
+            case .success(let persons, _):
+                return persons
+            case .error:
+                return []
+            }
+        }
+
+        var isLoading: Bool {
+            switch self {
+            case .success(_, let isLoadingNext):
+                return isLoadingNext
+            case .error:
+                return false
             }
         }
     }

@@ -5,10 +5,13 @@
 //  Created by Артём Грищенко on 13.05.2023.
 //
 
-import Foundation
+import Moya
 
-class NetworkManager {
+class NetworkManager: NetworkableProtocol {
+    var provider = MoyaProvider<KinopoiskAPI>(plugins: [NetworkLoggerPlugin()])
+
     @Injected var paginator: Paginator
+    @Injected var networkPaginator: NetworkPaginator
     let baseUrl = "https://api.kinopoisk.dev"
     let decoder = JSONDecoder()
 
@@ -85,31 +88,81 @@ class NetworkManager {
         task.resume()
     }
 
-    // TODO: error handling
-    func loadActors(query: String, completion: @escaping (Int, [PersonModel]) -> Void) {
-        let nextPage = paginator.getNextPage(forKey: .actorList)
-        if nextPage == nil {
-            completion(200, [])
+    func fetchPersons(_ query: String, completion: @escaping (Result<PersonListDTO, Error>) -> Void) {
+        guard let page = networkPaginator.getNextPage(forKey: .personList) else {
+            completion(.success(.empty))
             return
         }
-        var components = URLComponents(string: baseUrl + "/v1.2/person/search")!
-        var queryItems = [URLQueryItem]()
-        queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
-        queryItems.append(URLQueryItem(name: "limit", value: "10"))
-        queryItems.append(URLQueryItem(name: "query", value: query))
-        components.queryItems = queryItems
+        requestWithPagination(target: .persons(query: query, page: page), completion: completion)
+    }
+}
 
-        let request = makeURLRequestObject(url: components.url!)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data else { return }
-            do {
-                let actorsData = try self.decoder.decode(RawPersonsResultModel.self, from: data)
-                self.paginator.setPage(forKey: .actorList, page: actorsData.page, pages: actorsData.pages)
-                completion(200, PersonModel.processRawData(actorsData.docs))
-            } catch {
-                print("\(error)")
+protocol DTO: Decodable {
+
+}
+
+protocol PaginationDTO: Decodable {
+    associatedtype Item where Item: DTO
+
+    var page: Int { get }
+    var pages: Int { get }
+    var docs: [Item] { get }
+}
+
+class DTOConverter {
+    static func convert(_ dto: PersonListDTO) -> [PersonModel] {
+        var persons = [PersonModel]()
+        for person in dto.docs {
+            guard let name = person.name else { continue }
+            if name.count == 0 { continue }
+            persons.append(PersonModel(
+                id: person.id,
+                name: name,
+                photo: person.photo
+            ))
+        }
+        return persons
+    }
+}
+
+private extension NetworkManager {
+    private func request<T: Decodable>(target: KinopoiskAPI, completion: @escaping (Result<T, Error>) -> Void) {
+        provider.request(target) { rawResult in
+            switch rawResult {
+            case let .success(response):
+                do {
+                    let result = try JSONDecoder().decode(T.self, from: response.data)
+                    completion(.success(result))
+                } catch {
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
-        task.resume()
+    }
+
+    private func requestWithPagination<T: PaginationDTO>(target: KinopoiskAPI, completion: @escaping (Result<T, Error>) -> Void) {
+        provider.request(target) { rawResult in
+            switch rawResult {
+            case let .success(response):
+                do {
+                    let result = try JSONDecoder().decode(T.self, from: response.data)
+                    self.networkPaginator.setPage(
+                        forKey: NetworkPaginator.getKeyByRequestType(requestType: target),
+                        page: result.page
+                    )
+                    self.networkPaginator.setTotalPages(
+                        forKey: NetworkPaginator.getKeyByRequestType(requestType: target),
+                        pages: result.pages
+                    )
+                    completion(.success(result))
+                } catch {
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
     }
 }

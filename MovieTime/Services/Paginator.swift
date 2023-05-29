@@ -12,10 +12,17 @@ class Paginator {
         case movieList
         case actorList
     }
-
+    
     init() {
         paginatorMap[.movieList] = (0, nil)
         paginatorMap[.actorList] = (0, nil)
+    }
+    
+    static func getKeyByRequestType(requestType: KinopoiskAPI) -> Key{
+        switch requestType {
+        case .persons(_, _):
+            return .actorList
+        }
     }
 
     private var paginatorMap = [Key: (page: Int, pages: Int?)]()

@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.7.1)
   - AppAuth (1.6.2):
     - AppAuth/Core (= 1.6.2)
     - AppAuth/ExternalUserAgent (= 1.6.2)
@@ -15,6 +16,10 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 4.0, >= 1.5)
   - GTMSessionFetcher/Core (3.1.1)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
   - Realm (10.39.1):
     - Realm/Headers (= 10.39.1)
   - Realm/Headers (10.39.1)
@@ -26,33 +31,38 @@ PODS:
 DEPENDENCIES:
   - GoogleSignIn
   - GoogleSignInSwiftSupport
+  - Moya (~> 15.0)
   - RealmSwift (~> 10)
   - SwiftLint
   - Swinject
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - AppAuth
     - GoogleSignIn
     - GoogleSignInSwiftSupport
     - GTMAppAuth
     - GTMSessionFetcher
+    - Moya
     - Realm
     - RealmSwift
     - SwiftLint
     - Swinject
 
 SPEC CHECKSUMS:
+  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GoogleSignInSwiftSupport: 6ca6e5a978faa4cd43451b6b9b38b96ab5db1734
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   Realm: 1f3157edf145f4d9036765ab550c8cb18f62b700
   RealmSwift: 8a69a1cb788cd5865966f49667b130567e07bceb
   SwiftLint: 437c13044ba689c96b37c66f7c646f46efba7176
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
 
-PODFILE CHECKSUM: e8bf40b7cec6ae464fc7ca299ac1e756dbbd40cf
+PODFILE CHECKSUM: ac933a08b4d32514ff960955885996b27cf33305
 
 COCOAPODS: 1.12.1

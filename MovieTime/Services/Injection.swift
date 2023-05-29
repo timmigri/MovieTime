@@ -26,6 +26,11 @@ final class Injection {
 
     private func buildContainer() -> Container {
         let container = Container()
+        
+        // Network
+        container.register(NetworkPaginator.self) { _ in
+            return NetworkPaginator()
+        }.inObjectScope(.container)
 
         // Services
         container.register(NetworkManager.self) { _ in

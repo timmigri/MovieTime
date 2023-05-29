@@ -54,13 +54,11 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                if viewModel.showMoviesSection || viewModel.showActorsSection {
+                if true {
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             VStack {
-                                if viewModel.showActorsSection {
-                                    actorsSection(geometry)
-                                }
+                                actorsSection(geometry)
                                 if viewModel.showMoviesSection {
                                     moviesSection(geometry)
                                 }
@@ -72,33 +70,33 @@ struct SearchScreenView: View {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                 }
-                if viewModel.showSearchPicture {
-                    VStack {
-                        PictureBox(
-                            pictureName: "Pictures/Search",
-                            headlineText: "Поиск в MovieTime",
-                            bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
-                            takeAllSpace: false
-                        )
-                        NavigationLink(destination: MovieScreenView(
-                            source: .network(kpId: nil)
-                        )) {
-                            Text("Покажи случайный фильм")
-                                .bodyText5()
-                        }
-                    }
-                    .frame(maxHeight: .infinity)
-                    .onTapGesture {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }
-                }
-                if viewModel.showNoResultPicture {
-                    PictureBox(
-                        pictureName: "Pictures/NoResult",
-                        headlineText: "Ничего:(",
-                        bodyText: "Ничего не найдено, попробуйте другие слова."
-                    )
-                }
+//                if viewModel.showSearchPicture {
+//                    VStack {
+//                        PictureBox(
+//                            pictureName: "Pictures/Search",
+//                            headlineText: "Поиск в MovieTime",
+//                            bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
+//                            takeAllSpace: false
+//                        )
+//                        NavigationLink(destination: MovieScreenView(
+//                            source: .network(kpId: nil)
+//                        )) {
+//                            Text("Покажи случайный фильм")
+//                                .bodyText5()
+//                        }
+//                    }
+//                    .frame(maxHeight: .infinity)
+//                    .onTapGesture {
+//                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                    }
+//                }
+//                if viewModel.showNoResultPicture {
+//                    PictureBox(
+//                        pictureName: "Pictures/NoResult",
+//                        headlineText: "Ничего:(",
+//                        bodyText: "Ничего не найдено, попробуйте другие слова."
+//                    )
+//                }
             }
             .padding()
         }
@@ -109,22 +107,28 @@ struct SearchScreenView: View {
             Text("Актеры")
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: 10) {
-                    ForEach(viewModel.actors) { person in
-                        PersonCard(
-                            person: person,
-                            width: geometry.size.width / 4
-                        )
-                        .onAppear {
-                            if person.id == viewModel.actors.last?.id {
-                                viewModel.loadActors()
+            switch viewModel.personState {
+            case .success(let persons, let isLoadingNext):
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(alignment: .top, spacing: 10) {
+                        ForEach(persons) { person in
+                            PersonCard(
+                                person: person,
+                                width: geometry.size.width / 4
+                            )
+                            .onAppear {
+                                if person.id == persons.last?.id {
+                                    viewModel.loadActors()
+                                }
                             }
                         }
+                        LoadingIndicator(condition: isLoadingNext)
                     }
-                    LoadingIndicator(condition: viewModel.isLoadingActors)
                 }
-
+            case .error(let error):
+                Text(error)
+                    .bodyText3()
+                    .foregroundColor(.appPrimary200)
             }
         }
         .padding(.bottom, 10)
