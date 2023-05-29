@@ -18,6 +18,7 @@ struct MovieCard: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
+                    .animation(nil)
             }
             else if let posterUrl = movie.posterUrl, let movieUrl = URL(string: posterUrl) {
                 AsyncImage(

@@ -48,38 +48,18 @@ struct FilterScreenView: View {
 
     var sortKeyRowView: some View {
         VStack(alignment: .leading) {
-            Text("Сортировать по")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-            HStack(spacing: 0) {
-                ForEach(viewModel.sortOptions.indices, id: \.self) { index in
-                    renderSortOption(index)
-                }
+            HStack {
+                Text("Сортировать по")
+                    .bodyText2()
+                    .foregroundColor(.appTextWhite)
                 Spacer()
             }
+            CustomSelect(
+                options: viewModel.sortOptions,
+                onSelectOption: viewModel.onSelectSortOption
+            )
         }
         .padding(.bottom, 20)
-    }
-
-    func renderSortOption(_ index: Int) -> some View {
-        let isActive = viewModel.isSortOptionActive(index)
-        let backgroundColor: Color = isActive ? .appPrimary : .appPrimary200
-        let textColor: Color = isActive ? .appTextWhite : .appPrimary
-        let leftCornerRadius: CGFloat = index == 0 ? 10 : 0
-        let rightCornerRadius: CGFloat = index == viewModel.sortOptions.count - 1 ? 10 : 0
-        return backgroundColor.overlay(
-            Text(viewModel.sortOptions[index].0)
-                .bodyText5()
-                .foregroundColor(textColor)
-        )
-        .frame(width: 90, height: 36)
-        .cornerRadius(leftCornerRadius, corners: .topLeft)
-        .cornerRadius(leftCornerRadius, corners: .bottomLeft)
-        .cornerRadius(rightCornerRadius, corners: .topRight)
-        .cornerRadius(rightCornerRadius, corners: .bottomRight)
-        .onTapGesture {
-            viewModel.onSelectSortOption(index)
-        }
     }
 
     var filterTextRowView: some View {

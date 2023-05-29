@@ -55,6 +55,18 @@ struct BookmarkScreenView: View {
                                 lineWidth: 1
                             )
                     )
+                    HStack(spacing: 5) {
+                        Image("Icons/Filter")
+                        CustomSelect(
+                            options: viewModel.sortOptions,
+                            onSelectOption: viewModel.onSelectSortOption
+                        )
+                        Spacer()
+                        if viewModel.currentSortOptionIndex != nil {
+                            sortOrderButton
+                        }
+                    }
+                    .padding(.top, 5)
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
@@ -76,6 +88,16 @@ struct BookmarkScreenView: View {
         .onAppear {
             viewModel.getMovieListFromDB()
         }
+    }
+
+    var sortOrderButton: some View {
+        let iconColor: Color = viewModel.sortOrderAscending ? .white : .appPrimary
+        let backgroundColor: Color = viewModel.sortOrderAscending ? .appPrimary : .appPrimary200
+        return Image(systemName: "arrow.up.arrow.down")
+            .foregroundColor(iconColor)
+            .padding(8)
+            .background(backgroundColor)
+            .onTapGesture(perform: viewModel.onTapSortOrderButton)
     }
 }
 

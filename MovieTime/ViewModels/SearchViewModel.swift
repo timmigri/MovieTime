@@ -10,19 +10,22 @@ import SwiftUI
 import Combine
 
 class SearchViewModel: ObservableObject {
-    let sortOptions = [("Названию", "name"), ("Году", "year"), ("Рейтингу", "rating.kp")]
     private let maxFilterCategories = 3
     private let minLengthOfQueryToSearch = 3
     @Injected private var networkManager: NetworkManager
     @Injected private var paginator: Paginator
     @Injected private var rateMovie: RateMovie
 
-    @Published private(set) var currentSortOptionIndex: Int?
     @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
     @Published private(set) var isLoadingMovies = false
     @Published private(set) var isLoadingActors = false
     @Published private(set) var movies = [MovieModel]()
     @Published private(set) var actors = [PersonModel]()
+    @Published var sortOptions = [
+        CustomSelect.SelectOption(title: "Названию", key: "name"),
+        CustomSelect.SelectOption(title: "Году", key: "year"),
+        CustomSelect.SelectOption(title: "Рейтингу", key: "rating.kp")
+    ]
     @Published var query: String = ""
     @Published var isUserTyping = false
 
@@ -65,19 +68,21 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    // Sort option
-    func onSelectSortOption(_ index: Int) {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            if currentSortOptionIndex != nil && currentSortOptionIndex! == index {
-                currentSortOptionIndex = nil
-            } else {
-                currentSortOptionIndex = index
-            }
+    var currentSortOptionIndex: Int? {
+        if let index = sortOptions.firstIndex(where: { $0.isSelected }) {
+            return index
         }
+        return nil
     }
 
-    func isSortOptionActive(_ index: Int) -> Bool {
-        return currentSortOptionIndex != nil && currentSortOptionIndex! == index
+    // Sort option
+    func onSelectSortOption(_ index: Int, _ key: String) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            if !sortOptions[index].isSelected {
+                for ind in sortOptions.indices { sortOptions[ind].isSelected = false }
+            }
+            sortOptions[index].isSelected.toggle()
+        }
     }
 
     var isSomeFilterActive: Bool {
@@ -142,7 +147,7 @@ class SearchViewModel: ObservableObject {
     func loadMovies() {
         if isLoadingMovies || query.count < minLengthOfQueryToSearch { return }
         isLoadingMovies = true
-        let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].1 : nil
+        let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
         let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
         // TODO: error handling
         networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
