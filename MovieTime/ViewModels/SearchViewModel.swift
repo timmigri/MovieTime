@@ -26,10 +26,12 @@ class SearchViewModel: ObservableObject {
     @Published var query: String = ""
     @Published var isUserTyping = false
 
-    @Published var debouncedText = "" {
+    @Published private var debouncedText = "" {
         didSet {
-            onChangeSearchOptions()
-            isUserTyping = false
+            if debouncedText != oldValue {
+                onChangeSearchOptions()
+                isUserTyping = false
+            }
         }
     }
 
@@ -40,7 +42,7 @@ class SearchViewModel: ObservableObject {
             .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .sink(receiveValue: { [weak self] text in
                 self?.debouncedText = text
-            } )
+            })
             .store(in: &subscriptions)
     }
 
@@ -128,6 +130,7 @@ class SearchViewModel: ObservableObject {
 
     // API
     func onChangeSearchOptions() {
+        print("loading movies.")
         movies = []
         actors = []
         paginator.reset(forKey: .movieList)

@@ -68,6 +68,9 @@ struct SearchScreenView: View {
                         }
                     }
                     .padding(.top, 32)
+                    .onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
                 if viewModel.showSearchPicture {
                     VStack {
@@ -83,7 +86,11 @@ struct SearchScreenView: View {
                             Text("Покажи случайный фильм")
                                 .bodyText5()
                         }
-                    }.frame(maxHeight: .infinity)
+                    }
+                    .frame(maxHeight: .infinity)
+                    .onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
                 if viewModel.showNoResultPicture {
                     PictureBox(

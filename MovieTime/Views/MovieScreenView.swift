@@ -83,13 +83,13 @@ struct MovieScreenView: View {
         let movie = viewModel.movie!
 
         return Group {
-            if let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
+            if case .database = viewModel.source, let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
                 Image(uiImage: uiImage)
                     .resizable()
-            } else if let url = viewModel.posterUrl {
+            } else if case .network = viewModel.source, let url = viewModel.posterUrl {
                 AsyncImage(
                     url: url,
-                    placeholder: { EmptyView() },
+                    placeholder: { LoadingIndicator() },
                     image: {
                         Image(uiImage: $0)
                             .resizable()
@@ -228,11 +228,9 @@ struct MovieScreenView: View {
             }
         }
     }
-    
+
     func shareMovie() {
-        guard let source = UIApplication.shared.windows.last?.rootViewController else {
-            return
-        }
+        guard let source = UIApplication.shared.windows.last?.rootViewController else { return }
         viewModel.shareMovie(source: source)
     }
 }
@@ -245,7 +243,7 @@ private struct SectionView: View {
     @State var opacity: CGFloat = 0
 
     var body: some View {
-        if (showCondition) {
+        if showCondition {
             VStack(alignment: .leading) {
                 Text(title)
                     .bodyText2()

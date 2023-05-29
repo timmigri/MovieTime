@@ -14,7 +14,7 @@ struct BookmarkScreenView: View {
     var body: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
-            if viewModel.showNoBookmarkPicture {
+            if !viewModel.showResults {
                 PictureBox(
                     pictureName: "Pictures/Bookmark",
                     headlineText: "Список закладок пуст",

@@ -43,14 +43,15 @@ class BookmarkMovieService {
         }
         return res
     }
-    
-    func getMoviesList(query: String) -> [MovieDetailModel] {
-        guard let realm = self.realm else { return [] }
+
+    func getMoviesList(query: String) -> ([MovieDetailModel], Int) {
+        guard let realm = self.realm else { return ([], 0) }
         var dbResult = realm.objects(MovieDBModel.self)
+        let totalCount = dbResult.count
         if query.count > 0 {
-            dbResult = dbResult.filter("name CONTAINS %@", "*\(query)*")
+            dbResult = dbResult.filter("name contains[cd] %@", query.lowercased())
         }
         print(dbResult)
-        return Array(dbResult).map { MovieDetailModel.processDbData($0) }
+        return (Array(dbResult).map { MovieDetailModel.processDbData($0) }, totalCount)
     }
 }
