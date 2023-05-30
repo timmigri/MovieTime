@@ -54,84 +54,84 @@ struct SearchScreenView: View {
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
                         )
                 )
-                if true {
-                    GeometryReader { geometry in
-                        ScrollView(.vertical, showsIndicators: false) {
-                            VStack {
-                                actorsSection(geometry)
-                                if viewModel.showMoviesSection {
-                                    moviesSection(geometry)
+                Group {
+                    switch viewModel.screenState {
+                    case .noResultPicture:
+                        PictureBox(
+                            pictureName: "Pictures/NoResult",
+                            headlineText: "Ничего:(",
+                            bodyText: "Ничего не найдено, попробуйте другие слова."
+                        )
+                    case .searchPicture:
+                        VStack {
+                            PictureBox(
+                                pictureName: "Pictures/Search",
+                                headlineText: "Поиск в MovieTime",
+                                bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
+                                takeAllSpace: false
+                            )
+                            NavigationLink(destination: MovieScreenView(
+                                source: .network(kpId: nil)
+                            )) {
+                                Text("Покажи случайный фильм")
+                                    .bodyText5()
+                            }
+                        }
+                        .frame(maxHeight: .infinity)
+                    case .results:
+                        GeometryReader { geometry in
+                            ScrollView(.vertical, showsIndicators: false) {
+                                VStack {
+                                    actorsSection(geometry)
+                                    if viewModel.showMoviesSection {
+                                        moviesSection(geometry)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .padding(.top, 32)
-                    .onTapGesture {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        .padding(.top, 32)
                     }
                 }
-//                if viewModel.showSearchPicture {
-//                    VStack {
-//                        PictureBox(
-//                            pictureName: "Pictures/Search",
-//                            headlineText: "Поиск в MovieTime",
-//                            bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
-//                            takeAllSpace: false
-//                        )
-//                        NavigationLink(destination: MovieScreenView(
-//                            source: .network(kpId: nil)
-//                        )) {
-//                            Text("Покажи случайный фильм")
-//                                .bodyText5()
-//                        }
-//                    }
-//                    .frame(maxHeight: .infinity)
-//                    .onTapGesture {
-//                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//                    }
-//                }
-//                if viewModel.showNoResultPicture {
-//                    PictureBox(
-//                        pictureName: "Pictures/NoResult",
-//                        headlineText: "Ничего:(",
-//                        bodyText: "Ничего не найдено, попробуйте другие слова."
-//                    )
-//                }
+                .onTapGesture {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
             }
             .padding()
         }
     }
 
     func actorsSection(_ geometry: GeometryProxy) -> some View {
-        VStack(alignment: .leading) {
-            Text("Актеры")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-            switch viewModel.personState {
-            case .success(let persons, let isLoadingNext):
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(alignment: .top, spacing: 10) {
-                        ForEach(persons) { person in
-                            PersonCard(
-                                person: person,
-                                width: geometry.size.width / 4
-                            )
-                            .onAppear {
-                                if person.id == persons.last?.id {
-                                    viewModel.loadActors()
-                                }
-                            }
-                        }
-                        LoadingIndicator(condition: isLoadingNext)
-                    }
-                }
-            case .error(let error):
+        Group {
+            if let error = viewModel.personsLoadingError {
                 Text(error)
                     .bodyText3()
                     .foregroundColor(.appPrimary200)
+                    .padding(.bottom, 10)
+            } else if viewModel.showPersonsList {
+                VStack(alignment: .leading) {
+                    Text("Персоны")
+                        .bodyText2()
+                        .foregroundColor(.appTextWhite)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(alignment: .top, spacing: 10) {
+                            ForEach(viewModel.persons) { person in
+                                PersonCard(
+                                    person: person,
+                                    width: geometry.size.width / 4
+                                )
+                                .onAppear {
+                                    if person.id == viewModel.persons.last?.id {
+                                        viewModel.loadPersons()
+                                    }
+                                }
+                            }
+                            LoadingIndicator(condition: viewModel.isLoadingPersons)
+                        }
+                    }
+                }
+                .padding(.bottom, 10)
             }
         }
-        .padding(.bottom, 10)
     }
 
     func moviesSection(_ geometry: GeometryProxy) -> some View {

@@ -10,7 +10,9 @@ import Foundation
 class NetworkPaginator: PaginatorProtocol {
     typealias Value = (page: Int, pages: Int?)
     enum Key {
+        case movieList
         case personList
+        case unknown
     }
 
     private var paginatorMap = [Key: Value]()
@@ -45,10 +47,14 @@ class NetworkPaginator: PaginatorProtocol {
 }
 
 extension NetworkPaginator {
-    static func getKeyByRequestType(requestType: KinopoiskAPI) -> Key{
+    static func getKeyByRequestType(requestType: KinopoiskAPI) -> Key {
         switch requestType {
-        case .persons(_, _):
+        case .persons:
             return .personList
+        case .movies:
+            return .movieList
+        default:
+            return .unknown
         }
     }
 }

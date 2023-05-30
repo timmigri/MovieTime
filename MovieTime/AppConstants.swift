@@ -8,5 +8,10 @@
 import Foundation
 
 struct AppConstants {
+    // Network
     static let basicPageSize = 10
+    
+    // Search
+    static let maxFilterCategories = 3
+    static let minLengthOfQueryToSearch = 3
 }

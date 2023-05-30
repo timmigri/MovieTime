@@ -31,10 +31,8 @@
 		AC9534682A190DF400244118 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AC9534672A190DF400244118 /* .gitignore */; };
 		AC964BED2A24D47A00C886CC /* CustomSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BEC2A24D47A00C886CC /* CustomSelect.swift */; };
 		AC964BF02A25213B00C886CC /* KinopoiskAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BEF2A25213B00C886CC /* KinopoiskAPI.swift */; };
-		AC964BF22A2522A900C886CC /* NetworkableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BF12A2522A900C886CC /* NetworkableProtocol.swift */; };
 		AC964BF82A25266200C886CC /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BF72A25266100C886CC /* AppConstants.swift */; };
 		AC964BFB2A252C5800C886CC /* PersonDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BFA2A252C5800C886CC /* PersonDTO.swift */; };
-		AC964BFD2A2545AA00C886CC /* PaginatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BFC2A2545AA00C886CC /* PaginatorProtocol.swift */; };
 		AC964BFF2A2546BF00C886CC /* NetworkPaginator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BFE2A2546BF00C886CC /* NetworkPaginator.swift */; };
 		AC97C6262A125A3100BC19BE /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC97C6252A125A3100BC19BE /* LoadingIndicator.swift */; };
 		AC97C6282A125AD600BC19BE /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC97C6272A125AD600BC19BE /* MovieDetailViewModel.swift */; };
@@ -46,6 +44,9 @@
 		AC99272F2A181F36004AFB53 /* RateMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC99272E2A181F36004AFB53 /* RateMovie.swift */; };
 		AC9973172A1BFF51006871CF /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9973162A1BFF51006871CF /* AuthViewModel.swift */; };
 		AC99731B2A1C151B006871CF /* ProfileScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC99731A2A1C151B006871CF /* ProfileScreenView.swift */; };
+		AC9D43A92A261E3100E7F2F0 /* MovieDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9D43A82A261E3100E7F2F0 /* MovieDTO.swift */; };
+		AC9D43AB2A261E6600E7F2F0 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9D43AA2A261E6600E7F2F0 /* Protocols.swift */; };
+		AC9D43AE2A261F0000E7F2F0 /* DTOConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9D43AD2A261F0000E7F2F0 /* DTOConverter.swift */; };
 		ACA250032A0E7EF100DA11E0 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA250022A0E7EF100DA11E0 /* ViewExtension.swift */; };
 		ACA2B5EB2A0D5D170065CBB1 /* MovieTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B5EA2A0D5D170065CBB1 /* MovieTimeApp.swift */; };
 		ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2B5EC2A0D5D170065CBB1 /* ContentView.swift */; };
@@ -88,10 +89,8 @@
 		AC9534672A190DF400244118 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AC964BEC2A24D47A00C886CC /* CustomSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSelect.swift; sourceTree = "<group>"; };
 		AC964BEF2A25213B00C886CC /* KinopoiskAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinopoiskAPI.swift; sourceTree = "<group>"; };
-		AC964BF12A2522A900C886CC /* NetworkableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkableProtocol.swift; sourceTree = "<group>"; };
 		AC964BF72A25266100C886CC /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		AC964BFA2A252C5800C886CC /* PersonDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDTO.swift; sourceTree = "<group>"; };
-		AC964BFC2A2545AA00C886CC /* PaginatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorProtocol.swift; sourceTree = "<group>"; };
 		AC964BFE2A2546BF00C886CC /* NetworkPaginator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPaginator.swift; sourceTree = "<group>"; };
 		AC97C6252A125A3100BC19BE /* LoadingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		AC97C6272A125AD600BC19BE /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
@@ -103,6 +102,9 @@
 		AC99272E2A181F36004AFB53 /* RateMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateMovie.swift; sourceTree = "<group>"; };
 		AC9973162A1BFF51006871CF /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		AC99731A2A1C151B006871CF /* ProfileScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreenView.swift; sourceTree = "<group>"; };
+		AC9D43A82A261E3100E7F2F0 /* MovieDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDTO.swift; sourceTree = "<group>"; };
+		AC9D43AA2A261E6600E7F2F0 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		AC9D43AD2A261F0000E7F2F0 /* DTOConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOConverter.swift; sourceTree = "<group>"; };
 		ACA250022A0E7EF100DA11E0 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		ACA2B5E72A0D5D170065CBB1 /* MovieTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACA2B5EA2A0D5D170065CBB1 /* MovieTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTimeApp.swift; sourceTree = "<group>"; };
@@ -207,7 +209,7 @@
 		AC964BEE2A25211D00C886CC /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				AC964BF12A2522A900C886CC /* NetworkableProtocol.swift */,
+				AC964BF92A252C4B00C886CC /* DTO */,
 				AC964BEF2A25213B00C886CC /* KinopoiskAPI.swift */,
 				AC98B1FC2A10168B003CCD30 /* NetworkManager.swift */,
 				AC964BFE2A2546BF00C886CC /* NetworkPaginator.swift */,
@@ -215,20 +217,21 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		AC964BF42A25236F00C886CC /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				AC964BFC2A2545AA00C886CC /* PaginatorProtocol.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
 		AC964BF92A252C4B00C886CC /* DTO */ = {
 			isa = PBXGroup;
 			children = (
 				AC964BFA2A252C5800C886CC /* PersonDTO.swift */,
+				AC9D43A82A261E3100E7F2F0 /* MovieDTO.swift */,
 			);
 			path = DTO;
+			sourceTree = "<group>";
+		};
+		AC9D43AC2A261EEC00E7F2F0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AC9D43AD2A261F0000E7F2F0 /* DTOConverter.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		ACA2B5DE2A0D5D170065CBB1 = {
@@ -254,10 +257,9 @@
 		ACA2B5E92A0D5D170065CBB1 /* MovieTime */ = {
 			isa = PBXGroup;
 			children = (
-				AC964BF92A252C4B00C886CC /* DTO */,
 				AC9534652A190D3300244118 /* AppConfig.swift */,
 				AC964BF72A25266100C886CC /* AppConstants.swift */,
-				AC964BF42A25236F00C886CC /* Protocols */,
+				AC9D43AA2A261E6600E7F2F0 /* Protocols.swift */,
 				AC964BEE2A25211D00C886CC /* Network */,
 				AC9103212A0EECD400B76BB3 /* Services */,
 				AC9103192A0EBB9500B76BB3 /* Components */,
@@ -265,6 +267,7 @@
 				AC93059D2A0E6D2000DC687C /* Models */,
 				ACA2B60E2A0D8AA20065CBB1 /* Views */,
 				ACA2B5FE2A0D6BF20065CBB1 /* Extensions */,
+				AC9D43AC2A261EEC00E7F2F0 /* Utilities */,
 				ACA2B5FD2A0D6AE00065CBB1 /* Info.plist */,
 				ACA2B5F82A0D6A310065CBB1 /* Fonts */,
 				ACA2B5EA2A0D5D170065CBB1 /* MovieTimeApp.swift */,
@@ -472,6 +475,7 @@
 				AC99731B2A1C151B006871CF /* ProfileScreenView.swift in Sources */,
 				AC94143C2A16B3BA0093F260 /* PersonModel.swift in Sources */,
 				AC964BFB2A252C5800C886CC /* PersonDTO.swift in Sources */,
+				AC9D43AB2A261E6600E7F2F0 /* Protocols.swift in Sources */,
 				ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */,
 				AC91031B2A0EBBA000B76BB3 /* CustomButton.swift in Sources */,
 				AC964BED2A24D47A00C886CC /* CustomSelect.swift in Sources */,
@@ -479,11 +483,12 @@
 				ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */,
 				AC9305A32A0E6DCA00DC687C /* FilterCategoryExtension.swift in Sources */,
 				AC9103252A0EF35000B76BB3 /* MovieScreenView.swift in Sources */,
+				AC9D43AE2A261F0000E7F2F0 /* DTOConverter.swift in Sources */,
+				AC9D43A92A261E3100E7F2F0 /* MovieDTO.swift in Sources */,
 				ACA2B6102A0D8ABE0065CBB1 /* LoginScreenView.swift in Sources */,
 				AC964BFF2A2546BF00C886CC /* NetworkPaginator.swift in Sources */,
 				AC9103182A0EB63300B76BB3 /* SearchViewModel.swift in Sources */,
 				AC0E5A9E2A22AC0E0055C0F5 /* BookmarkMovieService.swift in Sources */,
-				AC964BFD2A2545AA00C886CC /* PaginatorProtocol.swift in Sources */,
 				AC97C62A2A126BD100BC19BE /* MovieDetailModel.swift in Sources */,
 				AC42073C2A12D95700974A6B /* ScrollViewOffsetPreferenceKey.swift in Sources */,
 				ACA2B6162A0D93A30065CBB1 /* BookmarkScreenView.swift in Sources */,
@@ -495,7 +500,6 @@
 				AC99272D2A181917004AFB53 /* AsyncImage.swift in Sources */,
 				AC98B1FD2A10168B003CCD30 /* NetworkManager.swift in Sources */,
 				AC94143E2A16E0E00093F260 /* PersonCard.swift in Sources */,
-				AC964BF22A2522A900C886CC /* NetworkableProtocol.swift in Sources */,
 				AC99272F2A181F36004AFB53 /* RateMovie.swift in Sources */,
 				AC97C6262A125A3100BC19BE /* LoadingIndicator.swift in Sources */,
 				AC0E5A982A229A390055C0F5 /* UserRatingDBModel.swift in Sources */,

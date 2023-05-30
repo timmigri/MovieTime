@@ -10,25 +10,12 @@ import SwiftUI
 import Combine
 
 class SearchViewModel: ObservableObject {
-    private let maxFilterCategories = 3
-    private let minLengthOfQueryToSearch = 3
     @Injected private var networkManager: NetworkManager
     @Injected private var paginator: Paginator
     @Injected private var rateMovie: RateMovie
 
-    @Published private(set) var personState: PersonState = .blank
-    @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
     @Published private(set) var isLoadingMovies = false
     @Published private(set) var movies = [MovieModel]()
-    @Published var sortOptions = [
-        CustomSelect.SelectOption(title: "Названию", key: "name"),
-        CustomSelect.SelectOption(title: "Году", key: "year"),
-        CustomSelect.SelectOption(title: "Рейтингу", key: "rating.kp")
-    ]
-    @Published var query = ""
-    @Published var isUserTyping = false
-    private var oldQuery = ""
-    private var subscriptions = Set<AnyCancellable>()
 
     init() {
         $query
@@ -43,11 +30,34 @@ class SearchViewModel: ObservableObject {
             .store(in: &subscriptions)
     }
 
-    // Animation
+    // MARK: Screen state
+    enum ScreenState {
+        case searchPicture
+        case noResultPicture
+        case results
+    }
+
+    var screenState: ScreenState {
+        if showPersonsList || showMoviesSection { return .results }
+        if query.count < AppConstants.minLengthOfQueryToSearch || isUserTyping { return .searchPicture }
+        return .noResultPicture
+    }
+
+    // MARK: Sort and filter
+    private var oldQuery = ""
+    private var subscriptions = Set<AnyCancellable>()
+    @Published var query = ""
+    @Published var isUserTyping = false
     @Published private(set) var filterCategoriesVisibility: [Bool] = Array(
         repeating: false,
         count: FilterCategoryModel.generateCategories().count
     )
+    @Published var sortOptions = [
+        CustomSelect.SelectOption(title: "Названию", key: "name"),
+        CustomSelect.SelectOption(title: "Году", key: "year"),
+        CustomSelect.SelectOption(title: "Рейтингу", key: "rating.kp")
+    ]
+    @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
 
     func onAppearFilterScreenView() {
         for index in filterCategoriesVisibility.indices { filterCategoriesVisibility[index] = false }
@@ -102,7 +112,7 @@ class SearchViewModel: ObservableObject {
     }
 
     func canSelectFilterCategory(_ category: FilterCategoryModel) -> Bool {
-        return category.isSelected || countSelectedFilterCategories < maxFilterCategories
+        return category.isSelected || countSelectedFilterCategories < AppConstants.maxFilterCategories
     }
 
     var countSelectedFilterCategories: Int {
@@ -113,82 +123,85 @@ class SearchViewModel: ObservableObject {
         return movies.count > 0 || isLoadingMovies
     }
 
-//    var showNoResultPicture: Bool {
-//        if showMoviesSection || showActorsSection || isUserTyping { return false }
-//        return query.count >= minLengthOfQueryToSearch
-//    }
-//
-//    var showSearchPicture: Bool {
-//        if showMoviesSection || showActorsSection { return false }
-//        return !showNoResultPicture
-//    }
+    // MARK: Person state
+    @Published var persons = [PersonModel]()
+    @Published var isLoadingPersons = false
+    @Published var personsLoadingError: String?
 
-    // API
-    func onChangeSearchOptions() {
-        movies = []
-        personState = .blank
-        paginator.reset(forKey: .movieList)
-        paginator.reset(forKey: .actorList)
-        loadMovies()
-        loadActors()
+    var showPersonsList: Bool {
+        return persons.count > 0 || isLoadingPersons
     }
 
-    func loadMovies() {
-        if isLoadingMovies || query.count < minLengthOfQueryToSearch { return }
-        isLoadingMovies = true
-        let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
-        let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
-        // TODO: error handling
-        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
-            DispatchQueue.main.async {
-                self.movies += res
-                self.isLoadingMovies = false
-            }
-        }
+    private func onSuccessLoadingPersons(_ newPersons: [PersonModel]) {
+        persons += newPersons
+        isLoadingPersons = false
+        personsLoadingError = nil
     }
 
-    func loadActors() {
-        if personState.isLoading || query.count < minLengthOfQueryToSearch { return }
-        var persons = personState.persons
-        personState = .success(persons: persons, isLoadingNext: true)
+    private func onErrorLoadingPersons() {
+        persons = []
+        isLoadingPersons = false
+        personsLoadingError = "Произошла ошибка при загрузке актеров."
+    }
+
+    private func onStartLoadingPersons() {
+        isLoadingPersons = true
+        personsLoadingError = nil
+    }
+
+    private func clearPersonState() {
+        persons = []
+        personsLoadingError = nil
+    }
+
+    func loadPersons() {
+        if isLoadingPersons || query.count < AppConstants.minLengthOfQueryToSearch { return }
+        onStartLoadingPersons()
         networkManager.fetchPersons(query) { [weak self] result in
             guard let self else { return }
 
             switch result {
             case .success(let personsResponse):
-                persons += DTOConverter.convert(personsResponse)
-                self.personState = .success(persons: persons, isLoadingNext: false)
-            case .failure(let error):
-                print(error.localizedDescription)
-                self.personState = .error(error: "Произошла ошибка при загрузке актеров.")
+                self.onSuccessLoadingPersons(DTOConverter.convert(personsResponse))
+            case .failure:
+                self.onErrorLoadingPersons()
             }
         }
     }
-}
 
-extension SearchViewModel {
-    enum PersonState {
-        static let blank = PersonState.success(persons: [], isLoadingNext: false)
+    // API
+    func onChangeSearchOptions() {
+        movies = []
+        paginator.reset(forKey: .movieList)
+        paginator.reset(forKey: .actorList)
+        loadMovies()
+        clearPersonState()
+        loadPersons()
+    }
 
-        case success(persons: [PersonModel], isLoadingNext: Bool)
-        case error(error: String)
+    func loadMovies() {
+        if isLoadingMovies || query.count < AppConstants.minLengthOfQueryToSearch { return }
+        let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
+        let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
+        networkManager.fetchMovies(query: query.lowercased(), sortField: sortField, genres: genres) { [weak self] result in
+            guard let self else { return }
 
-        var persons: [PersonModel] {
-            switch self {
-            case .success(let persons, _):
-                return persons
-            case .error:
-                return []
+            switch result {
+            case .success(let moviesResponse):
+                print(moviesResponse)
+//                self.onSuccessLoadingPersons(DTOConverter.convert(personsResponse))
+            case .failure:
+                print()
+//                self.onErrorLoadingPersons()
             }
+            
         }
-
-        var isLoading: Bool {
-            switch self {
-            case .success(_, let isLoadingNext):
-                return isLoadingNext
-            case .error:
-                return false
-            }
-        }
+//        isLoadingMovies = true
+//        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
+//            DispatchQueue.main.async {
+//                self.movies += res
+//                self.isLoadingMovies = false
+//            }
+//        }
     }
 }

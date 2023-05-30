@@ -77,7 +77,7 @@ class NetworkManager: NetworkableProtocol {
                 completion(nil)
                 return
             }
-            
+
             do {
                 let movieDetail = try self.decoder.decode(RawMovieDetailModel.self, from: data)
                 completion(MovieDetailModel.processRawData(movieDetail))
@@ -87,6 +87,14 @@ class NetworkManager: NetworkableProtocol {
         }
         task.resume()
     }
+    
+    func fetchMovies(query: String, sortField: String?, genres: [String], completion: @escaping (Result<MovieListDTO, Error>) -> Void) {
+        guard let page = networkPaginator.getNextPage(forKey: .movieList) else {
+            completion(.success(.empty))
+            return
+        }
+        requestWithPagination(target: .movies(query: query, page: page, sortField: sortField, genres: genres), completion: completion)
+    }
 
     func fetchPersons(_ query: String, completion: @escaping (Result<PersonListDTO, Error>) -> Void) {
         guard let page = networkPaginator.getNextPage(forKey: .personList) else {
@@ -94,34 +102,6 @@ class NetworkManager: NetworkableProtocol {
             return
         }
         requestWithPagination(target: .persons(query: query, page: page), completion: completion)
-    }
-}
-
-protocol DTO: Decodable {
-
-}
-
-protocol PaginationDTO: Decodable {
-    associatedtype Item where Item: DTO
-
-    var page: Int { get }
-    var pages: Int { get }
-    var docs: [Item] { get }
-}
-
-class DTOConverter {
-    static func convert(_ dto: PersonListDTO) -> [PersonModel] {
-        var persons = [PersonModel]()
-        for person in dto.docs {
-            guard let name = person.name else { continue }
-            if name.count == 0 { continue }
-            persons.append(PersonModel(
-                id: person.id,
-                name: name,
-                photo: person.photo
-            ))
-        }
-        return persons
     }
 }
 
