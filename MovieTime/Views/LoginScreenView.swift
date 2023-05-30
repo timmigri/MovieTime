@@ -11,20 +11,20 @@ import GoogleSignInSwift
 
 struct LoginScreenView: View {
     @ObservedObject var authViewModel = Injection.shared.container.resolve(AuthViewModel.self)!
-    
+
     var body: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 PictureBox(
-                    pictureName: "Pictures/Login",
-                    headlineText: "Вход в MovieTime",
-                    bodyText: "Войдите в MovieTime, чтобы узнать много нового о мире фильмов и сериалов."
+                    pictureName: R.image.pictures.login.name,
+                    headlineText: R.string.login.welcomeTitle(),
+                    bodyText: R.string.login.welcomeText()
                 )
                 Divider()
                     .frame(height: 2)
                     .frame(maxWidth: .infinity)
-                    .overlay(Color.appTextBlack.overlay(Text("Войти с помощью соцсетей")
+                    .overlay(Color.appTextBlack.overlay(Text(R.string.login.buttonSectionText())
                         .foregroundColor(.appTextBlack)
                         .bodyText5()
                         .padding(.horizontal, 10)
@@ -44,7 +44,7 @@ struct LoginScreenView: View {
                             authViewModel.vkAuthWebView
                         }
                         .overlay(
-                            Image("Icons/VK")
+                            Image(R.image.icons.vK)
                         )
                         .onTapGesture {
                             login(.vkontakte)

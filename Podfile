@@ -10,5 +10,6 @@ target 'MovieTime' do
   pod 'GoogleSignIn'
   pod 'GoogleSignInSwiftSupport'
   pod 'Moya', '~> 15.0'
+  pod 'R.swift'
 
 end

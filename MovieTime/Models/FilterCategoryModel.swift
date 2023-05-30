@@ -13,8 +13,4 @@ struct FilterCategoryModel: Identifiable {
     let name: String
     let searchKey: String
     var isSelected: Bool = false
-
-    var pathToPicture: String {
-        "FilterBackgrounds/" + pictureName
-    }
 }

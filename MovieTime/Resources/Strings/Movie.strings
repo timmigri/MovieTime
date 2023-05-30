@@ -1,0 +1,13 @@
+/* 
+  Movie.strings
+  MovieTime
+
+  Created by Артём Грищенко on 31.05.2023.
+  
+*/
+"noResultTitle" = "";
+"noResultText" = "";
+"userRatingSectionTitle" = "Ваша оценка";
+"descriptionSectionTitle" = "Описание";
+"actorsSectionTitle" = "Актеры";
+"factsSectionTitle" = "Факты";

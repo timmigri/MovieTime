@@ -29,6 +29,14 @@
 		AC9414402A16E5E50093F260 /* RatingStars.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC94143F2A16E5E50093F260 /* RatingStars.swift */; };
 		AC9534662A190D3300244118 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9534652A190D3300244118 /* AppConfig.swift */; };
 		AC9534682A190DF400244118 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AC9534672A190DF400244118 /* .gitignore */; };
+		AC95C3C02A267F0E009D4F2D /* R.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC95C3BF2A267F0E009D4F2D /* R.swift */; };
+		AC95C3C52A268075009D4F2D /* Login.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3C42A268075009D4F2D /* Login.strings */; };
+		AC95C3C72A268460009D4F2D /* TabBar.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3C62A268460009D4F2D /* TabBar.strings */; };
+		AC95C3C92A2685B6009D4F2D /* Search.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3C82A2685B6009D4F2D /* Search.strings */; };
+		AC95C3CB2A268C31009D4F2D /* Favorite.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3CA2A268C31009D4F2D /* Favorite.strings */; };
+		AC95C3CD2A268CFC009D4F2D /* Filter.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3CC2A268CFC009D4F2D /* Filter.strings */; };
+		AC95C3CF2A269C6D009D4F2D /* Movie.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3CE2A269C6D009D4F2D /* Movie.strings */; };
+		AC95C3D12A269E1D009D4F2D /* Profile.strings in Resources */ = {isa = PBXBuildFile; fileRef = AC95C3D02A269E1D009D4F2D /* Profile.strings */; };
 		AC964BED2A24D47A00C886CC /* CustomSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BEC2A24D47A00C886CC /* CustomSelect.swift */; };
 		AC964BF02A25213B00C886CC /* KinopoiskAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BEF2A25213B00C886CC /* KinopoiskAPI.swift */; };
 		AC964BF82A25266200C886CC /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC964BF72A25266100C886CC /* AppConstants.swift */; };
@@ -86,6 +94,14 @@
 		AC94143F2A16E5E50093F260 /* RatingStars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingStars.swift; sourceTree = "<group>"; };
 		AC9534652A190D3300244118 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		AC9534672A190DF400244118 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		AC95C3BF2A267F0E009D4F2D /* R.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = R.swift; path = MovieTime/Resources/R.swift; sourceTree = SOURCE_ROOT; };
+		AC95C3C42A268075009D4F2D /* Login.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Login.strings; sourceTree = "<group>"; };
+		AC95C3C62A268460009D4F2D /* TabBar.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = TabBar.strings; sourceTree = "<group>"; };
+		AC95C3C82A2685B6009D4F2D /* Search.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Search.strings; sourceTree = "<group>"; };
+		AC95C3CA2A268C31009D4F2D /* Favorite.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Favorite.strings; sourceTree = "<group>"; };
+		AC95C3CC2A268CFC009D4F2D /* Filter.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Filter.strings; sourceTree = "<group>"; };
+		AC95C3CE2A269C6D009D4F2D /* Movie.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Movie.strings; sourceTree = "<group>"; };
+		AC95C3D02A269E1D009D4F2D /* Profile.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Profile.strings; sourceTree = "<group>"; };
 		AC964BEC2A24D47A00C886CC /* CustomSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSelect.swift; sourceTree = "<group>"; };
 		AC964BEF2A25213B00C886CC /* KinopoiskAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinopoiskAPI.swift; sourceTree = "<group>"; };
 		AC964BF72A25266100C886CC /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
@@ -203,6 +219,29 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		AC95C3C22A26804C009D4F2D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AC95C3C32A26805A009D4F2D /* Strings */,
+				AC95C3BF2A267F0E009D4F2D /* R.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AC95C3C32A26805A009D4F2D /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				AC95C3C42A268075009D4F2D /* Login.strings */,
+				AC95C3C62A268460009D4F2D /* TabBar.strings */,
+				AC95C3C82A2685B6009D4F2D /* Search.strings */,
+				AC95C3CA2A268C31009D4F2D /* Favorite.strings */,
+				AC95C3CC2A268CFC009D4F2D /* Filter.strings */,
+				AC95C3CE2A269C6D009D4F2D /* Movie.strings */,
+				AC95C3D02A269E1D009D4F2D /* Profile.strings */,
+			);
+			path = Strings;
+			sourceTree = "<group>";
+		};
 		AC964BEE2A25211D00C886CC /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +293,7 @@
 		ACA2B5E92A0D5D170065CBB1 /* MovieTime */ = {
 			isa = PBXGroup;
 			children = (
+				AC95C3C22A26804C009D4F2D /* Resources */,
 				AC9534652A190D3300244118 /* AppConfig.swift */,
 				AC964BF72A25266100C886CC /* AppConstants.swift */,
 				AC9D43AA2A261E6600E7F2F0 /* Protocols.swift */,
@@ -336,6 +376,7 @@
 			buildPhases = (
 				A9636AD8D6520112BB61A2E2 /* [CP] Check Pods Manifest.lock */,
 				ACA2B5E32A0D5D170065CBB1 /* Sources */,
+				AC95C3BE2A267CDC009D4F2D /* Run Script */,
 				ACA2B5E42A0D5D170065CBB1 /* Frameworks */,
 				ACA2B5E52A0D5D170065CBB1 /* Resources */,
 				ACA2B60A2A0D7C0E0065CBB1 /* Run Script */,
@@ -388,10 +429,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC95C3D12A269E1D009D4F2D /* Profile.strings in Resources */,
+				AC95C3CD2A268CFC009D4F2D /* Filter.strings in Resources */,
 				AC9534682A190DF400244118 /* .gitignore in Resources */,
 				ACA2B60D2A0D85BF0065CBB1 /* .swiftlint.yml in Resources */,
+				AC95C3CB2A268C31009D4F2D /* Favorite.strings in Resources */,
+				AC95C3CF2A269C6D009D4F2D /* Movie.strings in Resources */,
 				ACA2B5FA2A0D6A650065CBB1 /* SFProDisplay-Regular.ttf in Resources */,
 				ACA2B5EF2A0D5D190065CBB1 /* Assets.xcassets in Resources */,
+				AC95C3C92A2685B6009D4F2D /* Search.strings in Resources */,
+				AC95C3C52A268075009D4F2D /* Login.strings in Resources */,
+				AC95C3C72A268460009D4F2D /* TabBar.strings in Resources */,
 				ACA2B5FC2A0D6A9B0065CBB1 /* SFProDisplay-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,6 +486,26 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AC95C3BE2A267CDC009D4F2D /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
 		ACA2B60A2A0D7C0E0065CBB1 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -474,6 +542,7 @@
 				AC9D43AB2A261E6600E7F2F0 /* Protocols.swift in Sources */,
 				ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */,
 				AC91031B2A0EBBA000B76BB3 /* CustomButton.swift in Sources */,
+				AC95C3C02A267F0E009D4F2D /* R.swift in Sources */,
 				AC964BED2A24D47A00C886CC /* CustomSelect.swift in Sources */,
 				AC91031F2A0EE44200B76BB3 /* PictureBox.swift in Sources */,
 				ACA2B5ED2A0D5D170065CBB1 /* ContentView.swift in Sources */,

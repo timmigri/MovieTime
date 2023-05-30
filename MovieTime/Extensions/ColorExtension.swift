@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 
 extension Color {
-    static let appTextWhite = Color("Colors/appText")
+    static let appTextWhite = Color(R.color.colors.appText.name)
     static let appTextBlack = appSecondary300
-    static let appPrimary = Color("Colors/appPrimary")
-    static let appPrimary200 = Color("Colors/appPrimary200")
-    static let appBackground = Color("Colors/appBackground")
-    static let appSecondary300 = Color("Colors/appSecondary300")
-    static let appSecondary = Color("Colors/appSecondary")
+    static let appPrimary = Color(R.color.colors.appPrimary.name)
+    static let appPrimary200 = Color(R.color.colors.appPrimary200.name)
+    static let appBackground = Color(R.color.colors.appBackground.name)
+    static let appSecondary300 = Color(R.color.colors.appSecondary300.name)
+    static let appSecondary = Color(R.color.colors.appSecondary.name)
 }

@@ -1,0 +1,13 @@
+/* 
+  Favorite.strings
+  MovieTime
+
+  Created by Артём Грищенко on 30.05.2023.
+  
+*/
+"pictureBoxTitle" = "Список закладок пуст";
+"pictureBoxText" = "Добавляйте любимые фильмы в избранное, чтобы видеть их всех в одном месте даже без доступа к Интернету.";
+"searchFieldPlaceholder" = "Поиск фильмов в избранном...";
+"sortOptionName" = "Название";
+"sortOptionYear" = "Год";
+"sortOptionRating" = "Рейтинг";

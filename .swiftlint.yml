@@ -1,2 +1,4 @@
 excluded:
   - Pods
+  - R.generated.swift
+  - MovieTime/Resources/R.swift

@@ -38,7 +38,7 @@ struct PictureBox_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
-            PictureBox(pictureName: "LoginIcon", headlineText: "Login", bodyText: "Login")
+            PictureBox(pictureName: R.image.pictures.login.name, headlineText: "Login", bodyText: "Login")
         }
     }
 }

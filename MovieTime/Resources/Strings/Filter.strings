@@ -1,0 +1,29 @@
+/* 
+  Filter.strings
+  MovieTime
+
+  Created by Артём Грищенко on 30.05.2023.
+  
+*/
+
+"navbarTitle" = "Фильтры";
+"showResultsButtonText" = "Показать результаты";
+"sortBy" = "Сортировать по";
+"chooseGenresTitle" = "Выберите жанры";
+"clearButtonText" = "Очистить";
+"sortOptionName" = "Названию";
+"sortOptionYear" = "Году";
+"sortOptionRating" = "Рейтингу";
+
+"categoryAction" = "Боевик";
+"categoryWar" = "Военный";
+"categoryHorror" = "Ужасы";
+"categoryThriler" = "Триллер";
+"categoryRomance" = "Мелодрама";
+"categoryWesterns" = "Вестерн";
+"categoryComedy" = "Комедия";
+"categoryAnimation" = "Мультфильм";
+"categoryMystery" = "Фантастика";
+"categoryFantasy" = "Фэнтези";
+"categoryMusic" = "Концерт";
+"categoryFamily" = "Семейный";

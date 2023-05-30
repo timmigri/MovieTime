@@ -1,0 +1,18 @@
+/* 
+  Search.strings
+  MovieTime
+
+  Created by Артём Грищенко on 30.05.2023.
+  
+*/
+
+"searchFieldPlaceholder" = "Поиск фильмов, сериалов, актеров...";
+"noResultBoxTitle" = "Ничего:(";
+"noResultBoxText" = "Ничего не найдено, попробуйте другие слова.";
+"searchBoxTitle" = "Поиск в MovieTime";
+"searchBoxText" = "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?";
+"searchBoxRandomMovie" = "Покажи случайный фильм";
+"resultsPersonsTitle" = "Персоны";
+"resultsMoviesTitle" = "Фильмы и сериалы";
+"errorLoadingPersons" = "Произошла ошибка при загрузке персон.";
+"errorLoadingMovies" = "Произошла ошибка при загрузке фильмов.";

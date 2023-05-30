@@ -18,7 +18,7 @@ class MovieDetailViewModel: ObservableObject {
         case loading
         case success(movie: MovieDetailModel)
         case error
-        
+
         var movie: MovieDetailModel? {
             switch self {
             case .success(let movie):
@@ -28,7 +28,7 @@ class MovieDetailViewModel: ObservableObject {
             }
         }
     }
-    
+
     let source: Source
 //    @Published private(set) var isLoadingMovie: Bool = false
 //    @Published private(set) var movie: MovieDetailModel?
@@ -56,18 +56,6 @@ class MovieDetailViewModel: ObservableObject {
             return false
         }
     }
-
-//    var showActorsCondition: (Bool, [PersonModel]) {
-//        guard let movie else { return (false, []) }
-//        guard let actors = movie.actors else { return (false, []) }
-//        return (actors.count > 0, actors)
-//    }
-
-//    var showDescriptionCondition: (Bool, String) {
-//        guard let movie else { return (false, "") }
-//        guard let description = movie.description else { return (false, "") }
-//        return (description.count > 0, description)
-//    }
 
     func onTapBookmarkButton() {
         guard let movie = screenState.movie else { return }

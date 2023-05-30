@@ -16,15 +16,15 @@ struct BookmarkScreenView: View {
             Color.appBackground.ignoresSafeArea()
             if !viewModel.showResults {
                 PictureBox(
-                    pictureName: "Pictures/Bookmark",
-                    headlineText: "Список закладок пуст",
-                    bodyText: "Добавляйте любимые фильмы в избранное, чтобы видеть их всех в одном месте даже без доступа к Интернету."
+                    pictureName: R.image.pictures.bookmark.name,
+                    headlineText: R.string.favorite.pictureBoxTitle(),
+                    bodyText: R.string.favorite.pictureBoxText()
                 )
                 .padding()
             } else {
                 VStack {
                     HStack(spacing: 7) {
-                        Image("Icons/Search")
+                        Image(R.image.icons.search.name)
                             .padding(.leading, 10)
                             .padding(.vertical, 10)
                             .animation(.easeInOut, value: 5)
@@ -32,7 +32,7 @@ struct BookmarkScreenView: View {
                                 viewModel.onChangeSearchOptions()
                             }
                         TextField(text: $viewModel.query) {
-                            Text("Поиск фильмов в избранном...")
+                            Text(R.string.favorite.searchFieldPlaceholder())
                                 .foregroundColor(.appSecondary300.opacity(0.5))
                                 .bodyText3()
                         }
@@ -56,7 +56,7 @@ struct BookmarkScreenView: View {
                             )
                     )
                     HStack(spacing: 5) {
-                        Image("Icons/Filter")
+                        Image(R.image.icons.filter.name)
                         CustomSelect(
                             options: viewModel.sortOptions,
                             onSelectOption: viewModel.onSelectSortOption

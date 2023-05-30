@@ -16,7 +16,7 @@ struct SearchScreenView: View {
             Color.appBackground.ignoresSafeArea()
             VStack {
                 HStack(spacing: 7) {
-                    Image("Icons/Search")
+                    Image(R.image.icons.search.name)
                         .padding(.leading, 10)
                         .padding(.vertical, 10)
                         .animation(.easeInOut, value: 5)
@@ -24,7 +24,7 @@ struct SearchScreenView: View {
                             viewModel.onChangeSearchOptions()
                         }
                     TextField(text: $viewModel.query) {
-                        Text("Поиск фильмов, сериалов, актеров...")
+                        Text(R.string.search.searchFieldPlaceholder)
                             .foregroundColor(.appSecondary300.opacity(0.5))
                             .bodyText3()
                     }
@@ -40,7 +40,7 @@ struct SearchScreenView: View {
                         viewModel.isUserTyping = true
                     }
                     NavigationLink(destination: FilterScreenView()) {
-                        let icon = viewModel.isSomeFilterActive ? "Icons/FilterActive" : "Icons/Filter"
+                        let icon = viewModel.isSomeFilterActive ? R.image.icons.filterActive : R.image.icons.filter
                         Image(icon)
                             .padding(.leading, 10)
                             .padding(.vertical, 10)
@@ -58,22 +58,22 @@ struct SearchScreenView: View {
                     switch viewModel.screenState {
                     case .noResultPicture:
                         PictureBox(
-                            pictureName: "Pictures/NoResult",
-                            headlineText: "Ничего:(",
-                            bodyText: "Ничего не найдено, попробуйте другие слова."
+                            pictureName: R.image.pictures.noResult.name,
+                            headlineText: R.string.search.noResultBoxTitle(),
+                            bodyText: R.string.search.noResultBoxText()
                         )
                     case .searchPicture:
                         VStack {
                             PictureBox(
-                                pictureName: "Pictures/Search",
-                                headlineText: "Поиск в MovieTime",
-                                bodyText: "Начните набирать в строке поиска, и MovieTime покажет вам лучшие результаты фильмов, сериалов и актеров по вашему запросу. Не знаете, что посмотреть?", // swiftlint:disable:this line_length
+                                pictureName: R.image.pictures.search.name,
+                                headlineText: R.string.search.searchBoxTitle(),
+                                bodyText: R.string.search.searchBoxText(),
                                 takeAllSpace: false
                             )
                             NavigationLink(destination: MovieScreenView(
                                 source: .network(kpId: nil)
                             )) {
-                                Text("Покажи случайный фильм")
+                                Text(R.string.search.searchBoxRandomMovie())
                                     .bodyText5()
                             }
                         }
@@ -107,7 +107,7 @@ struct SearchScreenView: View {
                     .padding(.bottom, 10)
             } else if viewModel.showPersonsList {
                 VStack(alignment: .leading) {
-                    Text("Персоны")
+                    Text(R.string.search.resultsPersonsTitle())
                         .bodyText2()
                         .foregroundColor(.appTextWhite)
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -141,7 +141,7 @@ struct SearchScreenView: View {
                     .padding(.bottom, 10)
             } else if viewModel.showMoviesList {
                 VStack(alignment: .leading) {
-                    Text("Фильмы и сериалы")
+                    Text(R.string.search.resultsMoviesTitle())
                         .bodyText2()
                         .foregroundColor(.appTextWhite)
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {

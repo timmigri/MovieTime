@@ -21,24 +21,24 @@ struct MainScreenView: View {
             SearchScreenView()
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 1 ? "Icons/Search" : "Icons/SearchActive")
-                        Text("Поиск")
+                        Image(selectedTabId != 1 ? R.image.icons.search.name : R.image.icons.searchActive.name)
+                        Text(R.string.tabBar.search())
                     }
                 }
                 .tag(1)
             BookmarkScreenView()
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 2 ? "Icons/Bookmark" : "Icons/BookmarkActive")
-                        Text("Избранное")
+                        Image(selectedTabId != 2 ? R.image.icons.bookmark.name : R.image.icons.bookmarkActive.name)
+                        Text(R.string.tabBar.favorite())
                     }
                 }
                 .tag(2)
             ProfileScreenView()
                 .tabItem {
                     HStack {
-                        Image(selectedTabId != 3 ? "Icons/Profile" : "Icons/ProfileActive")
-                        Text("Профиль")
+                        Image(selectedTabId != 3 ? R.image.icons.profile.name : R.image.icons.profileActive.name)
+                        Text(R.string.tabBar.profile())
                     }
                 }
                 .tag(3)

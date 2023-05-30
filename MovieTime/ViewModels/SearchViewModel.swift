@@ -50,9 +50,9 @@ class SearchViewModel: ObservableObject {
         count: FilterCategoryModel.generateCategories().count
     )
     @Published var sortOptions = [
-        CustomSelect.SelectOption(title: "Названию", key: "name"),
-        CustomSelect.SelectOption(title: "Году", key: "year"),
-        CustomSelect.SelectOption(title: "Рейтингу", key: "rating.kp")
+        CustomSelect.SelectOption(title: R.string.filter.sortOptionName(), key: "name"),
+        CustomSelect.SelectOption(title: R.string.filter.sortOptionYear(), key: "year"),
+        CustomSelect.SelectOption(title: R.string.filter.sortOptionRating(), key: "rating.kp")
     ]
     @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
 
@@ -139,7 +139,7 @@ class SearchViewModel: ObservableObject {
     private func onErrorLoadingPersons() {
         persons = []
         isLoadingPersons = false
-        personsLoadingError = "Произошла ошибка при загрузке актеров."
+        personsLoadingError = R.string.search.errorLoadingPersons()
     }
 
     private func onStartLoadingPersons() {
@@ -182,7 +182,7 @@ class SearchViewModel: ObservableObject {
     private func onErrorLoadingMovies() {
         movies = []
         isLoadingMovies = false
-        moviesLoadingError = "Произошла ошибка при загрузке фильмов."
+        moviesLoadingError = R.string.search.errorLoadingMovies()
     }
 
     private func onStartLoadingMovies() {

@@ -7,15 +7,16 @@
 
 import Foundation
 import SwiftUI
+import RealmSwift
 
 class BookmarkViewModel: ObservableObject {
     @Published private(set) var movieList: [MovieDetailModel] = []
     @Published var query: String = ""
     @Published var showResults = true
     @Published var sortOptions = [
-        CustomSelect.SelectOption(title: "Название", key: "name"),
-        CustomSelect.SelectOption(title: "Год", key: "year"),
-        CustomSelect.SelectOption(title: "Рейтинг", key: "rating")
+        CustomSelect.SelectOption(title: R.string.favorite.sortOptionName(), key: "name"),
+        CustomSelect.SelectOption(title: R.string.favorite.sortOptionYear(), key: "year"),
+        CustomSelect.SelectOption(title: R.string.favorite.sortOptionRating(), key: "rating")
     ]
     @Published var sortOrderAscending = false
     @Injected var bookmarkService: BookmarkMovieService
@@ -26,7 +27,7 @@ class BookmarkViewModel: ObservableObject {
         }
         return nil
     }
-    
+
     var currentSortOptionKey: String? {
         if let index = currentSortOptionIndex { return sortOptions[index].key }
         return nil

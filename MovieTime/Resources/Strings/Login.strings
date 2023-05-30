@@ -1,0 +1,11 @@
+/* 
+  Login.strings
+  MovieTime
+
+  Created by Артём Грищенко on 30.05.2023.
+  
+*/
+
+"welcomeTitle" = "Вход в MovieTime";
+"welcomeText" = "Войдите в MovieTime, чтобы узнать много нового о мире фильмов и сериалов.";
+"buttonSectionText" = "Войти с помощью соцсетей";

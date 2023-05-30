@@ -14,7 +14,7 @@ struct ProfileScreenView: View {
     var body: some View {
         ZStack{
             Color.appBackground.ignoresSafeArea()
-            Button("Logout") {
+            Button(R.string.profile.logout()) {
                 authViewModel.logout()
             }
         }

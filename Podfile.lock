@@ -20,6 +20,7 @@ PODS:
     - Moya/Core (= 15.0.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
+  - R.swift (7.3.2)
   - Realm (10.39.1):
     - Realm/Headers (= 10.39.1)
   - Realm/Headers (10.39.1)
@@ -32,6 +33,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - GoogleSignInSwiftSupport
   - Moya (~> 15.0)
+  - R.swift
   - RealmSwift (~> 10)
   - SwiftLint
   - Swinject
@@ -45,6 +47,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - Moya
+    - R.swift
     - Realm
     - RealmSwift
     - SwiftLint
@@ -58,11 +61,12 @@ SPEC CHECKSUMS:
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  R.swift: 0af0d882f49f03711415cb4e5215daa977d8a480
   Realm: 1f3157edf145f4d9036765ab550c8cb18f62b700
   RealmSwift: 8a69a1cb788cd5865966f49667b130567e07bceb
   SwiftLint: 437c13044ba689c96b37c66f7c646f46efba7176
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
 
-PODFILE CHECKSUM: ac933a08b4d32514ff960955885996b27cf33305
+PODFILE CHECKSUM: 304b23ac619cc5043f19cb8ade226295e3e9d4ae
 
 COCOAPODS: 1.12.1

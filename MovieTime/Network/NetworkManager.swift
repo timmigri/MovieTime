@@ -8,7 +8,7 @@
 import Moya
 
 class NetworkManager: NetworkableProtocol {
-    var provider = MoyaProvider<KinopoiskAPI>(plugins: [NetworkLoggerPlugin()])
+    var provider = MoyaProvider<KinopoiskAPI>()
     @Injected var networkPaginator: NetworkPaginator
 
     func fetchMovie(id: Int?, completion: @escaping (Result<MovieDetailDTO, Error>) -> Void) {

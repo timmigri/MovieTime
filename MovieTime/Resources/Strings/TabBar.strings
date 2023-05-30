@@ -1,0 +1,11 @@
+/* 
+  TabBar.strings
+  MovieTime
+
+  Created by Артём Грищенко on 30.05.2023.
+  
+*/
+
+"search" = "Поиск";
+"favorite" = "Избранное";
+"profile" = "Профиль";

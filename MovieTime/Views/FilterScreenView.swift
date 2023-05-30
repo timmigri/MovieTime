@@ -19,7 +19,7 @@ struct FilterScreenView: View {
                     onTapGesture: {
                         viewModel.onChangeSearchOptions()
                     },
-                    title: "Фильтры"
+                    title: R.string.filter.navbarTitle()
                 )
                 ScrollView(.vertical, showsIndicators: false) {
                     sortKeyRowView
@@ -38,7 +38,7 @@ struct FilterScreenView: View {
                     viewModel.onChangeSearchOptions()
                     self.presentationMode.wrappedValue.dismiss()
                 },
-                title: "Показать результаты"
+                title: R.string.filter.showResultsButtonText()
             )
             .scaleEffect(viewModel.isSomeFilterActive ? 1 : 0.001, anchor: .center)
             .padding()
@@ -49,7 +49,7 @@ struct FilterScreenView: View {
     var sortKeyRowView: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Сортировать по")
+                Text(R.string.filter.sortBy())
                     .bodyText2()
                     .foregroundColor(.appTextWhite)
                 Spacer()
@@ -64,12 +64,12 @@ struct FilterScreenView: View {
 
     var filterTextRowView: some View {
         HStack {
-            Text("Выберите жанры")
+            Text(R.string.filter.chooseGenresTitle())
                 .bodyText2()
                 .foregroundColor(.appTextWhite)
             Spacer()
             if viewModel.countSelectedFilterCategories > 0 {
-                Button("Очистить") { viewModel.resetFilterCategories() }
+                Button(R.string.filter.clearButtonText()) { viewModel.resetFilterCategories() }
                     .foregroundColor(.appPrimary)
             }
         }
@@ -96,7 +96,7 @@ struct FilterScreenView: View {
                 .padding(.vertical, 23)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
-                    Image(category.pathToPicture)
+                    Image(category.pictureName)
                         .resizable()
                         .cornerRadius(8)
                 )

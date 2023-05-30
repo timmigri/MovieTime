@@ -10,6 +10,7 @@ import SwiftUI
 struct MovieScreenView: View {
     @StateObject var viewModel: MovieDetailViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    private let scrollCoordinateSpace = "scroll"
 
     init(source: MovieDetailViewModel.Source) {
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(source: source))
@@ -27,9 +28,9 @@ struct MovieScreenView: View {
             case .error:
                 VStack {
                     PictureBox(
-                        pictureName: "Pictures/NoResult",
-                        headlineText: "Ничего:(",
-                        bodyText: "Произошла ошибка со стороны сервера, из-за которой не возможно показать фильм."
+                        pictureName: R.image.pictures.noResult.name,
+                        headlineText: R.string.movie.noResultTitle(),
+                        bodyText: R.string.movie.noResultText()
                     )
                 }
             }
@@ -67,13 +68,13 @@ struct MovieScreenView: View {
                 }
                 .background(
                     GeometryReader { innerGeometry in
-                        let offset = innerGeometry.frame(in: .named("scroll")).minY
+                        let offset = innerGeometry.frame(in: .named(scrollCoordinateSpace)).minY
                         Color.clear.preference(key: ScrollViewOffsetPreferenceKey.self, value: -offset)
                     }
                 )
             }
             .ignoresSafeArea()
-            .coordinateSpace(name: "scroll")
+            .coordinateSpace(name: scrollCoordinateSpace)
             .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
                 viewModel.onUpdateScrollPosition(value)
             }
@@ -127,7 +128,7 @@ struct MovieScreenView: View {
                 }
                 .foregroundColor(.appSecondary300)
                 HStack(spacing: 2) {
-                    Image("Icons/MovieStar")
+                    Image(R.image.icons.movieStar)
                     Text(movie.formattedRatingString)
                         .bodyText5()
                         .foregroundColor(.appTextWhite)
@@ -153,7 +154,7 @@ struct MovieScreenView: View {
         }
 
         return HStack {
-            renderButton(icon: "Icons/ArrowBack")
+            renderButton(icon: R.image.icons.arrowBack.name)
                 .padding(.leading, 8)
                 .onTapGesture {
                     presentationMode.wrappedValue.dismiss()
@@ -161,18 +162,18 @@ struct MovieScreenView: View {
             Spacer()
             HStack(spacing: 20) {
                 if viewModel.showBookmarkButton {
-                    renderButton(icon: viewModel.isBookmarked ? "Icons/BookmarkActive" : "Icons/BookmarkMovie")
+                    renderButton(icon: viewModel.isBookmarked ? R.image.icons.bookmarkActive.name : R.image.icons.bookmarkMovie.name)
                         .scaleEffect(viewModel.bookmarkButtonScale)
                         .onTapGesture(perform: viewModel.onTapBookmarkButton)
                 }
-                renderButton(icon: "Icons/Share")
+                renderButton(icon: R.image.icons.share.name)
                     .onTapGesture(perform: shareMovie)
             }
         }
     }
 
     var ratingView: some View {
-        SectionView(title: "Ваша оценка", paddingTop: 5, innerContent: AnyView(
+        SectionView(title: R.string.movie.userRatingSectionTitle(), paddingTop: 5, innerContent: AnyView(
             RatingStars(
                 rating: viewModel.userRating,
                 onChange: viewModel.onChangeRating
@@ -184,7 +185,7 @@ struct MovieScreenView: View {
         Group {
             if let description = movie.description {
                 SectionView(
-                    title: "Описание",
+                    title: R.string.movie.descriptionSectionTitle(),
                     innerContent: AnyView(
                     Text(description)
                         .bodyText3()
@@ -198,7 +199,7 @@ struct MovieScreenView: View {
         Group {
             if movie.actors.count > 0 {
                 SectionView(
-                    title: "Актеры",
+                    title: R.string.movie.actorsSectionTitle(),
                     innerContent: AnyView(
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(alignment: .top, spacing: 10) {
@@ -218,7 +219,7 @@ struct MovieScreenView: View {
     func renderFactsView(_ movie: MovieDetailModel) -> some View {
         Group {
             if let facts = movie.facts, facts.count > 0 {
-                SectionView(title: "Факты", innerContent: AnyView(
+                SectionView(title: R.string.movie.factsSectionTitle(), innerContent: AnyView(
                     ForEach(facts.indices, id: \.self) { index in
                         Text(facts[index])
                             .bodyText5()
