@@ -31,18 +31,6 @@ class MovieDetailModel: MovieModel {
             super.init(id: id, year: year, movieLength: movieLength, name: name, posterUrl: posterUrl, rating: rating, posterImage: posterImage)
     }
 
-    init(dbModel: MovieDBModel) {
-        self.description = dbModel.movieDescription
-        self.genres = []
-        self.facts = []
-        self.actors = []
-        super.init(id: dbModel.kpId, year: dbModel.year, movieLength: dbModel.movieLength, name: dbModel.name, posterUrl: nil, rating: dbModel.rating, posterImage: dbModel.image)
-    }
-
-    static func processDbData(_ dbModel: MovieDBModel) -> MovieDetailModel {
-        return MovieDetailModel(dbModel: dbModel)
-    }
-
     var genresString: String {
         genres.prefix(3).joined(separator: ", ")
     }

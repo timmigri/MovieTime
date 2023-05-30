@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class MovieDBModel: Object {
+class MovieDBModel: Object, Identifiable {
     @Persisted var image: Data?
     @Persisted var kpId: Int
     @Persisted var name: String

@@ -14,67 +14,25 @@ struct BookmarkScreenView: View {
     var body: some View {
         ZStack {
             Color.appBackground.ignoresSafeArea()
-            if !viewModel.showResults {
+            switch viewModel.screenState {
+            case .noBookmarkPicture:
                 PictureBox(
                     pictureName: R.image.pictures.bookmark.name,
                     headlineText: R.string.favorite.pictureBoxTitle(),
                     bodyText: R.string.favorite.pictureBoxText()
                 )
                 .padding()
-            } else {
+            case .success(let movieList):
                 VStack {
-                    HStack(spacing: 7) {
-                        Image(R.image.icons.search.name)
-                            .padding(.leading, 10)
-                            .padding(.vertical, 10)
-                            .animation(.easeInOut, value: 5)
-                            .onTapGesture {
-                                viewModel.onChangeSearchOptions()
-                            }
-                        TextField(text: $viewModel.query) {
-                            Text(R.string.favorite.searchFieldPlaceholder())
-                                .foregroundColor(.appSecondary300.opacity(0.5))
-                                .bodyText3()
-                        }
-                        .frame(height: 44)
-                        .accentColor(.appPrimary)
-                        .foregroundColor(.appSecondary300)
-                        .autocorrectionDisabled(true)
-                        .focused($searchFieldFocused)
-                        .onChange(of: searchFieldFocused) { isFocused in
-                            searchFieldFocused = isFocused
-                        }
-                        .onChange(of: viewModel.query) { _ in
-                            viewModel.onChangeSearchOptions()
-                        }
-                    }
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(
-                                searchFieldFocused ? Color.appPrimary : Color.appSecondary300,
-                                lineWidth: 1
-                            )
-                    )
-                    HStack(spacing: 5) {
-                        Image(R.image.icons.filter.name)
-                        CustomSelect(
-                            options: viewModel.sortOptions,
-                            onSelectOption: viewModel.onSelectSortOption
-                        )
-                        Spacer()
-                        if viewModel.currentSortOptionIndex != nil {
-                            sortOrderButton
-                        }
-                    }
-                    .padding(.top, 5)
+                    filterView
                     GeometryReader { geometry in
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                                ForEach(viewModel.movieList) { movie in
+                                ForEach(movieList, id: \.id) { movie in
                                     NavigationLink(destination: MovieScreenView(
-                                        source: .database(movie: movie)
+                                        source: .database(kpId: movie.id)
                                     )) {
-                                        MovieCard(movie: MovieModel(movieDetailModel: movie), geometry: geometry)
+                                        MovieCard(movie: movie, geometry: geometry)
                                     }
                                 }
                             }
@@ -83,10 +41,58 @@ struct BookmarkScreenView: View {
                     .padding(.top, 32)
                 }
                 .padding()
+            case .error(let error):
+                Text(error)
+                    .bodyText3()
+                    .foregroundColor(.appSecondary300)
             }
-        }
-        .onAppear {
-            viewModel.getMovieListFromDB()
+        }.onAppear(perform: viewModel.onChangeSearchOptions)
+    }
+    
+    var filterView: some View {
+        Group {
+            HStack(spacing: 7) {
+                Image(R.image.icons.search.name)
+                    .padding(.leading, 10)
+                    .padding(.vertical, 10)
+                    .animation(.easeInOut, value: 5)
+                    .onTapGesture(perform: viewModel.onChangeSearchOptions)
+                TextField(text: $viewModel.query) {
+                    Text(R.string.favorite.searchFieldPlaceholder())
+                        .foregroundColor(.appSecondary300.opacity(0.5))
+                        .bodyText3()
+                }
+                .frame(height: 44)
+                .accentColor(.appPrimary)
+                .foregroundColor(.appSecondary300)
+                .autocorrectionDisabled(true)
+                .focused($searchFieldFocused)
+                .onChange(of: searchFieldFocused) { isFocused in
+                    searchFieldFocused = isFocused
+                }
+                .onChange(of: viewModel.query) { _ in
+                    viewModel.onChangeSearchOptions()
+                }
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(
+                        searchFieldFocused ? Color.appPrimary : Color.appSecondary300,
+                        lineWidth: 1
+                    )
+            )
+            HStack(spacing: 5) {
+                Image(R.image.icons.filter.name)
+                CustomSelect(
+                    options: viewModel.sortOptions,
+                    onSelectOption: viewModel.onSelectSortOption
+                )
+                Spacer()
+                if viewModel.currentSortOptionIndex != nil {
+                    sortOrderButton
+                }
+            }
+            .padding(.top, 5)
         }
     }
 

@@ -11,7 +11,7 @@ import SwiftUI
 class MovieDetailViewModel: ObservableObject {
     enum Source {
         case network(kpId: Int?)
-        case database(movie: MovieDetailModel)
+        case database(kpId: Int)
     }
 
     enum ScreenState {
@@ -30,13 +30,11 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     let source: Source
-//    @Published private(set) var isLoadingMovie: Bool = false
-//    @Published private(set) var movie: MovieDetailModel?
     @Published private(set) var screenState: ScreenState = .loading
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
     @Injected private var rateMovie: RateMovie
-    @Injected private var bookmarkMovieService: BookmarkMovieService
+    @Injected private var movieRepository: MovieRepository
     @Injected private var networkManager: NetworkManager
     @Published var isBookmarked: Bool = false
 
@@ -59,7 +57,7 @@ class MovieDetailViewModel: ObservableObject {
 
     func onTapBookmarkButton() {
         guard let movie = screenState.movie else { return }
-        let res = bookmarkMovieService.toggleBookmark(forMovieId: movie.id, movie: movie)
+        let res = movieRepository.toggleMovie(forMovieId: movie.id, movie: movie)
         guard let res else { return }
 
         isBookmarked = res
@@ -99,9 +97,9 @@ class MovieDetailViewModel: ObservableObject {
     }
     
     private func onSuccessLoadingMovie(_ movie: MovieDetailModel) {
+        self.userRating = rateMovie.getRating(forId: movie.id)
+        self.isBookmarked = movieRepository.containsMovie(id: movie.id)
         self.screenState = .success(movie: movie)
-        self.userRating = self.rateMovie.getRating(forId: movie.id)
-        self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: movie.id)
     }
 
     func loadMovie() {
@@ -120,8 +118,14 @@ class MovieDetailViewModel: ObservableObject {
                     self.screenState = .error
                 }
             }
-        case .database(let movie):
-            self.onSuccessLoadingMovie(movie)
+        case .database(let kpId):
+            screenState = .loading
+            if let movieEntity = movieRepository.getMovieById(id: kpId) {
+                let movie = EntityConverter.convertFrom(movieEntity)
+                self.onSuccessLoadingMovie(movie)
+            } else {
+                screenState = .error
+            }
         }
     }
 

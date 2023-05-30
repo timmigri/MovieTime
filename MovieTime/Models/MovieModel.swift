@@ -26,16 +26,6 @@ class MovieModel: Identifiable {
         self.posterImage = posterImage
     }
 
-    init(movieDetailModel: MovieDetailModel) {
-        self.id = movieDetailModel.id
-        self.year = movieDetailModel.year
-        self.movieLength = movieDetailModel.movieLength
-        self.name = movieDetailModel.name
-        self.posterUrl = movieDetailModel.posterUrl
-        self.rating = movieDetailModel.rating
-        self.posterImage = movieDetailModel.posterImage
-    }
-
     var durationString: String? {
         if let movieLength {
             let hoursString = movieLength >= 60 ? String(movieLength / 60) + " ч " : ""

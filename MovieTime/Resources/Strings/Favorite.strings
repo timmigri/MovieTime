@@ -11,3 +11,4 @@
 "sortOptionName" = "Название";
 "sortOptionYear" = "Год";
 "sortOptionRating" = "Рейтинг";
+"databaseError" = "Произошла ошибка при чтении базы данных.";
