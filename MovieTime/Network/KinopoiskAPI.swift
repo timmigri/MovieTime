@@ -10,6 +10,7 @@ import Moya
 enum KinopoiskAPI {
     case persons(query: String, page: Int)
     case movies(query: String, page: Int, sortField: String?, genres: [String])
+    case movieDetail(id: Int?)
 }
 
 extension KinopoiskAPI: TargetType, Hashable {
@@ -24,6 +25,11 @@ extension KinopoiskAPI: TargetType, Hashable {
             return "v1.2/person/search"
         case .movies:
             return "v1.3/movie"
+        case .movieDetail(let id):
+            if let id {
+                return "v1.3/movie/" + String(id)
+            }
+            return "v1.3/movie/random"
         }
     }
 
@@ -40,14 +46,12 @@ extension KinopoiskAPI: TargetType, Hashable {
                 "limit": AppConstants.basicPageSize
             ], encoding: URLEncoding.queryString)
         case let .movies(query, page, sortField, genres):
-            var parameters: [String : Any] = [
+            var parameters: [String: Any] = [
                 "name": query,
                 "page": page,
                 "limit": AppConstants.basicPageSize,
+                "typeNumber": [1, 2, 3, 4, 5, 6]
             ]
-            for type in 1...6 {
-                parameters["typeNumber"] = String(type)
-            }
             if let sortField {
                 parameters["sortField"] = sortField
             }
@@ -55,7 +59,10 @@ extension KinopoiskAPI: TargetType, Hashable {
                 parameters["genres.name"] = genre
             }
             return .requestParameters(parameters: parameters, encoding: URLEncoding.queryString)
+        case .movieDetail:
+            return .requestPlain
         }
+        
     }
 
     var headers: [String: String]? {

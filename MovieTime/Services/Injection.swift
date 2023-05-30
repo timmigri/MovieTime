@@ -42,9 +42,6 @@ final class Injection {
         container.register(BookmarkMovieService.self) { _ in
             return BookmarkMovieService()
         }.inObjectScope(.container)
-        container.register(Paginator.self) { _ in
-            return Paginator()
-        }.inObjectScope(.container)
 
         // View models
         container.register(AuthViewModel.self) { _ in

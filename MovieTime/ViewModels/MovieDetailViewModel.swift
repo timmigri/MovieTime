@@ -13,10 +13,26 @@ class MovieDetailViewModel: ObservableObject {
         case network(kpId: Int?)
         case database(movie: MovieDetailModel)
     }
+
+    enum ScreenState {
+        case loading
+        case success(movie: MovieDetailModel)
+        case error
+        
+        var movie: MovieDetailModel? {
+            switch self {
+            case .success(let movie):
+                return movie
+            default:
+                return nil
+            }
+        }
+    }
     
     let source: Source
-    @Published private(set) var isLoadingMovie: Bool = false
-    @Published private(set) var movie: MovieDetailModel?
+//    @Published private(set) var isLoadingMovie: Bool = false
+//    @Published private(set) var movie: MovieDetailModel?
+    @Published private(set) var screenState: ScreenState = .loading
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
     @Injected private var rateMovie: RateMovie
@@ -33,31 +49,28 @@ class MovieDetailViewModel: ObservableObject {
 
     // UI Conditions
     func showAdvancedTopBar(_ screenHeight: CGFloat) -> Bool {
-        movie != nil && scrollViewOffset < screenHeight * 0.6
+        switch screenState {
+        case .success:
+            return scrollViewOffset < screenHeight * 0.6
+        default:
+            return false
+        }
     }
 
-    var showMovieContent: Bool {
-        !isLoadingMovie && movie != nil
-    }
+//    var showActorsCondition: (Bool, [PersonModel]) {
+//        guard let movie else { return (false, []) }
+//        guard let actors = movie.actors else { return (false, []) }
+//        return (actors.count > 0, actors)
+//    }
 
-    var showNoResultPicture: Bool {
-        !isLoadingMovie && movie == nil
-    }
-
-    var showActorsCondition: (Bool, [PersonModel]) {
-        guard let movie else { return (false, []) }
-        guard let actors = movie.actors else { return (false, []) }
-        return (actors.count > 0, actors)
-    }
-
-    var showDescriptionCondition: (Bool, String) {
-        guard let movie else { return (false, "") }
-        guard let description = movie.description else { return (false, "") }
-        return (description.count > 0, description)
-    }
+//    var showDescriptionCondition: (Bool, String) {
+//        guard let movie else { return (false, "") }
+//        guard let description = movie.description else { return (false, "") }
+//        return (description.count > 0, description)
+//    }
 
     func onTapBookmarkButton() {
-        guard let movie = self.movie else { return }
+        guard let movie = screenState.movie else { return }
         let res = bookmarkMovieService.toggleBookmark(forMovieId: movie.id, movie: movie)
         guard let res else { return }
 
@@ -76,39 +89,51 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     var posterUrl: URL? {
-        guard let movie else { return nil }
+        guard let movie = screenState.movie else { return nil }
         guard let posterUrl = movie.posterUrl else { return nil }
         return URL(string: posterUrl)
     }
 
     var showBookmarkButton: Bool {
         if posterUrl == nil { return true }
-        return movie?.posterImage != nil
+        return screenState.movie?.posterImage != nil
     }
 
     func onFinishLoadingPoster(image: UIImage?) {
         guard let image else { return }
-        movie?.posterImage = image.pngData()
+        switch screenState {
+        case .success(var movie):
+            movie.posterImage = image.pngData()
+            screenState = .success(movie: movie)
+        default:
+            break
+        }
+    }
+    
+    private func onSuccessLoadingMovie(_ movie: MovieDetailModel) {
+        self.screenState = .success(movie: movie)
+        self.userRating = self.rateMovie.getRating(forId: movie.id)
+        self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: movie.id)
     }
 
     func loadMovie() {
         switch source {
         case .network(let kpId):
-            isLoadingMovie = true
-            networkManager.loadMovie(id: kpId) { res in
-                DispatchQueue.main.async {
-                    self.movie = res
-                    self.isLoadingMovie = false
-                    if let res {
-                        self.userRating = self.rateMovie.getRating(forId: res.id)
-                        self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: res.id)
-                    }
+            screenState = .loading
+            networkManager.fetchMovie(id: kpId) { [weak self] result in
+                guard let self else { return }
+
+                switch result {
+                case .success(let movieResponse):
+                    let movie = DTOConverter.convert(movieResponse)
+                    guard let movie else { fallthrough }
+                    self.onSuccessLoadingMovie(movie)
+                case .failure:
+                    self.screenState = .error
                 }
             }
         case .database(let movie):
-            self.movie = movie
-            self.userRating = self.rateMovie.getRating(forId: movie.id)
-            self.isBookmarked = self.bookmarkMovieService.isMovieBookmarked(id: movie.id)
+            self.onSuccessLoadingMovie(movie)
         }
     }
 
@@ -117,16 +142,14 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     func onChangeRating(value: Int) {
-        if let movie {
+        if let movie = screenState.movie {
             userRating = value
             rateMovie.setRating(forId: movie.id, value: value)
         }
     }
 
     func shareMovie(source: UIViewController) {
-        guard let movie else {
-            return
-        }
+        guard let movie = screenState.movie else { return }
         var items = [Any]()
         items.append(URL(string: "https://www.google.com")!)
         items.append("Рекомендую: \(movie.name) (\(movie.year))")

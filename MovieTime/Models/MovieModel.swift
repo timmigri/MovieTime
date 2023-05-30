@@ -7,23 +7,23 @@
 
 import Foundation
 
-struct MovieModel: Identifiable {
+class MovieModel: Identifiable {
     let id: Int
     let year: Int?
     let movieLength: Int?
     let name: String
     let posterUrl: String?
     let rating: Float
-    let posterImage: Data?
+    var posterImage: Data?
 
-    private init(rawData: RawMovieModel) {
-        self.id = rawData.id!
-        self.name = rawData.name!
-        self.posterUrl = rawData.poster!.previewUrl
-        self.rating = rawData.rating!.kp
-        self.movieLength = rawData.movieLength
-        self.year = rawData.year
-        self.posterImage = nil
+    init(id: Int, year: Int?, movieLength: Int?, name: String, posterUrl: String?, rating: Float, posterImage: Data?) {
+        self.id = id
+        self.year = year
+        self.movieLength = movieLength
+        self.name = name
+        self.posterUrl = posterUrl
+        self.rating = rating
+        self.posterImage = posterImage
     }
 
     init(movieDetailModel: MovieDetailModel) {
@@ -34,18 +34,6 @@ struct MovieModel: Identifiable {
         self.posterUrl = movieDetailModel.posterUrl
         self.rating = movieDetailModel.rating
         self.posterImage = movieDetailModel.posterImage
-    }
-
-    static func processRawData(_ rawData: RawMoviesResultModel) -> [MovieModel] {
-        var movies = [MovieModel]()
-        for rawMovie in rawData.docs {
-            if rawMovie.id == nil { continue }
-            if rawMovie.name == nil { continue }
-            if rawMovie.poster == nil { continue }
-            if rawMovie.rating == nil { continue }
-            movies.append(MovieModel(rawData: rawMovie))
-        }
-        return movies
     }
 
     var durationString: String? {
@@ -60,27 +48,4 @@ struct MovieModel: Identifiable {
     var formattedRatingString: String {
         String(format: "%.1f", rating)
     }
-}
-
-struct RawMovieModel: Decodable {
-    let id: Int?
-    let year: Int?
-    let name: String?
-    let movieLength: Int?
-    let rating: Rating?
-    let poster: Poster?
-
-    struct Poster: Decodable {
-        let previewUrl: String
-    }
-
-    struct Rating: Decodable {
-        let kp: Float // swiftlint:disable:this identifier_name
-    }
-}
-
-struct RawMoviesResultModel: Decodable {
-    let docs: [RawMovieModel]
-    let pages: Int
-    let page: Int
 }

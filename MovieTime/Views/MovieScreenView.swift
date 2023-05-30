@@ -18,9 +18,13 @@ struct MovieScreenView: View {
     var body: some View {
         ZStack(alignment: .top) {
             Color.appBackground.ignoresSafeArea()
-            LoadingIndicator(condition: viewModel.isLoadingMovie)
-                .frame(maxHeight: .infinity)
-            if viewModel.showNoResultPicture {
+            switch viewModel.screenState {
+            case .loading:
+                LoadingIndicator()
+                    .frame(maxHeight: .infinity)
+            case .success(let movie):
+                renderMovieContentView(movie)
+            case .error:
                 VStack {
                     PictureBox(
                         pictureName: "Pictures/NoResult",
@@ -29,16 +33,13 @@ struct MovieScreenView: View {
                     )
                 }
             }
-            if viewModel.showMovieContent {
-                movieContentView
-            }
             GeometryReader { geometry in
                 if viewModel.showAdvancedTopBar(geometry.size.height) {
                     advancedTopBarView
                 } else {
                     CustomNavigationBar(
                         onTapGesture: { },
-                        title: viewModel.movie?.name
+                        title: viewModel.screenState.movie?.name
                     )
                 }
             }
@@ -48,18 +49,18 @@ struct MovieScreenView: View {
         .onAppear(perform: viewModel.loadMovie)
     }
 
-    var movieContentView: some View {
-        return GeometryReader { geometry in
+    func renderMovieContentView(_ movie: MovieDetailModel) -> some View {
+        GeometryReader { geometry in
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(alignment: .leading) {
-                    topImageBlockView
+                    renderTopImageBlockView(movie)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .frame(height: geometry.size.height * 0.7, alignment: .bottom)
                     Group {
-                        descriptionView
-                        renderActorsView(geometry)
+                        renderDescriptionView(movie)
+                        renderActorsView(movie, geometry: geometry)
                         ratingView
-                        factsView
+                        renderFactsView(movie)
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 20)
@@ -79,10 +80,8 @@ struct MovieScreenView: View {
         }
     }
 
-    var posterPicture: some View {
-        let movie = viewModel.movie!
-
-        return Group {
+    func renderPosterPicture(_ movie: MovieDetailModel) -> some View {
+        Group {
             if case .database = viewModel.source, let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
                 Image(uiImage: uiImage)
                     .resizable()
@@ -100,22 +99,22 @@ struct MovieScreenView: View {
         }
     }
 
-    var topImageBlockView: some View {
-        let movie = viewModel.movie!
-
-        return ZStack(alignment: .bottomLeading) {
-            posterPicture
+    func renderTopImageBlockView(_ movie: MovieDetailModel) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            renderPosterPicture(movie)
             VStack(alignment: .leading) {
                 Text(movie.name)
                     .heading3()
                     .foregroundColor(.appTextWhite)
                     .padding(.bottom, 3)
                 HStack {
-                    Text(String(movie.year))
-                        .caption2()
-                    Circle()
-                        .fill(Color.appSecondary300)
-                        .frame(width: 4, height: 4)
+                    if let year = movie.year {
+                        Text(String(year))
+                            .caption2()
+                        Circle()
+                            .fill(Color.appSecondary300)
+                            .frame(width: 4, height: 4)
+                    }
                     Text(movie.genresString)
                         .caption2()
                     if let duration = movie.durationString {
@@ -181,40 +180,44 @@ struct MovieScreenView: View {
         ))
     }
 
-    var descriptionView: some View {
-        let (condition, description) = viewModel.showDescriptionCondition
-        return SectionView(
-            title: "Описание",
-            showCondition: condition,
-            innerContent: AnyView(
-            Text(description)
-                .bodyText3()
-                .foregroundColor(.appTextBlack)
-        ))
-    }
-
-    func renderActorsView(_ geometry: GeometryProxy) -> some View {
-        let (condition, actors) = viewModel.showActorsCondition
-        return SectionView(
-            title: "Актеры",
-            showCondition: condition,
-            innerContent: AnyView(
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 10) {
-                    ForEach(actors) { person in
-                        PersonCard(
-                            person: person,
-                            width: geometry.size.width / 4
-                        )
-                    }
-                }
-            }
-        ))
-    }
-
-    var factsView: some View {
+    func renderDescriptionView(_ movie: MovieDetailModel) -> some View {
         Group {
-            if let facts = viewModel.movie!.facts, facts.count > 0 {
+            if let description = movie.description {
+                SectionView(
+                    title: "Описание",
+                    innerContent: AnyView(
+                    Text(description)
+                        .bodyText3()
+                        .foregroundColor(.appTextBlack)
+                ))
+            }
+        }
+    }
+
+    func renderActorsView(_ movie: MovieDetailModel, geometry: GeometryProxy) -> some View {
+        Group {
+            if movie.actors.count > 0 {
+                SectionView(
+                    title: "Актеры",
+                    innerContent: AnyView(
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(alignment: .top, spacing: 10) {
+                                ForEach(movie.actors) { person in
+                                    PersonCard(
+                                        person: person,
+                                        width: geometry.size.width / 4
+                                    )
+                                }
+                            }
+                        }
+                    ))
+            }
+        }
+    }
+
+    func renderFactsView(_ movie: MovieDetailModel) -> some View {
+        Group {
+            if let facts = movie.facts, facts.count > 0 {
                 SectionView(title: "Факты", innerContent: AnyView(
                     ForEach(facts.indices, id: \.self) { index in
                         Text(facts[index])
@@ -229,7 +232,7 @@ struct MovieScreenView: View {
         }
     }
 
-    func shareMovie() {
+    private func shareMovie() {
         guard let source = UIApplication.shared.windows.last?.rootViewController else { return }
         viewModel.shareMovie(source: source)
     }
@@ -237,27 +240,24 @@ struct MovieScreenView: View {
 
 private struct SectionView: View {
     let title: String
-    var showCondition: Bool = true
     var paddingTop: CGFloat = 20.0
     let innerContent: AnyView
     @State var opacity: CGFloat = 0
 
     var body: some View {
-        if showCondition {
-            VStack(alignment: .leading) {
-                Text(title)
-                    .bodyText2()
-                    .foregroundColor(.appTextWhite)
-                    .padding(.bottom, 8)
-                innerContent
-            }
-            .padding(.top, paddingTop)
-            .opacity(opacity)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation {
-                        opacity = 1
-                    }
+        VStack(alignment: .leading) {
+            Text(title)
+                .bodyText2()
+                .foregroundColor(.appTextWhite)
+                .padding(.bottom, 8)
+            innerContent
+        }
+        .padding(.top, paddingTop)
+        .opacity(opacity)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation {
+                    opacity = 1
                 }
             }
         }

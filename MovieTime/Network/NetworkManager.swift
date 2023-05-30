@@ -9,91 +9,21 @@ import Moya
 
 class NetworkManager: NetworkableProtocol {
     var provider = MoyaProvider<KinopoiskAPI>(plugins: [NetworkLoggerPlugin()])
-
-    @Injected var paginator: Paginator
     @Injected var networkPaginator: NetworkPaginator
-    let baseUrl = "https://api.kinopoisk.dev"
-    let decoder = JSONDecoder()
 
-    func makeURLRequestObject(url: URL) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        request.setValue(AppConfig.apiKey, forHTTPHeaderField: "X-API-KEY")
-        return request
+    func fetchMovie(id: Int?, completion: @escaping (Result<MovieDetailDTO, Error>) -> Void) {
+        request(target: .movieDetail(id: id), completion: completion)
     }
 
-    // TODO: error handling
-    func loadMovies(query: String, sortField: String?, genres: [String], completion: @escaping ([MovieModel]) -> Void) {
-        let nextPage = paginator.getNextPage(forKey: .movieList)
-        if nextPage == nil {
-            completion([])
-            return
-        }
-
-        var components = URLComponents(string: baseUrl + "/v1.3/movie")!
-        var queryItems = [URLQueryItem]()
-        queryItems.append(URLQueryItem(name: "page", value: String(nextPage!)))
-        queryItems.append(URLQueryItem(name: "limit", value: "10"))
-        queryItems.append(URLQueryItem(name: "name", value: query))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "1"))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "2"))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "3"))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "4"))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "5"))
-        queryItems.append(URLQueryItem(name: "typeNumber", value: "6"))
-        if let sortField {
-            queryItems.append(URLQueryItem(name: "sortField", value: sortField))
-        }
-        for genre in genres {
-            queryItems.append(URLQueryItem(name: "genres.name", value: genre))
-        }
-        components.queryItems = queryItems
-
-        let request = makeURLRequestObject(url: components.url!)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data else {
-                completion([])
-                return
-            }
-
-            do {
-                let moviesData = try self.decoder.decode(RawMoviesResultModel.self, from: data)
-                self.paginator.setPage(forKey: .movieList, page: moviesData.page, pages: moviesData.pages)
-                completion(MovieModel.processRawData(moviesData))
-            } catch {
-                print("\(error)")
-            }
-        }
-        task.resume()
-    }
-
-    func loadMovie(id: Int?, completion: @escaping (MovieDetailModel?) -> Void) {
-        let urlId = id == nil ? "random" : String(id!)
-        let url = URL(string: baseUrl + "/v1.3/movie/" + urlId)
-        let request = makeURLRequestObject(url: url!)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data else {
-                completion(nil)
-                return
-            }
-
-            do {
-                let movieDetail = try self.decoder.decode(RawMovieDetailModel.self, from: data)
-                completion(MovieDetailModel.processRawData(movieDetail))
-            } catch {
-                completion(nil)
-            }
-        }
-        task.resume()
-    }
-    
     func fetchMovies(query: String, sortField: String?, genres: [String], completion: @escaping (Result<MovieListDTO, Error>) -> Void) {
         guard let page = networkPaginator.getNextPage(forKey: .movieList) else {
             completion(.success(.empty))
             return
         }
-        requestWithPagination(target: .movies(query: query, page: page, sortField: sortField, genres: genres), completion: completion)
+        requestWithPagination(
+            target: .movies(query: query, page: page, sortField: sortField, genres: genres),
+            completion: completion
+        )
     }
 
     func fetchPersons(_ query: String, completion: @escaping (Result<PersonListDTO, Error>) -> Void) {

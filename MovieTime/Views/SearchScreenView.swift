@@ -83,9 +83,7 @@ struct SearchScreenView: View {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     actorsSection(geometry)
-                                    if viewModel.showMoviesSection {
-                                        moviesSection(geometry)
-                                    }
+                                    moviesSection(geometry)
                                 }
                             }
                         }
@@ -135,17 +133,26 @@ struct SearchScreenView: View {
     }
 
     func moviesSection(_ geometry: GeometryProxy) -> some View {
-        return VStack(alignment: .leading) {
-            Text("Фильмы и сериалы")
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                ForEach(viewModel.movies) { movie in
-                    renderMovie(movie, geometry)
+        Group {
+            if let error = viewModel.moviesLoadingError {
+                Text(error)
+                    .bodyText3()
+                    .foregroundColor(.appPrimary200)
+                    .padding(.bottom, 10)
+            } else if viewModel.showMoviesList {
+                VStack(alignment: .leading) {
+                    Text("Фильмы и сериалы")
+                        .bodyText2()
+                        .foregroundColor(.appTextWhite)
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                        ForEach(viewModel.movies) { movie in
+                            renderMovie(movie, geometry)
+                        }
+                    }
+                    LoadingIndicator(condition: viewModel.isLoadingMovies)
+                        .frame(maxWidth: .infinity)
                 }
             }
-            LoadingIndicator(condition: viewModel.isLoadingMovies)
-                .frame(maxWidth: .infinity)
         }
     }
 

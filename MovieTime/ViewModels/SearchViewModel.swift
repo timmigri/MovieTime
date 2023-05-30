@@ -11,11 +11,8 @@ import Combine
 
 class SearchViewModel: ObservableObject {
     @Injected private var networkManager: NetworkManager
-    @Injected private var paginator: Paginator
+    @Injected private var paginator: NetworkPaginator
     @Injected private var rateMovie: RateMovie
-
-    @Published private(set) var isLoadingMovies = false
-    @Published private(set) var movies = [MovieModel]()
 
     init() {
         $query
@@ -38,7 +35,7 @@ class SearchViewModel: ObservableObject {
     }
 
     var screenState: ScreenState {
-        if showPersonsList || showMoviesSection { return .results }
+        if showPersonsList || showMoviesList { return .results }
         if query.count < AppConstants.minLengthOfQueryToSearch || isUserTyping { return .searchPicture }
         return .noResultPicture
     }
@@ -79,7 +76,6 @@ class SearchViewModel: ObservableObject {
         return nil
     }
 
-    // Sort option
     func onSelectSortOption(_ index: Int, _ key: String) {
         withAnimation(.easeInOut(duration: 0.2)) {
             if !sortOptions[index].isSelected {
@@ -93,7 +89,6 @@ class SearchViewModel: ObservableObject {
         currentSortOptionIndex != nil || countSelectedFilterCategories > 0
     }
 
-    // Filter categories
     func onChooseFilterCategory(_ id: String) {
         if let index = filterCategories.firstIndex(where: { $0.id == id }),
            canSelectFilterCategory(filterCategories[index]) {
@@ -119,14 +114,17 @@ class SearchViewModel: ObservableObject {
         filterCategories.filter { $0.isSelected }.count
     }
 
-    var showMoviesSection: Bool {
-        return movies.count > 0 || isLoadingMovies
+    func onChangeSearchOptions() {
+        clearMovieState()
+        clearPersonState()
+        loadMovies()
+        loadPersons()
     }
 
     // MARK: Person state
-    @Published var persons = [PersonModel]()
-    @Published var isLoadingPersons = false
-    @Published var personsLoadingError: String?
+    @Published private(set) var persons = [PersonModel]()
+    @Published private(set) var isLoadingPersons = false
+    @Published private(set) var personsLoadingError: String?
 
     var showPersonsList: Bool {
         return persons.count > 0 || isLoadingPersons
@@ -152,6 +150,7 @@ class SearchViewModel: ObservableObject {
     private func clearPersonState() {
         persons = []
         personsLoadingError = nil
+        paginator.reset(forKey: .personList)
     }
 
     func loadPersons() {
@@ -169,18 +168,41 @@ class SearchViewModel: ObservableObject {
         }
     }
 
-    // API
-    func onChangeSearchOptions() {
+    // MARK: Movie state
+    @Published private(set) var isLoadingMovies = false
+    @Published private(set) var movies = [MovieModel]()
+    @Published private(set) var moviesLoadingError: String?
+
+    private func onSuccessLoadingMovies(_ newMovies: [MovieModel]) {
+        movies += newMovies
+        isLoadingMovies = false
+        moviesLoadingError = nil
+    }
+
+    private func onErrorLoadingMovies() {
         movies = []
+        isLoadingMovies = false
+        moviesLoadingError = "Произошла ошибка при загрузке фильмов."
+    }
+
+    private func onStartLoadingMovies() {
+        isLoadingMovies = true
+        moviesLoadingError = nil
+    }
+
+    private func clearMovieState() {
+        movies = []
+        moviesLoadingError = nil
         paginator.reset(forKey: .movieList)
-        paginator.reset(forKey: .actorList)
-        loadMovies()
-        clearPersonState()
-        loadPersons()
+    }
+
+    var showMoviesList: Bool {
+        return movies.count > 0 || isLoadingMovies
     }
 
     func loadMovies() {
         if isLoadingMovies || query.count < AppConstants.minLengthOfQueryToSearch { return }
+        onStartLoadingMovies()
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
         let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
         networkManager.fetchMovies(query: query.lowercased(), sortField: sortField, genres: genres) { [weak self] result in
@@ -188,20 +210,10 @@ class SearchViewModel: ObservableObject {
 
             switch result {
             case .success(let moviesResponse):
-                print(moviesResponse)
-//                self.onSuccessLoadingPersons(DTOConverter.convert(personsResponse))
+                self.onSuccessLoadingMovies(DTOConverter.convert(moviesResponse))
             case .failure:
-                print()
-//                self.onErrorLoadingPersons()
+                self.onErrorLoadingMovies()
             }
-            
         }
-//        isLoadingMovies = true
-//        networkManager.loadMovies(query: query.lowercased(), sortField: sortField, genres: genres) { (res) in
-//            DispatchQueue.main.async {
-//                self.movies += res
-//                self.isLoadingMovies = false
-//            }
-//        }
     }
 }
