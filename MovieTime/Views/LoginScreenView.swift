@@ -21,53 +21,57 @@ struct LoginScreenView: View {
                     headlineText: R.string.login.welcomeTitle(),
                     bodyText: R.string.login.welcomeText()
                 )
-                Divider()
-                    .frame(height: 2)
-                    .frame(maxWidth: .infinity)
-                    .overlay(Color.appTextBlack.overlay(Text(R.string.login.buttonSectionText())
+                ZStack {
+                    Divider()
+                        .frame(height: 2)
+                        .frame(maxWidth: .infinity)
+                        .overlay(Color.appTextBlack)
+                    Text(R.string.login.buttonSectionText())
                         .foregroundColor(.appTextBlack)
                         .bodyText5()
                         .padding(.horizontal, 10)
                         .background(Color.appBackground)
-                    ))
-                    .padding(.bottom, 30)
+                }
+                .padding(.bottom, 30)
                 HStack(spacing: 15) {
                     GoogleSignInButton(
                         style: .icon,
                         action: { login(.google) })
                     .clipShape(Circle())
-
-                    Circle()
-                        .fill(Color(red: 81 / 255, green: 129 / 255, blue: 184 / 255))
-                        .frame(width: 40, height: 40)
-                        .sheet(isPresented: $authViewModel.isShowingAuthVK) {
-                            authViewModel.vkAuthWebView
-                        }
-                        .overlay(
-                            Image(R.image.icons.vK)
-                        )
-                        .onTapGesture {
-                            login(.vkontakte)
-                        }
-
+                    ZStack {
+                        Circle()
+                            .fill(Color(red: 81 / 255, green: 129 / 255, blue: 184 / 255))
+                            .frame(width: 40, height: 40)
+                            .sheet(isPresented: $authViewModel.isShowingAuthVK) {
+                                authViewModel.vkAuthWebView
+                            }
+                        Image(R.image.icons.vK)
+                    }
+                    .onTapGesture {
+                        login(.vkontakte)
+                    }
                 }
             }
             .padding()
             .conditionTransform(authViewModel.isLoadingAuth) { view in
-                view.overlay(
-                    Color.appBackground.opacity(0.9).overlay(
-                        LoadingIndicator()
-                    )
-                )
+                ZStack {
+                    view
+                    Color.appBackground.opacity(0.9)
+                    LoadingIndicator()
+                }
+            }
+            .conditionTransform(authViewModel.isRestoringAuth) { view in
+                ZStack {
+                    view
+                    Color.appBackground
+                    LoadingIndicator()
+                }
             }
         }
     }
 
     private func login(_ source: AuthViewModel.LoginSource) {
-        guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
-            return
-        }
-        authViewModel.login(rootViewController: rootViewController, source)
+        authViewModel.login(source)
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var authViewModel = Injection.shared.container.resolve(AuthViewModel.self)!
-    
+
     var body: some View {
         if authViewModel.isUserLoggedIn {
             NavigationView {

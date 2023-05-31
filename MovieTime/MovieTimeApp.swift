@@ -11,7 +11,7 @@ import GoogleSignIn
 @main
 struct MovieTimeApp: App {
     @ObservedObject var authViewModel = Injection.shared.container.resolve(AuthViewModel.self)!
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

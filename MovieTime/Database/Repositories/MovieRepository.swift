@@ -35,19 +35,23 @@ class MovieRepository: MovieRepositoryProtocol {
         }
         return res
     }
-    
+
     func getAllMovies() -> Results<MovieEntity>? {
         return realm?.objects(MovieEntity.self)
     }
-    
-    func applyFilters(_ results: Results<MovieEntity>, query: String, sortKey: String?, ascending: Bool) -> Results<MovieEntity> {
-        var dbResult = results
-        if query.count > 0 {
-            dbResult = dbResult.filter("name contains[cd] %@", query.lowercased())
-        }
-        if let sortKey {
-            dbResult = dbResult.sorted(byKeyPath: sortKey, ascending: ascending)
-        }
-        return dbResult
+
+    func applyFilters(
+        _ results: Results<MovieEntity>,
+        query: String,
+        sortKey: String?,
+        ascending: Bool) -> Results<MovieEntity> {
+            var dbResult = results
+            if query.count > 0 {
+                dbResult = dbResult.filter("name contains[cd] %@", query.lowercased())
+            }
+            if let sortKey {
+                dbResult = dbResult.sorted(byKeyPath: sortKey, ascending: ascending)
+            }
+            return dbResult
     }
 }

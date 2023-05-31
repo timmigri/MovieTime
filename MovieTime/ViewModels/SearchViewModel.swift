@@ -12,7 +12,6 @@ import Combine
 class SearchViewModel: ObservableObject {
     @Injected private var networkManager: NetworkManager
     @Injected private var paginator: NetworkPaginator
-    @Injected private var rateMovie: RateMovie
 
     init() {
         $query
@@ -162,7 +161,8 @@ class SearchViewModel: ObservableObject {
             switch result {
             case .success(let personsResponse):
                 self.onSuccessLoadingPersons(DTOConverter.convert(personsResponse))
-            case .failure:
+            case .failure(let error):
+                print(error)
                 self.onErrorLoadingPersons()
             }
         }

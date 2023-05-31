@@ -18,7 +18,11 @@
      ) {
          self.placeholder = placeholder()
          self.image = image
-         _loader = StateObject(wrappedValue: ImageLoader(url: url, cache: Environment(\.imageCache).wrappedValue, onFinishLoading: onFinishLoading))
+         _loader = StateObject(wrappedValue: ImageLoader(
+            url: url,
+            cache: Environment(\.imageCache).wrappedValue,
+            onFinishLoading: onFinishLoading
+         ))
      }
 
      var body: some View {
@@ -28,8 +32,8 @@
 
      private var content: some View {
          Group {
-             if loader.image != nil {
-                 image(loader.image!)
+             if let loaderImage = loader.image {
+                 image(loaderImage)
              } else {
                  placeholder
              }
@@ -47,15 +51,18 @@
      subscript(_ key: URL) -> UIImage? {
          get { cache.object(forKey: key as NSURL) }
          set {
-             newValue == nil ? cache.removeObject(forKey: key as NSURL) : cache.setObject(
-                newValue!, forKey: key as NSURL)
+             if let newValue {
+                 cache.setObject(newValue, forKey: key as NSURL)
+             } else {
+                 cache.removeObject(forKey: key as NSURL)
+             }
          }
      }
  }
 
  class ImageLoader: ObservableObject {
      @Published var image: UIImage?
-     
+
      private(set) var isLoading = false
 
      private let url: URL

@@ -38,6 +38,7 @@ struct BookmarkScreenView: View {
                             }
                         }
                     }
+                    .onTapGesture(perform: UIApplication.shared.clearAllTextFieldFocus)
                     .padding(.top, 32)
                 }
                 .padding()
@@ -48,7 +49,7 @@ struct BookmarkScreenView: View {
             }
         }.onAppear(perform: viewModel.onChangeSearchOptions)
     }
-    
+
     var filterView: some View {
         Group {
             HStack(spacing: 7) {
@@ -74,7 +75,7 @@ struct BookmarkScreenView: View {
                     viewModel.onChangeSearchOptions()
                 }
             }
-            .overlay(
+            .background(
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(
                         searchFieldFocused ? Color.appPrimary : Color.appSecondary300,

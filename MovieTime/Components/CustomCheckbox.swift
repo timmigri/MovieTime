@@ -34,15 +34,14 @@ struct CustomCheckbox: View {
                     .strokeBorder(.white)
                     .frame(width: size, height: size)
             } else {
-                Circle()
-                    .fill(fillColor)
-                    .frame(width: size, height: size)
-                    .overlay(
-                        Image(systemName: "checkmark")
-                            .font(.system(size: checkmarkSize))
-                        //                        .clipShape(Rectangle().offset(x: animationOffset))
-                            .foregroundColor(titleColor)
-                    )
+                ZStack {
+                    Circle()
+                        .fill(fillColor)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: checkmarkSize))
+                        .foregroundColor(titleColor)
+                }
+                .frame(width: size, height: size)
             }
             if let title {
                 Text(title)

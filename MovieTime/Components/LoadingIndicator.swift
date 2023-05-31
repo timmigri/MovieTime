@@ -10,8 +10,13 @@ import SwiftUI
 struct LoadingIndicator: View {
     var condition: Bool?
 
+    var showIndicator: Bool {
+        guard let condition else { return true }
+        return condition
+    }
+
     var body: some View {
-        if condition == nil || condition! {
+        if showIndicator {
             ProgressView()
                 .progressViewStyle(
                     CircularProgressViewStyle(tint: .appPrimary200))

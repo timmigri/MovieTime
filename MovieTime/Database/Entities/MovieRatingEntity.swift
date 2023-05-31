@@ -1,14 +1,14 @@
 //
-//  UserRatingDBModel.swift
+//  MovieRatingEntity.swift
 //  MovieTime
 //
-//  Created by Артём Грищенко on 27.05.2023.
+//  Created by Артём Грищенко on 31.05.2023.
 //
 
 import Foundation
 import RealmSwift
 
-class UserRatingDBModel: Object {
+class MovieRatingEntity: Object {
     @Persisted var kpMovieId: Int
     @Persisted var rating: Int
 }

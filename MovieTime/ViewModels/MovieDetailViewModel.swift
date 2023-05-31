@@ -33,7 +33,7 @@ class MovieDetailViewModel: ObservableObject {
     @Published private(set) var screenState: ScreenState = .loading
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
-    @Injected private var rateMovie: RateMovie
+    @Injected private var movieRatingRepository: MovieRatingRepository
     @Injected private var movieRepository: MovieRepository
     @Injected private var networkManager: NetworkManager
     @Published var isBookmarked: Bool = false
@@ -88,16 +88,16 @@ class MovieDetailViewModel: ObservableObject {
     func onFinishLoadingPoster(image: UIImage?) {
         guard let image else { return }
         switch screenState {
-        case .success(var movie):
+        case .success(let movie):
             movie.posterImage = image.pngData()
             screenState = .success(movie: movie)
         default:
             break
         }
     }
-    
+
     private func onSuccessLoadingMovie(_ movie: MovieDetailModel) {
-        self.userRating = rateMovie.getRating(forId: movie.id)
+        self.userRating = movieRatingRepository.getRating(forId: movie.id)
         self.isBookmarked = movieRepository.containsMovie(id: movie.id)
         self.screenState = .success(movie: movie)
     }
@@ -136,17 +136,13 @@ class MovieDetailViewModel: ObservableObject {
     func onChangeRating(value: Int) {
         if let movie = screenState.movie {
             userRating = value
-            rateMovie.setRating(forId: movie.id, value: value)
+            movieRatingRepository.setRating(forId: movie.id, value: value)
         }
     }
 
-    func shareMovie(source: UIViewController) {
+    func shareMovie() {
         guard let movie = screenState.movie else { return }
-        var items = [Any]()
-        items.append(URL(string: "https://www.google.com")!)
-        items.append("Рекомендую: \(movie.name) (\(movie.year))")
-        let vc = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        vc.popoverPresentationController?.sourceView = source.view
-        source.present(vc, animated: true)
+        guard let source = UIApplication.shared.getCurrentViewController() else { return }
+        ShareService.shareMovie(movie as MovieModel, source: source)
     }
 }

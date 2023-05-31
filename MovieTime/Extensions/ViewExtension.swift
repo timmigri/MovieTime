@@ -26,7 +26,6 @@ struct RoundedCorner: Shape {
     }
 }
 
-
 extension View {
     @ViewBuilder func conditionTransform<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
         if condition {

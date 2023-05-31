@@ -15,7 +15,7 @@ class BookmarkViewModel: ObservableObject {
         case noBookmarkPicture
         case error(error: String)
     }
-    
+
     @Published var query: String = ""
     @Published var sortOptions = [
         CustomSelect.SelectOption(title: R.string.favorite.sortOptionName(), key: "name"),
@@ -48,7 +48,7 @@ class BookmarkViewModel: ObservableObject {
         sortOrderAscending.toggle()
         onChangeSearchOptions()
     }
-    
+
     func onChangeSearchOptions() {
         if let movieResults = movieRepository.getAllMovies() {
             if movieResults.count == 0 {

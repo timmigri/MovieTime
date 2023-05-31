@@ -83,7 +83,9 @@ struct MovieScreenView: View {
 
     func renderPosterPicture(_ movie: MovieDetailModel) -> some View {
         Group {
-            if case .database = viewModel.source, let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
+            if case .database = viewModel.source,
+                let posterImage = movie.posterImage,
+                let uiImage = UIImage(data: posterImage) {
                 Image(uiImage: uiImage)
                     .resizable()
             } else if case .network = viewModel.source, let url = viewModel.posterUrl {
@@ -116,9 +118,9 @@ struct MovieScreenView: View {
                             .fill(Color.appSecondary300)
                             .frame(width: 4, height: 4)
                     }
-                    Text(movie.genresString)
+                    Text(StringFormatter.getMovieGenresString(movie.genres))
                         .caption2()
-                    if let duration = movie.durationString {
+                    if let duration = StringFormatter.getMovieDurationString(movie) {
                         Circle()
                             .fill(Color.appSecondary300)
                             .frame(width: 4, height: 4)
@@ -129,7 +131,7 @@ struct MovieScreenView: View {
                 .foregroundColor(.appSecondary300)
                 HStack(spacing: 2) {
                     Image(R.image.icons.movieStar)
-                    Text(movie.formattedRatingString)
+                    Text(StringFormatter.getFormattedMovieRatingString(movie.rating))
                         .bodyText5()
                         .foregroundColor(.appTextWhite)
                 }
@@ -162,12 +164,16 @@ struct MovieScreenView: View {
             Spacer()
             HStack(spacing: 20) {
                 if viewModel.showBookmarkButton {
-                    renderButton(icon: viewModel.isBookmarked ? R.image.icons.bookmarkActive.name : R.image.icons.bookmarkMovie.name)
+                    renderButton(
+                        icon: viewModel.isBookmarked ?
+                        R.image.icons.bookmarkActive.name :
+                        R.image.icons.bookmarkMovie.name
+                    )
                         .scaleEffect(viewModel.bookmarkButtonScale)
                         .onTapGesture(perform: viewModel.onTapBookmarkButton)
                 }
                 renderButton(icon: R.image.icons.share.name)
-                    .onTapGesture(perform: shareMovie)
+                    .onTapGesture(perform: viewModel.shareMovie)
             }
         }
     }
@@ -231,11 +237,6 @@ struct MovieScreenView: View {
                 ))
             }
         }
-    }
-
-    private func shareMovie() {
-        guard let source = UIApplication.shared.windows.last?.rootViewController else { return }
-        viewModel.shareMovie(source: source)
     }
 }
 

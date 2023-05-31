@@ -37,20 +37,14 @@ struct MovieDetailDTO: DTO {
     let name: String?
     let year: Int?
     let movieLength: Int?
+    let seriesLength: Int?
+    let seasonsInfo: [SeasonInfo]?
     let description: String?
     let facts: [Fact]?
     let genres: [Genre]?
-    let rating: Rating?
-    let poster: Poster?
-    let persons: [PersonDTO]?
-
-    struct Poster: Decodable {
-        let previewUrl: String
-    }
-
-    struct Rating: Decodable {
-        let kp: Float // swiftlint:disable:this identifier_name
-    }
+    let rating: MovieDTO.Rating?
+    let poster: MovieDTO.Poster?
+    let persons: [MoviePersonDTO]?
 
     struct Fact: Decodable {
         let value: String
@@ -60,4 +54,17 @@ struct MovieDetailDTO: DTO {
     struct Genre: Decodable {
         let name: String
     }
+
+    struct SeasonInfo: Decodable {
+        let number: Int
+        let episodesCount: Int
+    }
+
+}
+
+struct MoviePersonDTO: DTO {
+    let id: Int
+    let name: String?
+    let photo: String?
+    let profession: String?
 }

@@ -36,8 +36,8 @@ class NetworkPaginator: PaginatorProtocol {
         }
 
         let (page, pages) = value
-        if pages == nil { return 1 }
-        if page < pages! { return page + 1 }
+        guard let pages else { return 1 }
+        if page < pages { return page + 1 }
         return nil
     }
 

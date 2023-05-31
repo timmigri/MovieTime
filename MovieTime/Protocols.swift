@@ -43,5 +43,20 @@ protocol MovieRepositoryProtocol {
     // MARK: return true if movie was created after calling this method
     func toggleMovie(forMovieId id: Int, movie: MovieDetailModel) -> Bool?
     func getAllMovies() -> Results<MovieEntity>?
-    func applyFilters(_ results: Results<MovieEntity>, query: String, sortKey: String?, ascending: Bool) -> Results<MovieEntity>
+    func applyFilters(
+        _ results: Results<MovieEntity>,
+        query: String,
+        sortKey: String?,
+        ascending: Bool
+    ) -> Results<MovieEntity>
+}
+
+protocol MovieRatingRepositoryProtocol {
+    func getRating(forId id: Int) -> Int
+    func setRating(forId id: Int, value: Int)
+}
+
+// Services
+protocol ShareServiceProtocol {
+    static func shareMovie(_ movie: MovieModel, source: UIViewController)
 }

@@ -20,6 +20,7 @@ class AuthViewModel: ObservableObject {
     @Published var vkAuthWebView: VKAuthWebView?
     @Published var navigationViewUUID = UUID()
     @Published var isLoadingAuth = false
+    @Published var isRestoringAuth = false
 
     enum LoginSource {
         case vkontakte
@@ -30,12 +31,13 @@ class AuthViewModel: ObservableObject {
         authUser != nil
     }
 
-    func login(rootViewController: UIViewController, _ loginSource: LoginSource) {
+    func login(_ loginSource: LoginSource) {
+        guard let viewController = UIApplication.shared.getCurrentViewController() else { return }
         isLoadingAuth = true
         switch loginSource {
         case .google:
             let googleAuthProvider = GoogleAuthProvider()
-            googleAuthProvider.login(rootViewController: rootViewController) { isSuccess in
+            googleAuthProvider.login(rootViewController: viewController) { isSuccess in
                 if isSuccess { self.authUser = googleAuthProvider }
                 self.isLoadingAuth = false
             }
@@ -43,7 +45,7 @@ class AuthViewModel: ObservableObject {
             let vkAuthProvider = VKAuthProvider()
             vkAuthWebView = VKAuthWebView { token in
                 vkAuthProvider.setToken(token)
-                vkAuthProvider.login(rootViewController: rootViewController) { isSuccess in
+                vkAuthProvider.login(rootViewController: viewController) { isSuccess in
                     if isSuccess { self.authUser = vkAuthProvider }
                     self.isShowingAuthVK = false
                     self.isLoadingAuth = false
@@ -61,7 +63,7 @@ class AuthViewModel: ObservableObject {
     }
 
     func restoreAuth() {
-        isLoadingAuth = true
+        isRestoringAuth = true
         var providers = [AuthProviderProtocol]()
         var counter = 0
         providers.append(GoogleAuthProvider())
@@ -73,9 +75,9 @@ class AuthViewModel: ObservableObject {
                 guard self.authUser == nil else { return }
                 if isSuccess {
                     self.authUser = provider
-                    self.isLoadingAuth = false
+                    self.isRestoringAuth = false
                 } else if counter == providers.count {
-                    self.isLoadingAuth = false
+                    self.isRestoringAuth = false
                 }
             }
         }
@@ -178,18 +180,17 @@ struct VKAuthWebView: UIViewRepresentable {
 
 class WebViewCoordinator: NSObject, WKNavigationDelegate {
     var authCompletion: (String) -> Void
-    
+
     init(authCompletion: @escaping (String) -> Void) {
         self.authCompletion = authCompletion
     }
-    
+
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        
         guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment else {
             decisionHandler(.allow)
             return
         }
-        
+
         let params = fragment.components(separatedBy: "&")
             .map { $0.components(separatedBy: "=") }
             .reduce([String:String]()) { res, param in
@@ -199,7 +200,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
                 dict[key] = value
                 return dict
             }
-        
+
         if let accessToken = params["access_token"] {
             authCompletion(accessToken)
         }
@@ -208,16 +209,16 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
 }
 
 final class WebCacheCleaner {
-    
+
     static func clean() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         print("[WebCacheCleaner] All cookies deleted")
-        
+
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
             records.forEach { record in
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
     }
-    
+
 }

@@ -10,5 +10,5 @@ import Foundation
 struct PersonModel: Identifiable {
     let id: Int
     let name: String
-    let photo: String?
+    let photoUrl: String?
 }

@@ -15,7 +15,12 @@ class NetworkManager: NetworkableProtocol {
         request(target: .movieDetail(id: id), completion: completion)
     }
 
-    func fetchMovies(query: String, sortField: String?, genres: [String], completion: @escaping (Result<MovieListDTO, Error>) -> Void) {
+    func fetchMovies(
+        query: String,
+        sortField: String?,
+        genres: [String],
+        completion: @escaping (Result<MovieListDTO, Error>) -> Void
+    ) {
         guard let page = networkPaginator.getNextPage(forKey: .movieList) else {
             completion(.success(.empty))
             return
@@ -52,7 +57,10 @@ private extension NetworkManager {
         }
     }
 
-    private func requestWithPagination<T: PaginationDTO>(target: KinopoiskAPI, completion: @escaping (Result<T, Error>) -> Void) {
+    private func requestWithPagination<T: PaginationDTO>(
+        target: KinopoiskAPI,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
         provider.request(target) { rawResult in
             switch rawResult {
             case let .success(response):

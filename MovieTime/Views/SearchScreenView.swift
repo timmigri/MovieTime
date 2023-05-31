@@ -48,7 +48,7 @@ struct SearchScreenView: View {
                             .padding(.trailing, 10)
                     }
                 }
-                .overlay(
+                .background(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(
                             searchFieldFocused ? Color.appPrimary : Color.appSecondary300, lineWidth: 1
@@ -90,9 +90,7 @@ struct SearchScreenView: View {
                         .padding(.top, 32)
                     }
                 }
-                .onTapGesture {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }
+                .onTapGesture(perform: UIApplication.shared.clearAllTextFieldFocus)
             }
             .padding()
         }

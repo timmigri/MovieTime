@@ -14,7 +14,7 @@ struct PersonCard: View {
 
     var body: some View {
         VStack {
-            if let photo = person.photo, let photoUrl = URL(string: photo) {
+            if let photo = person.photoUrl, let photoUrl = URL(string: photo) {
                 AsyncImage(
                      url: photoUrl,
                      placeholder: { LoadingIndicator() },
@@ -25,14 +25,14 @@ struct PersonCard: View {
                 .frame(width: width, height: 3 / 2 * width)
             } else {
                 let ratio: CGFloat = 3 / 2
-                Color.appSecondary
-                    .overlay(
-                        Image(systemName: "camera")
-                            .font(.system(size: 40))
-                            .foregroundColor(.appSecondary300)
-                    )
-                    .frame(width: width)
-                    .frame(height: ratio * width)
+                ZStack {
+                    Color.appSecondary
+                    Image(systemName: "camera")
+                        .font(.system(size: 40))
+                        .foregroundColor(.appSecondary300)
+                }
+                .frame(width: width)
+                .frame(height: ratio * width)
             }
             Text(person.name)
                 .caption2()

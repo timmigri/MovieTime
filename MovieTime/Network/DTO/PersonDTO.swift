@@ -19,5 +19,4 @@ struct PersonDTO: DTO {
     let id: Int
     let name: String?
     let photo: String?
-    let profession: String?
 }

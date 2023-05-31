@@ -17,13 +17,9 @@ struct CustomButton: View {
                 .foregroundColor(.appTextWhite)
                 .padding(.vertical, 12)
                 .padding(.horizontal, 20)
+                .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity)
-        .background(
-            Color.appPrimary.onTapGesture {
-                action()
-            }
-        )
+        .background(Color.appPrimary)
         .cornerRadius(10)
     }
 }

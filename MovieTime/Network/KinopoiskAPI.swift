@@ -15,7 +15,7 @@ enum KinopoiskAPI {
 
 extension KinopoiskAPI: TargetType, Hashable {
     var baseURL: URL {
-        guard let url = URL(string: "https://api.kinopoisk.dev/") else { fatalError() }
+        guard let url = URL(string: AppConstants.baseApiUrl) else { fatalError() }
         return url
     }
 
@@ -62,7 +62,7 @@ extension KinopoiskAPI: TargetType, Hashable {
         case .movieDetail:
             return .requestPlain
         }
-        
+
     }
 
     var headers: [String: String]? {
@@ -71,7 +71,7 @@ extension KinopoiskAPI: TargetType, Hashable {
             "X-API-KEY": AppConfig.apiKey
         ]
     }
-    
+
     var sampleData: Data {
         return Data()
     }

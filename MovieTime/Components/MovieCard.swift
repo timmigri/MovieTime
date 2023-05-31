@@ -33,11 +33,12 @@ struct MovieCard: View {
                 )
                 .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
             } else {
-                Color.appSecondary.overlay(
+                ZStack {
+                    Color.appSecondary
                     Image(systemName: "camera")
                         .font(.system(size: 40))
                         .foregroundColor(.appSecondary300)
-                )
+                }
                 .frame(height: (geometry.size.width - 20) / 2 * (3 / 2))
             }
         }
@@ -52,15 +53,15 @@ struct MovieCard: View {
                 .multilineTextAlignment(.leading)
             Spacer()
             HStack {
-                if let duration = movie.durationString {
+                if let duration = StringFormatter.getMovieDurationString(movie) {
                     Text(duration)
                         .caption2()
                         .foregroundColor(.appTextBlack)
                 }
                 Spacer()
                 HStack(spacing: 2) {
-                    Image("Icons/MovieStar")
-                    Text(movie.formattedRatingString)
+                    Image(R.image.icons.movieStar.name)
+                    Text(StringFormatter.getFormattedMovieRatingString(movie.rating))
                         .bodyText5()
                         .foregroundColor(.appTextWhite)
                 }

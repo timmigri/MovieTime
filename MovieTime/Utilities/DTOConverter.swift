@@ -14,10 +14,10 @@ class DTOConverter {
         return PersonModel(
             id: dto.id,
             name: name,
-            photo: dto.photo
+            photoUrl: dto.photo
         )
     }
-    
+
     static func convert(_ dto: PersonListDTO) -> [PersonModel] {
         var persons = [PersonModel]()
         for person in dto.docs {
@@ -26,7 +26,7 @@ class DTOConverter {
         }
         return persons
     }
-    
+
     static func convert(_ dto: MovieListDTO) -> [MovieModel] {
         var movies = [MovieModel]()
         for movie in dto.docs {
@@ -45,7 +45,7 @@ class DTOConverter {
         }
         return movies
     }
-    
+
     static func convert(_ dto: MovieDetailDTO) -> MovieDetailModel? {
         guard let name = dto.name else { return nil }
         guard let poster = dto.poster else { return nil }
@@ -57,15 +57,28 @@ class DTOConverter {
                 .map { $0.value }.prefix(5)
             ?? []
         )
-        let persons = dto.persons!
-            .filter { $0.profession == "актеры" }
-            .compactMap { convert($0) }
-        
+
+        var persons = [PersonModel]()
+        if let dtoPersons = dto.persons {
+            for person in dtoPersons {
+                guard let profession = person.profession else { continue }
+                if profession != "актеры" { continue }
+                guard let personModel = convert(PersonDTO(
+                    id: person.id,
+                    name: person.name,
+                    photo: person.photo
+                )) else { continue }
+                persons.append(personModel)
+            }
+        }
+
         return MovieDetailModel(
             id: dto.id,
             name: name,
             year: dto.year,
             movieLength: dto.movieLength,
+            seriesLength: dto.seriesLength,
+            seriesSeasonsCount: dto.seasonsInfo?.count,
             description: dto.description,
             facts: facts,
             genres: genres.map { $0.name },

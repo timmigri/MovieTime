@@ -34,10 +34,10 @@ final class Injection {
         container.register(NetworkManager.self) { _ in
             return NetworkManager()
         }
-        
+
         // MARK: Database
-        container.register(RateMovie.self) { _ in
-            return RateMovie()
+        container.register(MovieRatingRepository.self) { _ in
+            return MovieRatingRepository()
         }.inObjectScope(.container)
         container.register(MovieRepository.self) { _ in
             return MovieRepository()
