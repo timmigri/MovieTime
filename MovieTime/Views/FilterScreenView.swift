@@ -83,15 +83,13 @@ struct FilterScreenView: View {
         ) {
             ForEach(viewModel.filterCategories.indices, id: \.self) { index in
                 let category = viewModel.filterCategories[index]
-                HStack(spacing: 10) {
-                    CustomCheckbox(
-                        checked: category.isSelected,
-                        onCheck: { viewModel.onChooseFilterCategory(category.id)
-                        },
-                        title: category.name,
-                        isDisabled: !viewModel.canSelectFilterCategory(category)
-                    )
-                }
+                CustomCheckbox(
+                    checked: category.isSelected,
+                    onCheck: { viewModel.onChooseFilterCategory(category.id)
+                    },
+                    title: category.name,
+                    isDisabled: !viewModel.canSelectFilterCategory(category)
+                )
                 .padding(.horizontal, 10)
                 .padding(.vertical, 23)
                 .frame(maxWidth: .infinity, alignment: .leading)

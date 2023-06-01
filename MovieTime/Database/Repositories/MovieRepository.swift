@@ -33,7 +33,6 @@ class MovieRepository: MovieRepositoryProtocol {
 
     func toggleMovie(forMovieId id: Int, movie: MovieDetailModel) -> Bool? {
         guard let realm else { return nil }
-        print(Realm.Configuration.defaultConfiguration.fileURL?.path)
         var res: Bool?
         try? realm.write {
             if let movie = getMovieById(id: id) {
@@ -67,7 +66,6 @@ class MovieRepository: MovieRepositoryProtocol {
                     guard let imageUrl = DeviceImage.getImagePathOnDevice(
                         .moviePoster(movieId: movie.id)) else { return }
                     guard let imageData = movie.posterImage else { return }
-                    print(imageUrl)
                     do {
                         try imageData.write(to: imageUrl, options: .atomic)
                     } catch {

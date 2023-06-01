@@ -34,7 +34,7 @@ struct MainScreenView: View {
                     }
                 }
                 .tag(2)
-            ProfileScreenView()
+            CustomMovieScreenView(mode: .create)
                 .tabItem {
                     HStack {
                         Image(selectedTabId != 3 ? R.image.icons.profile.name : R.image.icons.profileActive.name)

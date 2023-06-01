@@ -56,6 +56,9 @@ final class Injection {
         container.register(MovieDetailViewModel.self) { _, source in
             return MovieDetailViewModel(source: source)
         }
+        container.register(CustomMovieViewModel.self) { _, mode in
+            return CustomMovieViewModel(mode: mode)
+        }
         return container
     }
 }
