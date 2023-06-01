@@ -12,7 +12,7 @@ class MovieDetailModel: MovieModel {
     let seriesSeasonsCount: Int?
     let description: String?
     let facts: [String]
-    let genres: [String]
+    let genres: [GenreModel]
     let actors: [PersonModel]
 
     init(id: Int,
@@ -23,7 +23,7 @@ class MovieDetailModel: MovieModel {
          seriesSeasonsCount: Int?,
          description: String?,
          facts: [String],
-         genres: [String],
+         genres: [GenreModel],
          posterUrl: String?,
          rating: Float,
          actors: [PersonModel],

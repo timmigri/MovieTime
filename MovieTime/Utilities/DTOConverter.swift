@@ -81,7 +81,7 @@ class DTOConverter {
             seriesSeasonsCount: dto.seasonsInfo?.count,
             description: dto.description,
             facts: facts,
-            genres: genres.map { $0.name },
+            genres: genres.map { GenreModel(name: $0.name) },
             posterUrl: poster.previewUrl,
             rating: rating.kp,
             actors: persons

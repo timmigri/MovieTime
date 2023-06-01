@@ -118,7 +118,7 @@ struct MovieScreenView: View {
                             .fill(Color.appSecondary300)
                             .frame(width: 4, height: 4)
                     }
-                    Text(StringFormatter.getMovieGenresString(movie.genres))
+                    Text(StringFormatter.getMovieGenresString(movie.genres.map { $0.name }))
                         .caption2()
                     if let duration = StringFormatter.getMovieDurationString(movie) {
                         Circle()

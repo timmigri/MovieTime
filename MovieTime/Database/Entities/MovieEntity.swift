@@ -18,4 +18,7 @@ class MovieEntity: Object, Identifiable {
     @Persisted var seriesSeasonsCount: Int?
     @Persisted var movieDescription: String?
     @Persisted var rating: Float
+    @Persisted var facts: Data?
+    @Persisted var actors: List<PersonEntity>
+    @Persisted var genres: List<GenreEntity>
 }
