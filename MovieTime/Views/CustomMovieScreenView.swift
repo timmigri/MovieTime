@@ -9,15 +9,13 @@ import Foundation
 import UIKit
 import SwiftUI
 import PhotosUI
+import Combine
 
 struct CustomMovieScreenView: View {
-    @State var movieLength: String = ""
     @State var isShowPhotoLibrary = false
     @State private var image: Image?
     @State private var inputImage: UIImage?
-    
-    @State var facts: [String] = ["для", "кря"]
-    
+
     @ObservedObject var viewModel: CustomMovieViewModel
 
     init(mode: CustomMovieViewModel.Mode) {
@@ -33,6 +31,7 @@ struct CustomMovieScreenView: View {
                         name: viewModel.nameField,
                         year: viewModel.selectedYear,
                         rating: 5.0,
+                        durationString: viewModel.movieLengthFormatted,
                         posterView: AnyView(
                             ZStack {
                                 Color.appPrimary200
@@ -69,65 +68,29 @@ struct CustomMovieScreenView: View {
                             .pickerStyle(WheelPickerStyle())
                         ))
                         SectionView(title: "Продолжительность", innerContent: AnyView(
-                            CustomTextField(text: $movieLength, placeholder: "в минутах")
-                        ))
-                        VStack(alignment: .leading) {
-                            Text("Жанры")
-                                .bodyText5()
-                                .foregroundColor(.white)
-                            LazyVGrid(
-                                columns: [GridItem(.flexible()), GridItem(.flexible())],
-                                spacing: 20
-                            ) {
-                                let categories = FilterCategoryModel.generateCategories()
-                                ForEach(categories.indices, id: \.self) { index in
-                                    let category = categories[index]
-                                    CustomCheckbox(
-                                        checked: false,
-                                        onCheck: {
-                                        },
-                                        title: category.name,
-                                        isDisabled: false
-                                    )
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 23)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(
-                                        Image(category.pictureName)
-                                            .resizable()
-                                            .cornerRadius(8)
-                                    )
-                                    .onTapGesture {
-                                        //                                    viewModel.onChooseFilterCategory(category.id)
+                            CustomTextField(text: $viewModel.movieLengthField, placeholder: "в минутах")
+                                .keyboardType(.numberPad)
+                                .onReceive(Just(viewModel.movieLengthField)) { newValue in
+                                    let filtered = newValue.filter { "0123456789".contains($0) }
+                                    if newValue.count > 5 {
+                                        self.viewModel.movieLengthField = String(Array(newValue).prefix(5))
                                     }
-                                    //                                .opacity(viewModel.filterCategoriesVisibility[index] ? 1 : 0)
-                                }
-                            }
-                        }
-                        SectionView(title: "Факты", innerContent: AnyView(
-                            VStack(alignment: .leading) {
-                                ForEach(facts.indices) { factIndex in
-                                    TextField(text: $facts[factIndex]) {
-                                        Text("Факт \(factIndex + 1)")
-                                            .foregroundColor(.appSecondary300.opacity(0.5))
-                                            .bodyText3()
+                                    if filtered != newValue {
+                                        self.viewModel.movieLengthField = filtered
                                     }
-                                    .accentColor(.appPrimary)
-                                    .foregroundColor(.appSecondary300)
                                 }
-                                Button("Добавить факт") {
-                                    
-                                }
-                                .foregroundColor(.appPrimary)
-                            }
                         ))
+                        GenreSelector(
+                            genres: FilterCategoryModel.generateCategories(),
+                            selectedGenresIndexes: viewModel.selectedGenresIndexes,
+                            onChange: viewModel.onChangeSelectedGenres
+                        )
+                        .padding(.top, 20)
                     }
                     .padding()
                 }
                 .ignoresSafeArea()
-                
             }
-            .ignoresSafeArea()
         }
         .sheet(isPresented: $isShowPhotoLibrary) {
             ImagePicker(image: $inputImage)

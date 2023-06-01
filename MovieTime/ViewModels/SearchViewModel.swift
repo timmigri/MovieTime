@@ -44,29 +44,13 @@ class SearchViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     @Published var query = ""
     @Published var isUserTyping = false
-    @Published private(set) var filterCategoriesVisibility: [Bool] = Array(
-        repeating: false,
-        count: FilterCategoryModel.generateCategories().count
-    )
     @Published var sortOptions = [
         CustomSelect.SelectOption(title: R.string.filter.sortOptionName(), key: "name"),
         CustomSelect.SelectOption(title: R.string.filter.sortOptionYear(), key: "year"),
         CustomSelect.SelectOption(title: R.string.filter.sortOptionRating(), key: "rating.kp")
     ]
-    @Published private(set) var filterCategories = FilterCategoryModel.generateCategories()
-
-    func onAppearFilterScreenView() {
-        for index in filterCategoriesVisibility.indices { filterCategoriesVisibility[index] = false }
-        let totalDuration: CGFloat = 0.5
-        for index in filterCategoriesVisibility.indices {
-            let after: CGFloat = totalDuration * CGFloat(index + 1) / CGFloat(filterCategoriesVisibility.count)
-            DispatchQueue.main.asyncAfter(deadline: .now() + after) {
-                withAnimation {
-                    self.filterCategoriesVisibility[index] = true
-                }
-            }
-        }
-    }
+    @Published private(set) var genres = FilterCategoryModel.generateCategories()
+    @Published private(set) var selectedGenresIndexes = [Int]()
 
     var currentSortOptionIndex: Int? {
         if let index = sortOptions.firstIndex(where: { $0.isSelected }) {
@@ -84,33 +68,12 @@ class SearchViewModel: ObservableObject {
         }
     }
 
+    func onChangeSelectedGenres(_ indexes: [Int]) {
+        selectedGenresIndexes = indexes
+    }
+
     var isSomeFilterActive: Bool {
-        currentSortOptionIndex != nil || countSelectedFilterCategories > 0
-    }
-
-    func onChooseFilterCategory(_ id: String) {
-        if let index = filterCategories.firstIndex(where: { $0.id == id }),
-           canSelectFilterCategory(filterCategories[index]) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                filterCategories[index].isSelected.toggle()
-            }
-        }
-    }
-
-    func resetFilterCategories() {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            for index in filterCategories.indices {
-                filterCategories[index].isSelected = false
-            }
-        }
-    }
-
-    func canSelectFilterCategory(_ category: FilterCategoryModel) -> Bool {
-        return category.isSelected || countSelectedFilterCategories < AppConstants.maxFilterCategories
-    }
-
-    var countSelectedFilterCategories: Int {
-        filterCategories.filter { $0.isSelected }.count
+        currentSortOptionIndex != nil || selectedGenresIndexes.count > 0
     }
 
     func onChangeSearchOptions() {
@@ -204,7 +167,7 @@ class SearchViewModel: ObservableObject {
         if isLoadingMovies || query.count < AppConstants.minLengthOfQueryToSearch { return }
         onStartLoadingMovies()
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
-        let genres = filterCategories.filter { $0.isSelected }.map { $0.searchKey }
+        let genres = selectedGenresIndexes.map { self.genres[$0].searchKey }
         networkManager.fetchMovies(query: query.lowercased(), sortField: sortField, genres: genres) { [weak self] result in
             guard let self else { return }
 

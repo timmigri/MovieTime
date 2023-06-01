@@ -54,9 +54,14 @@ struct MovieScreenView: View {
         GeometryReader { geometry in
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(alignment: .leading) {
-                    renderTopImageBlockView(movie)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(height: geometry.size.height * 0.7, alignment: .bottom)
+                    MoviePosterBox(
+                        name: movie.name,
+                        year: movie.year,
+                        rating: movie.rating,
+                        durationString: StringFormatter.getMovieDurationString(movie),
+                        posterView: AnyView(renderPosterPicture(movie)),
+                        geometry: geometry
+                    )
                     Group {
                         renderDescriptionView(movie)
                         renderActorsView(movie, geometry: geometry)
@@ -99,49 +104,6 @@ struct MovieScreenView: View {
                     onFinishLoading: viewModel.onFinishLoadingPoster
                 )
             }
-        }
-    }
-
-    func renderTopImageBlockView(_ movie: MovieDetailModel) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            renderPosterPicture(movie)
-            VStack(alignment: .leading) {
-                Text(movie.name)
-                    .heading3()
-                    .foregroundColor(.appTextWhite)
-                    .padding(.bottom, 3)
-                HStack {
-                    if let year = movie.year {
-                        Text(String(year))
-                            .caption2()
-                        Circle()
-                            .fill(Color.appSecondary300)
-                            .frame(width: 4, height: 4)
-                    }
-                    Text(StringFormatter.getMovieGenresString(movie.genres.map { $0.name }))
-                        .caption2()
-                    if let duration = StringFormatter.getMovieDurationString(movie) {
-                        Circle()
-                            .fill(Color.appSecondary300)
-                            .frame(width: 4, height: 4)
-                        Text(duration)
-                            .caption2()
-                    }
-                }
-                .foregroundColor(.appSecondary300)
-                HStack(spacing: 2) {
-                    Image(R.image.icons.movieStar)
-                    Text(StringFormatter.getFormattedMovieRatingString(movie.rating))
-                        .bodyText5()
-                        .foregroundColor(.appTextWhite)
-                }
-            }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                Color.appBackground.opacity(0.75)
-            )
         }
     }
 

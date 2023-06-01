@@ -13,6 +13,7 @@ struct MoviePosterBox: View {
     let year: Int?
     let rating: Float
     let genres: [GenreModel] = []
+    let durationString: String?
     var posterView: AnyView
     let geometry: GeometryProxy
     
@@ -24,6 +25,7 @@ struct MoviePosterBox: View {
                     .heading3()
                     .foregroundColor(.appTextWhite)
                     .padding(.bottom, 3)
+                    .lineLimit(2)
                 HStack {
                     if let year {
                         Text(String(year))
@@ -32,15 +34,20 @@ struct MoviePosterBox: View {
                             .fill(Color.appSecondary300)
                             .frame(width: 4, height: 4)
                     }
-                    Text(StringFormatter.getMovieGenresString(genres.map { $0.name }))
-                        .caption2()
-//                    if let duration = StringFormatter.getMovieDurationString(movie) {
-//                        Circle()
-//                            .fill(Color.appSecondary300)
-//                            .frame(width: 4, height: 4)
-//                        Text(duration)
-//                            .caption2()
-//                    }
+                    if genres.count > 0 {
+                        Text(StringFormatter.getMovieGenresString(genres.map { $0.name }))
+                            .caption2()
+                    } else {
+                        Text("без жанров")
+                            .caption2()
+                    }
+                    if let durationString {
+                        Circle()
+                            .fill(Color.appSecondary300)
+                            .frame(width: 4, height: 4)
+                        Text(durationString)
+                            .caption2()
+                    }
                 }
                 .foregroundColor(.appSecondary300)
                 HStack(spacing: 2) {
@@ -67,7 +74,7 @@ struct MoviePosterBox_Previews: PreviewProvider {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             GeometryReader { geometry in
-                MoviePosterBox(name: "Фильм", year: 2000, rating: 7.8, posterView: AnyView(EmptyView()), geometry: geometry)
+                MoviePosterBox(name: "Фильм", year: 2000, rating: 7.8, durationString: nil, posterView: AnyView(EmptyView()), geometry: geometry)
             }
         }
     }

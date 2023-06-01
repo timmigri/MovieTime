@@ -18,11 +18,21 @@ class CustomMovieViewModel: ObservableObject {
     @Published var descriptionField: String = ""
     @Published var movieLengthField: String = ""
     @Published var selectedYearIndex: Int = 0
-    @Published var facts = [String]()
+    @Published private(set) var selectedGenresIndexes = [Int]()
+    let genres = FilterCategoryModel.generateCategories()
     let availableYears: [Int]
     
     var selectedYear: Int {
         availableYears[selectedYearIndex]
+    }
+    
+    var selectedGenres: [FilterCategoryModel] {
+        selectedGenresIndexes.map { genres[$0] }
+    }
+    
+    var movieLengthFormatted: String? {
+        guard let duration = Int(movieLengthField) else { return nil }
+        return StringFormatter.convertLengthToHoursAndMinutesString(duration)
     }
     
     init(mode: Mode) {
@@ -30,5 +40,9 @@ class CustomMovieViewModel: ObservableObject {
         let currentYear = Calendar(identifier: .gregorian).dateComponents([.year], from: Date()).year ?? 2023
         availableYears = Array(minYear...currentYear)
         selectedYearIndex = availableYears.firstIndex(where: { $0 == 2000 }) ?? availableYears.count / 2
+    }
+    
+    func onChangeSelectedGenres(_ indexes: [Int]) {
+        selectedGenresIndexes = indexes
     }
 }

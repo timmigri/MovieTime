@@ -8,7 +8,7 @@
 import Foundation
 
 struct StringFormatter {
-    private static func convertLengthToHoursAndMinutesString(_ length: Int) -> String {
+    static func convertLengthToHoursAndMinutesString(_ length: Int) -> String {
         let hoursString = length >= 60 ? String(length / 60) + " ч " : ""
         let minutesString = String(length % 60) + " м"
         return hoursString + minutesString

@@ -23,15 +23,15 @@ struct FilterScreenView: View {
                 )
                 ScrollView(.vertical, showsIndicators: false) {
                     sortKeyRowView
-                    filterTextRowView
-                    filterCategoriesListView
+                    GenreSelector(
+                        genres: viewModel.genres,
+                        selectedGenresIndexes: viewModel.selectedGenresIndexes,
+                        onChange: viewModel.onChangeSelectedGenres
+                    )
                 }
                 Spacer()
             }
             .padding()
-            .onAppear {
-                viewModel.onAppearFilterScreenView()
-            }
 
             CustomButton(
                 action: {
@@ -60,50 +60,6 @@ struct FilterScreenView: View {
             )
         }
         .padding(.bottom, 20)
-    }
-
-    var filterTextRowView: some View {
-        HStack {
-            Text(R.string.filter.chooseGenresTitle())
-                .bodyText2()
-                .foregroundColor(.appTextWhite)
-            Spacer()
-            if viewModel.countSelectedFilterCategories > 0 {
-                Button(R.string.filter.clearButtonText()) { viewModel.resetFilterCategories() }
-                    .foregroundColor(.appPrimary)
-            }
-        }
-        .padding(.bottom, 20)
-    }
-
-    var filterCategoriesListView: some View {
-        LazyVGrid(
-            columns: [GridItem(.flexible()), GridItem(.flexible())],
-            spacing: 20
-        ) {
-            ForEach(viewModel.filterCategories.indices, id: \.self) { index in
-                let category = viewModel.filterCategories[index]
-                CustomCheckbox(
-                    checked: category.isSelected,
-                    onCheck: { viewModel.onChooseFilterCategory(category.id)
-                    },
-                    title: category.name,
-                    isDisabled: !viewModel.canSelectFilterCategory(category)
-                )
-                .padding(.horizontal, 10)
-                .padding(.vertical, 23)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    Image(category.pictureName)
-                        .resizable()
-                        .cornerRadius(8)
-                )
-                .onTapGesture {
-                    viewModel.onChooseFilterCategory(category.id)
-                }
-                .opacity(viewModel.filterCategoriesVisibility[index] ? 1 : 0)
-            }
-        }
     }
 }
 

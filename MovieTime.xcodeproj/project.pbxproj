@@ -79,6 +79,7 @@
 		ACAD0CF32A290F75004B947D /* CustomMovieScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CF22A290F75004B947D /* CustomMovieScreenView.swift */; };
 		ACAD0CF52A292469004B947D /* MoviePosterBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CF42A292469004B947D /* MoviePosterBox.swift */; };
 		ACAD0CF72A292A6D004B947D /* CustomMovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CF62A292A6D004B947D /* CustomMovieViewModel.swift */; };
+		ACAD0CF92A295389004B947D /* GenreSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CF82A295389004B947D /* GenreSelector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -158,6 +159,7 @@
 		ACAD0CF22A290F75004B947D /* CustomMovieScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMovieScreenView.swift; sourceTree = "<group>"; };
 		ACAD0CF42A292469004B947D /* MoviePosterBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePosterBox.swift; sourceTree = "<group>"; };
 		ACAD0CF62A292A6D004B947D /* CustomMovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMovieViewModel.swift; sourceTree = "<group>"; };
+		ACAD0CF82A295389004B947D /* GenreSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreSelector.swift; sourceTree = "<group>"; };
 		E2F6AA47F525A4217418C67F /* Pods-MovieTime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieTime.release.xcconfig"; path = "Target Support Files/Pods-MovieTime/Pods-MovieTime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -208,6 +210,7 @@
 				AC0E5A9F2A22BAA40055C0F5 /* MovieCard.swift */,
 				AC964BEC2A24D47A00C886CC /* CustomSelect.swift */,
 				ACAD0CF42A292469004B947D /* MoviePosterBox.swift */,
+				ACAD0CF82A295389004B947D /* GenreSelector.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -578,6 +581,7 @@
 				AC95C3DC2A26AC70009D4F2D /* EntityConverter.swift in Sources */,
 				ACAD0CE72A28D9D9004B947D /* PersonEntity.swift in Sources */,
 				AC93059C2A0E685A00DC687C /* FilterScreenView.swift in Sources */,
+				ACAD0CF92A295389004B947D /* GenreSelector.swift in Sources */,
 				AC95C3DA2A26A901009D4F2D /* MovieRepository.swift in Sources */,
 				ACAD0CF72A292A6D004B947D /* CustomMovieViewModel.swift in Sources */,
 				AC99731B2A1C151B006871CF /* ProfileScreenView.swift in Sources */,
