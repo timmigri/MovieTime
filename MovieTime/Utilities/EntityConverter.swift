@@ -30,9 +30,11 @@ class EntityConverter {
 
     static func convertFrom(_ movieEntity: MovieEntity) -> MovieDetailModel {
         var facts = [String]()
+        var posterData: Data? = DeviceImage.getImageFromLocalPath(.moviePoster(movieId: movieEntity.kpId))
         if let entityFacts = movieEntity.facts {
             facts = (try? JSONDecoder().decode([String].self, from: entityFacts)) ?? []
         }
+        
         return MovieDetailModel(
             id: movieEntity.kpId,
             name: movieEntity.name,
@@ -46,7 +48,7 @@ class EntityConverter {
             posterUrl: nil,
             rating: movieEntity.rating,
             actors: movieEntity.actors.map { convertFrom($0) },
-            posterImage: movieEntity.image
+            posterImage: posterData
         )
     }
 
@@ -74,7 +76,6 @@ class EntityConverter {
         movieEntity.seriesSeasonsCount = movie.seriesSeasonsCount
         movieEntity.movieDescription = movie.description
         movieEntity.rating = movie.rating
-        movieEntity.image = movie.posterImage
         movieEntity.facts = try? JSONEncoder().encode(movie.facts)
         // MARK: actors and genres appending to entity in repository
         return movieEntity

@@ -9,7 +9,6 @@ import Foundation
 import RealmSwift
 
 class MovieEntity: Object, Identifiable {
-    @Persisted var image: Data?
     @Persisted var kpId: Int
     @Persisted var name: String
     @Persisted var year: Int?

@@ -23,4 +23,5 @@ class ShareService: ShareServiceProtocol {
         let viewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         viewController.popoverPresentationController?.sourceView = source.view
         source.present(viewController, animated: true)
-    }}
+    }
+}

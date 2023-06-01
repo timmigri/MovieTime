@@ -75,6 +75,7 @@
 		ACAD0CE72A28D9D9004B947D /* PersonEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CE62A28D9D9004B947D /* PersonEntity.swift */; };
 		ACAD0CE92A28DA29004B947D /* GenreEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CE82A28DA29004B947D /* GenreEntity.swift */; };
 		ACAD0CEB2A28DD0A004B947D /* GenreModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CEA2A28DD0A004B947D /* GenreModel.swift */; };
+		ACAD0CF12A28FDE1004B947D /* DeviceImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACAD0CF02A28FDE1004B947D /* DeviceImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +151,7 @@
 		ACAD0CE62A28D9D9004B947D /* PersonEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEntity.swift; sourceTree = "<group>"; };
 		ACAD0CE82A28DA29004B947D /* GenreEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreEntity.swift; sourceTree = "<group>"; };
 		ACAD0CEA2A28DD0A004B947D /* GenreModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreModel.swift; sourceTree = "<group>"; };
+		ACAD0CF02A28FDE1004B947D /* DeviceImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceImage.swift; sourceTree = "<group>"; };
 		E2F6AA47F525A4217418C67F /* Pods-MovieTime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieTime.release.xcconfig"; path = "Target Support Files/Pods-MovieTime/Pods-MovieTime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -293,6 +295,7 @@
 				AC95C3DB2A26AC70009D4F2D /* EntityConverter.swift */,
 				AC8FB3C52A279A6300F3E55F /* ShareService.swift */,
 				AC8FB3C92A27C17C00F3E55F /* StringFormatter.swift */,
+				ACAD0CF02A28FDE1004B947D /* DeviceImage.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				AC95C3D52A26A8B2009D4F2D /* MovieEntity.swift in Sources */,
 				ACA2B6042A0D6EB60065CBB1 /* TextExtension.swift in Sources */,
 				AC8FB3CA2A27C17C00F3E55F /* StringFormatter.swift in Sources */,
+				ACAD0CF12A28FDE1004B947D /* DeviceImage.swift in Sources */,
 				AC9534662A190D3300244118 /* AppConfig.swift in Sources */,
 				ACA2B6022A0D6C2E0065CBB1 /* FontExtension.swift in Sources */,
 				AC964BF02A25213B00C886CC /* KinopoiskAPI.swift in Sources */,

@@ -10,12 +10,13 @@ import RealmSwift
 
 class MovieRepository: MovieRepositoryProtocol {    
     private let realm = try? Realm()
-    
+    private static let imagesFolder = "MovieTimePosters"
+
     private func getGenreByName(name: String) -> GenreEntity? {
         guard let realm else { return nil }
         return realm.objects(GenreEntity.self).filter("name == \"\(name)\"").first
     }
-    
+
     private func getPersonByKpId(kpId: Int) -> PersonEntity? {
         guard let realm else { return nil }
         return realm.objects(PersonEntity.self).filter("kpId == \(kpId)").first
@@ -60,6 +61,19 @@ class MovieRepository: MovieRepositoryProtocol {
                     movieEntity.actors.append(personEntity)
                 }
                 realm.add(movieEntity)
+
+
+                DispatchQueue.global(qos: .userInitiated).async {
+                    guard let imageUrl = DeviceImage.getImagePathOnDevice(
+                        .moviePoster(movieId: movie.id)) else { return }
+                    guard let imageData = movie.posterImage else { return }
+                    print(imageUrl)
+                    do {
+                        try imageData.write(to: imageUrl, options: .atomic)
+                    } catch {
+                        print(error)
+                    }
+                }
                 res = true
             }
         }
