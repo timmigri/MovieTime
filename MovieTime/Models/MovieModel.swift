@@ -8,23 +8,26 @@
 import Foundation
 
 class MovieModel: Identifiable {
-    let id: Int
+    let kpId: Int?
+    let uuid: UUID?
     let year: Int?
     let movieLength: Int?
     let name: String
     let posterUrl: String?
-    let rating: Float
+    let rating: Float?
     var posterImage: Data?
 
     init(
-        id: Int,
+        kpId: Int?,
+        uuid: UUID?,
         year: Int?,
         movieLength: Int?,
         name: String,
         posterUrl: String?,
-        rating: Float,
+        rating: Float?,
         posterImage: Data? = nil) {
-            self.id = id
+            self.kpId = kpId
+            self.uuid = uuid
             self.year = year
             self.movieLength = movieLength
             self.name = name

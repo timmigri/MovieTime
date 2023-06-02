@@ -10,6 +10,7 @@ import Foundation
 struct DeviceImage {
     enum ImageType {
         case moviePoster(movieId: Int)
+        case customMoviePoster(movieUUID: UUID)
     }
 
     private static func getDeviceImageFromLocalURL(_ url: URL?) -> Data? {
@@ -21,7 +22,7 @@ struct DeviceImage {
 
     private static func getFolderByImageType(_ type: ImageType) -> String {
         switch type {
-        case .moviePoster:
+        case .moviePoster, .customMoviePoster:
             return "MovieTimePosters"
         }
     }
@@ -30,6 +31,8 @@ struct DeviceImage {
         switch type {
         case .moviePoster(let movieId):
             return String(movieId)
+        case .customMoviePoster(let movieUUID):
+            return movieUUID.uuidString
         }
     }
 

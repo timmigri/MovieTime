@@ -15,7 +15,8 @@ class MovieDetailModel: MovieModel {
     let genres: [GenreModel]
     let actors: [PersonModel]
 
-    init(id: Int,
+    init(kpId: Int?,
+         uuid: UUID?,
          name: String,
          year: Int?,
          movieLength: Int?,
@@ -25,7 +26,7 @@ class MovieDetailModel: MovieModel {
          facts: [String],
          genres: [GenreModel],
          posterUrl: String?,
-         rating: Float,
+         rating: Float?,
          actors: [PersonModel],
          posterImage: Data? = nil) {
             self.seriesLength = seriesLength
@@ -35,7 +36,8 @@ class MovieDetailModel: MovieModel {
             self.genres = genres
             self.actors = actors
             super.init(
-                id: id,
+                kpId: kpId,
+                uuid: uuid,
                 year: year,
                 movieLength: movieLength,
                 name: name,

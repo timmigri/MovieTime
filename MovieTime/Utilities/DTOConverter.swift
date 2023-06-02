@@ -34,7 +34,8 @@ class DTOConverter {
             guard let poster = movie.poster else { continue }
             guard let rating = movie.rating else { continue }
             movies.append(MovieModel(
-                id: movie.id,
+                kpId: movie.id,
+                uuid: nil,
                 year: movie.year,
                 movieLength: movie.movieLength,
                 name: name,
@@ -73,7 +74,8 @@ class DTOConverter {
         }
 
         return MovieDetailModel(
-            id: dto.id,
+            kpId: dto.id,
+            uuid: nil,
             name: name,
             year: dto.year,
             movieLength: dto.movieLength,
@@ -81,7 +83,7 @@ class DTOConverter {
             seriesSeasonsCount: dto.seasonsInfo?.count,
             description: dto.description,
             facts: facts,
-            genres: genres.map { GenreModel(name: $0.name) },
+            genres: genres.map { GenreModel(name: $0.name, pictureName: nil, searchKey: nil) },
             posterUrl: poster.previewUrl,
             rating: rating.kp,
             actors: persons

@@ -17,6 +17,7 @@ struct MovieCard: View {
             if let posterImage = movie.posterImage, let uiImage = UIImage(data: posterImage) {
                 Image(uiImage: uiImage)
                     .resizable()
+                    .scaledToFit()
                     .frame(maxHeight: (geometry.size.width - 20) / 2 * (3 / 2))
                     .animation(nil)
             } else if let posterUrl = movie.posterUrl, let movieUrl = URL(string: posterUrl) {
@@ -59,11 +60,13 @@ struct MovieCard: View {
                         .foregroundColor(.appTextBlack)
                 }
                 Spacer()
-                HStack(spacing: 2) {
-                    Image(R.image.icons.movieStar.name)
-                    Text(StringFormatter.getFormattedMovieRatingString(movie.rating))
-                        .bodyText5()
-                        .foregroundColor(.appTextWhite)
+                if let rating = movie.rating {
+                    HStack(spacing: 2) {
+                        Image(R.image.icons.movieStar.name)
+                        Text(StringFormatter.getFormattedMovieRatingString(rating))
+                            .bodyText5()
+                            .foregroundColor(.appTextWhite)
+                    }
                 }
             }
         }

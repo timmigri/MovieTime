@@ -16,30 +16,37 @@ struct BookmarkScreenView: View {
             Color.appBackground.ignoresSafeArea()
             switch viewModel.screenState {
             case .noBookmarkPicture:
-                PictureBox(
-                    pictureName: R.image.pictures.bookmark.name,
-                    headlineText: R.string.favorite.pictureBoxTitle(),
-                    bodyText: R.string.favorite.pictureBoxText()
-                )
-                .padding()
+                ZStack(alignment: .bottomTrailing) {
+                    PictureBox(
+                        pictureName: R.image.pictures.bookmark.name,
+                        headlineText: R.string.favorite.pictureBoxTitle(),
+                        bodyText: R.string.favorite.pictureBoxText()
+                    )
+                    .padding()
+                    createMovieButton
+                        .padding(.bottom, 5)
+                }
             case .success(let movieList):
-                VStack {
-                    filterView
-                    GeometryReader { geometry in
-                        ScrollView(.vertical, showsIndicators: false) {
-                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                                ForEach(movieList, id: \.id) { movie in
-                                    NavigationLink(destination: MovieScreenView(
-                                        source: .database(kpId: movie.id)
-                                    )) {
-                                        MovieCard(movie: movie, geometry: geometry)
+                ZStack(alignment: .bottomTrailing) {
+                    VStack {
+                        filterView
+                        GeometryReader { geometry in
+                            ScrollView(.vertical, showsIndicators: false) {
+                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                                    ForEach(movieList, id: \.id) { movie in
+                                        NavigationLink(destination: MovieScreenView(
+                                            source: .database(kpId: movie.kpId, uuid: movie.uuid)
+                                        )) {
+                                            MovieCard(movie: movie, geometry: geometry)
+                                        }
                                     }
                                 }
                             }
                         }
+                        .onTapGesture(perform: UIApplication.shared.clearAllTextFieldFocus)
+                        .padding(.top, 32)
                     }
-                    .onTapGesture(perform: UIApplication.shared.clearAllTextFieldFocus)
-                    .padding(.top, 32)
+                    createMovieButton
                 }
                 .padding()
             case .error(let error):
@@ -48,6 +55,22 @@ struct BookmarkScreenView: View {
                     .foregroundColor(.appSecondary300)
             }
         }.onAppear(perform: viewModel.onChangeSearchOptions)
+    }
+    
+    var createMovieButton: some View {
+        NavigationLink(destination: CustomMovieScreenView(mode: .create)
+        ) {
+            ZStack {
+                Circle()
+                    .fill(Color.appPrimary)
+                    .frame(width: 50, height: 50)
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+                    .font(.system(size: 25))
+            }
+            .padding(10)
+            .opacity(0.9)
+        }
     }
 
     var filterView: some View {

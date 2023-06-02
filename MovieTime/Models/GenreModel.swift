@@ -9,4 +9,6 @@ import Foundation
 
 struct GenreModel {
     let name: String
+    let pictureName: String?
+    let searchKey: String?
 }

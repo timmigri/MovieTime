@@ -156,7 +156,7 @@ struct SearchScreenView: View {
 
     func renderMovie(_ movie: MovieModel, _ geometry: GeometryProxy) -> some View {
         NavigationLink(destination: MovieScreenView(
-            source: .network(kpId: movie.id)
+            source: .network(kpId: movie.kpId)
         )) {
             MovieCard(movie: movie, geometry: geometry)
             .onAppear {

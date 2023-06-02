@@ -10,4 +10,6 @@ import RealmSwift
 
 class GenreEntity: Object {
     @Persisted var name: String
+    @Persisted var pictureName: String?
+    @Persisted var searchKey: String?
 }

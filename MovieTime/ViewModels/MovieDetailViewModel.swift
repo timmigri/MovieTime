@@ -11,7 +11,7 @@ import SwiftUI
 class MovieDetailViewModel: ObservableObject {
     enum Source {
         case network(kpId: Int?)
-        case database(kpId: Int)
+        case database(kpId: Int?, uuid: UUID?)
     }
 
     enum ScreenState {
@@ -37,12 +37,18 @@ class MovieDetailViewModel: ObservableObject {
     @Injected private var movieRepository: MovieRepository
     @Injected private var networkManager: NetworkManager
     @Published var isBookmarked: Bool = false
+    let isCustomMovie: Bool
 
     // Animation
     @Published var bookmarkButtonScale: CGFloat = 1
 
     init(source: Source) {
         self.source = source
+        if case .database(let kpId, _) = source {
+            isCustomMovie = kpId == nil
+        } else {
+            isCustomMovie = false
+        }
     }
 
     // UI Conditions
@@ -57,8 +63,7 @@ class MovieDetailViewModel: ObservableObject {
 
     func onTapBookmarkButton() {
         guard let movie = screenState.movie else { return }
-        let res = movieRepository.toggleMovie(forMovieId: movie.id, movie: movie)
-        guard let res else { return }
+        guard let res = movieRepository.toggleMovie(movie: movie) else { return }
 
         isBookmarked = res
         if res {
@@ -97,8 +102,10 @@ class MovieDetailViewModel: ObservableObject {
     }
 
     private func onSuccessLoadingMovie(_ movie: MovieDetailModel) {
-        self.userRating = movieRatingRepository.getRating(forId: movie.id)
-        self.isBookmarked = movieRepository.containsMovie(id: movie.id)
+        if let kpId = movie.kpId {
+            self.userRating = movieRatingRepository.getRating(forId: kpId)
+        }
+        self.isBookmarked = movieRepository.containsMovie(kpId: movie.kpId, uuid: movie.uuid)
         self.screenState = .success(movie: movie)
     }
 
@@ -118,9 +125,9 @@ class MovieDetailViewModel: ObservableObject {
                     self.screenState = .error
                 }
             }
-        case .database(let kpId):
+        case .database(let kpId, let uuid):
             screenState = .loading
-            if let movieEntity = movieRepository.getMovieById(id: kpId) {
+            if let movieEntity = movieRepository.getMovie(kpId: kpId, uuid: uuid) {
                 let movie = EntityConverter.convertFrom(movieEntity)
                 self.onSuccessLoadingMovie(movie)
             } else {
@@ -136,7 +143,9 @@ class MovieDetailViewModel: ObservableObject {
     func onChangeRating(value: Int) {
         if let movie = screenState.movie {
             userRating = value
-            movieRatingRepository.setRating(forId: movie.id, value: value)
+            if let kpId = movie.kpId {
+                movieRatingRepository.setRating(forId: kpId, value: value)
+            }
         }
     }
 

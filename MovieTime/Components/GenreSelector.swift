@@ -9,13 +9,13 @@ import Foundation
 import SwiftUI
 
 struct GenreSelector: View {
-    let genres: [FilterCategoryModel]
+    let genres: [GenreModel]
     let onChange: ([Int]) -> Void
     let selectedGenresIndexes: [Int]
     @State var genresVisibility: [Bool]
 
     init(
-        genres: [FilterCategoryModel],
+        genres: [GenreModel],
         selectedGenresIndexes: [Int],
         onChange: @escaping ([Int]) -> Void) {
         self.genres = genres
@@ -93,17 +93,19 @@ struct GenreSelector: View {
                 CustomCheckbox(
                     checked: selectedGenresIndexes.contains(index),
                     onCheck: { onChooseGenre(index) },
-                    title: category.name,
+                    title: category.name.capitalized,
                     isDisabled: !canSelectGenre(index)
                 )
                 .padding(.horizontal, 10)
                 .padding(.vertical, 23)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    Image(category.pictureName)
-                        .resizable()
-                        .cornerRadius(8)
-                )
+                .conditionTransform(category.pictureName != nil) { view in
+                    view.background(
+                        Image(category.pictureName!)
+                            .resizable()
+                            .cornerRadius(8)
+                    )
+                }
                 .onTapGesture {
                     onChooseGenre(index)
                 }
@@ -118,7 +120,7 @@ struct GenreSelector_Previews: PreviewProvider {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             GenreSelector(
-                genres: FilterCategoryModel.generateCategories(),
+                genres: GenreModel.generateBasicGenres(),
                 selectedGenresIndexes: [1],
                 onChange: { _ in }
             )

@@ -10,8 +10,9 @@ import UIKit
 
 class ShareService: ShareServiceProtocol {
     static func shareMovie(_ movie: MovieModel, source: UIViewController) {
+        guard let kpId = movie.kpId else { return }
         var items = [Any]()
-        if let url = URL(string: AppConstants.shareUrlMovie + String(movie.id)) {
+        if let url = URL(string: AppConstants.shareUrlMovie + String(kpId)) {
             items.append(url)
         }
         var yearString = ""

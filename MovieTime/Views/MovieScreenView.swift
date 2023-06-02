@@ -58,6 +58,7 @@ struct MovieScreenView: View {
                         name: movie.name,
                         year: movie.year,
                         rating: movie.rating,
+                        genres: movie.genres,
                         durationString: StringFormatter.getMovieDurationString(movie),
                         posterView: AnyView(renderPosterPicture(movie)),
                         geometry: geometry
@@ -65,7 +66,9 @@ struct MovieScreenView: View {
                     Group {
                         renderDescriptionView(movie)
                         renderActorsView(movie, geometry: geometry)
-                        ratingView
+                        if !viewModel.isCustomMovie {
+                            ratingView
+                        }
                         renderFactsView(movie)
                     }
                     .padding(.horizontal)
@@ -93,6 +96,7 @@ struct MovieScreenView: View {
                 let uiImage = UIImage(data: posterImage) {
                 Image(uiImage: uiImage)
                     .resizable()
+                    .scaledToFill()
             } else if case .network = viewModel.source, let url = viewModel.posterUrl {
                 AsyncImage(
                     url: url,
@@ -134,8 +138,10 @@ struct MovieScreenView: View {
                         .scaleEffect(viewModel.bookmarkButtonScale)
                         .onTapGesture(perform: viewModel.onTapBookmarkButton)
                 }
-                renderButton(icon: R.image.icons.share.name)
-                    .onTapGesture(perform: viewModel.shareMovie)
+                if !viewModel.isCustomMovie {
+                    renderButton(icon: R.image.icons.share.name)
+                        .onTapGesture(perform: viewModel.shareMovie)
+                }
             }
         }
     }
@@ -151,7 +157,7 @@ struct MovieScreenView: View {
 
     func renderDescriptionView(_ movie: MovieDetailModel) -> some View {
         Group {
-            if let description = movie.description {
+            if let description = movie.description, description.count > 0 {
                 SectionView(
                     title: R.string.movie.descriptionSectionTitle(),
                     innerContent: AnyView(

@@ -11,8 +11,8 @@ import SwiftUI
 struct MoviePosterBox: View {
     let name: String
     let year: Int?
-    let rating: Float
-    let genres: [GenreModel] = []
+    let rating: Float?
+    let genres: [GenreModel]
     let durationString: String?
     var posterView: AnyView
     let geometry: GeometryProxy
@@ -50,11 +50,13 @@ struct MoviePosterBox: View {
                     }
                 }
                 .foregroundColor(.appSecondary300)
-                HStack(spacing: 2) {
-                    Image(R.image.icons.movieStar)
-                    Text(StringFormatter.getFormattedMovieRatingString(rating))
-                        .bodyText5()
-                        .foregroundColor(.appTextWhite)
+                if let rating {
+                    HStack(spacing: 2) {
+                        Image(R.image.icons.movieStar)
+                        Text(StringFormatter.getFormattedMovieRatingString(rating))
+                            .bodyText5()
+                            .foregroundColor(.appTextWhite)
+                    }
                 }
             }
             .padding(.vertical, 10)
@@ -74,7 +76,7 @@ struct MoviePosterBox_Previews: PreviewProvider {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             GeometryReader { geometry in
-                MoviePosterBox(name: "Фильм", year: 2000, rating: 7.8, durationString: nil, posterView: AnyView(EmptyView()), geometry: geometry)
+                MoviePosterBox(name: "Фильм", year: 2000, rating: 7.8, genres: [], durationString: nil, posterView: AnyView(EmptyView()), geometry: geometry)
             }
         }
     }

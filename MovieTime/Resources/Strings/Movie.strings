@@ -5,8 +5,8 @@
   Created by Артём Грищенко on 31.05.2023.
   
 */
-"noResultTitle" = "";
-"noResultText" = "";
+"noResultTitle" = "Ничего :(";
+"noResultText" = "Произошла ошибка при работе с базой данных";
 "userRatingSectionTitle" = "Ваша оценка";
 "descriptionSectionTitle" = "Описание";
 "actorsSectionTitle" = "Актеры";

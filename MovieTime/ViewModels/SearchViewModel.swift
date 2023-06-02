@@ -49,8 +49,8 @@ class SearchViewModel: ObservableObject {
         CustomSelect.SelectOption(title: R.string.filter.sortOptionYear(), key: "year"),
         CustomSelect.SelectOption(title: R.string.filter.sortOptionRating(), key: "rating.kp")
     ]
-    @Published private(set) var genres = FilterCategoryModel.generateCategories()
     @Published private(set) var selectedGenresIndexes = [Int]()
+    let genres = GenreModel.generateBasicGenres()
 
     var currentSortOptionIndex: Int? {
         if let index = sortOptions.firstIndex(where: { $0.isSelected }) {
@@ -167,7 +167,7 @@ class SearchViewModel: ObservableObject {
         if isLoadingMovies || query.count < AppConstants.minLengthOfQueryToSearch { return }
         onStartLoadingMovies()
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
-        let genres = selectedGenresIndexes.map { self.genres[$0].searchKey }
+        let genres = selectedGenresIndexes.compactMap { self.genres[$0].searchKey }
         networkManager.fetchMovies(query: query.lowercased(), sortField: sortField, genres: genres) { [weak self] result in
             guard let self else { return }
 

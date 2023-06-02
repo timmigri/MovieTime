@@ -15,11 +15,15 @@ class EntityConverter {
             convertFrom(movieEntity) as MovieModel
         }
     }
-    
+
     static func convertFrom(_ genreEntity: GenreEntity) -> GenreModel {
-        GenreModel(name: genreEntity.name)
+        GenreModel(
+            name: genreEntity.name,
+            pictureName: genreEntity.pictureName,
+            searchKey: genreEntity.searchKey
+        )
     }
-    
+
     static func convertFrom(_ personEntity: PersonEntity) -> PersonModel {
         PersonModel(
             id: personEntity.kpId,
@@ -30,13 +34,25 @@ class EntityConverter {
 
     static func convertFrom(_ movieEntity: MovieEntity) -> MovieDetailModel {
         var facts = [String]()
-        var posterData: Data? = DeviceImage.getImageFromLocalPath(.moviePoster(movieId: movieEntity.kpId))
+        var posterData: Data?
+        
+        var uuid: UUID? = nil
+        if let uuidString = movieEntity.uuid {
+            uuid = UUID(uuidString: uuidString)
+        }
+        
+        if let kpId = movieEntity.kpId {
+            posterData = DeviceImage.getImageFromLocalPath(.moviePoster(movieId: kpId))
+        } else if let uuid {
+            posterData = DeviceImage.getImageFromLocalPath(.customMoviePoster(movieUUID: uuid))
+        }
         if let entityFacts = movieEntity.facts {
             facts = (try? JSONDecoder().decode([String].self, from: entityFacts)) ?? []
         }
         
         return MovieDetailModel(
-            id: movieEntity.kpId,
+            kpId: movieEntity.kpId,
+            uuid: uuid,
             name: movieEntity.name,
             year: movieEntity.year,
             movieLength: movieEntity.movieLength,
@@ -55,6 +71,8 @@ class EntityConverter {
     static func convertTo(_ genre: GenreModel) -> GenreEntity {
         let genreEntity = GenreEntity()
         genreEntity.name = genre.name
+        genreEntity.pictureName = genre.pictureName
+        genreEntity.searchKey = genre.searchKey
         return genreEntity
     }
 
@@ -68,7 +86,8 @@ class EntityConverter {
 
     static func convertTo(_ movie: MovieDetailModel) -> MovieEntity {
         let movieEntity = MovieEntity()
-        movieEntity.kpId = movie.id
+        movieEntity.kpId = movie.kpId
+        movieEntity.uuid = movie.uuid?.uuidString
         movieEntity.name = movie.name
         movieEntity.year = movie.year
         movieEntity.movieLength = movie.movieLength

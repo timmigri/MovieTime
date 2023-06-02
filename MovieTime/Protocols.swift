@@ -39,9 +39,10 @@ protocol NetworkableProtocol {
 
 // MARK: Database protocols
 protocol MovieRepositoryProtocol {
-    func containsMovie(id: Int) -> Bool
+    func getMovie(kpId: Int?, uuid: UUID?) -> MovieEntity?
+    func containsMovie(kpId: Int?, uuid: UUID?) -> Bool
     // MARK: return true if movie was created after calling this method
-    func toggleMovie(forMovieId id: Int, movie: MovieDetailModel) -> Bool?
+    func toggleMovie(movie: MovieDetailModel) -> Bool?
     func getAllMovies() -> Results<MovieEntity>?
     func applyFilters(
         _ results: Results<MovieEntity>,
@@ -49,6 +50,7 @@ protocol MovieRepositoryProtocol {
         sortKey: String?,
         ascending: Bool
     ) -> Results<MovieEntity>
+    func createBasicGenres()
 }
 
 protocol MovieRatingRepositoryProtocol {

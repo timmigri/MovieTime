@@ -12,44 +12,53 @@ import PhotosUI
 import Combine
 
 struct CustomMovieScreenView: View {
-    @State var isShowPhotoLibrary = false
-    @State private var image: Image?
-    @State private var inputImage: UIImage?
-
     @ObservedObject var viewModel: CustomMovieViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     init(mode: CustomMovieViewModel.Mode) {
         _viewModel = ObservedObject(wrappedValue: CustomMovieViewModel(mode: mode))
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topLeading) {
             Color.appBackground.ignoresSafeArea()
             GeometryReader { geometry in
                 ScrollView {
                     MoviePosterBox(
                         name: viewModel.nameField,
                         year: viewModel.selectedYear,
-                        rating: 5.0,
+                        rating: nil,
+                        genres: viewModel.selectedGenres,
                         durationString: viewModel.movieLengthFormatted,
                         posterView: AnyView(
                             ZStack {
                                 Color.appPrimary200
-                                image?
-                                    .resizable()
-                                    .scaledToFill()
+                                if let image = viewModel.image {
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } else {
+                                    VStack(spacing: 15) {
+                                        Image(systemName: "camera")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 55))
+                                        Text("Нажмите, чтобы добавить изображение")
+                                            .font(.sf(.regular, size: 24))
+                                            .foregroundColor(.white)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                }
                             }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                print("sdfsdf")
-                                isShowPhotoLibrary = true
-                            }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    viewModel.isShowPhotoLibrary = true
+                                }
                         ),
                         geometry: geometry
                     )
-                    .onChange(of: inputImage) { _ in
-                        guard let inputImage = inputImage else { return }
-                        image = Image(uiImage: inputImage)
+                    .onChange(of: viewModel.inputImage) { _ in
+                        guard let inputImage = viewModel.inputImage else { return }
+                        viewModel.image = Image(uiImage: inputImage)
                     }
                     VStack(spacing: 0) {
                         SectionView(title: "Название фильма*", innerContent: AnyView(
@@ -65,7 +74,7 @@ struct CustomMovieScreenView: View {
                                         .foregroundColor(Color.appPrimary)
                                 }
                             }
-                            .pickerStyle(WheelPickerStyle())
+                                .pickerStyle(WheelPickerStyle())
                         ))
                         SectionView(title: "Продолжительность", innerContent: AnyView(
                             CustomTextField(text: $viewModel.movieLengthField, placeholder: "в минутах")
@@ -81,19 +90,41 @@ struct CustomMovieScreenView: View {
                                 }
                         ))
                         GenreSelector(
-                            genres: FilterCategoryModel.generateCategories(),
+                            genres: viewModel.genres,
                             selectedGenresIndexes: viewModel.selectedGenresIndexes,
                             onChange: viewModel.onChangeSelectedGenres
                         )
                         .padding(.top, 20)
+                        if viewModel.showCreateButton {
+                            CustomButton(
+                                action: {
+                                    presentationMode.wrappedValue.dismiss()
+                                    viewModel.createMovie()
+                                },
+                                title: "Добавить фильм"
+                            )
+                            .padding(.top, 20)
+                        }
                     }
                     .padding()
                 }
                 .ignoresSafeArea()
             }
+            Image(R.image.icons.arrowBack.name)
+                .background(
+                    Circle()
+                        .fill(Color.appBackground.opacity(0.95))
+                        .frame(width: 45, height: 45)
+                )
+                .padding()
+                .padding(.leading, 8)
+                .onTapGesture {
+                    presentationMode.wrappedValue.dismiss()
+                }
         }
-        .sheet(isPresented: $isShowPhotoLibrary) {
-            ImagePicker(image: $inputImage)
+        .navigationBarHidden(true)
+        .sheet(isPresented: $viewModel.isShowPhotoLibrary) {
+            ImagePicker(image: $viewModel.inputImage)
         }
     }
 }
