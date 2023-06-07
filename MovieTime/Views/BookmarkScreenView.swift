@@ -56,7 +56,7 @@ struct BookmarkScreenView: View {
             }
         }.onAppear(perform: viewModel.onChangeSearchOptions)
     }
-    
+
     var createMovieButton: some View {
         NavigationLink(destination: CustomMovieScreenView(mode: .create)
         ) {

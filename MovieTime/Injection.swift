@@ -50,7 +50,7 @@ final class AuthInjection {
             mContainer = newValue
         }
     }
-    
+
     func clearContainer() {
         mContainer = nil
     }

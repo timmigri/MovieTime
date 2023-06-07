@@ -16,7 +16,7 @@ struct MoviePosterBox: View {
     let durationString: String?
     var posterView: AnyView
     let geometry: GeometryProxy
-    
+
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             posterView
@@ -76,7 +76,15 @@ struct MoviePosterBox_Previews: PreviewProvider {
         ZStack {
             Color.appBackground.ignoresSafeArea()
             GeometryReader { geometry in
-                MoviePosterBox(name: "Фильм", year: 2000, rating: 7.8, genres: [], durationString: nil, posterView: AnyView(EmptyView()), geometry: geometry)
+                MoviePosterBox(
+                    name: "Фильм",
+                    year: 2000,
+                    rating: 7.8,
+                    genres: [],
+                    durationString: nil,
+                    posterView: AnyView(EmptyView()),
+                    geometry: geometry
+                )
             }
         }
     }

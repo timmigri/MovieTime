@@ -64,32 +64,43 @@ struct CustomMovieScreenView: View {
                     }
                     VStack(spacing: 0) {
                         SectionView(title: R.string.customMovie.movieNameTitle(), innerContent: AnyView(
-                            CustomTextField(text: $viewModel.nameField, placeholder: R.string.customMovie.movieNamePlaceholder())
+                            CustomTextField(
+                                text: $viewModel.nameField,
+                                placeholder: R.string.customMovie.movieNamePlaceholder()
+                            )
                         ))
                         SectionView(title: R.string.customMovie.movieDescriptionTitle(), innerContent: AnyView(
-                            CustomTextField(text: $viewModel.descriptionField, placeholder: R.string.customMovie.movieDescriptionPlaceholder())
+                            CustomTextField(
+                                text: $viewModel.descriptionField,
+                                placeholder: R.string.customMovie.movieDescriptionPlaceholder()
+                            )
                         ))
                         SectionView(title: R.string.customMovie.movieYearTitle(), innerContent: AnyView(
                             Picker("", selection: $viewModel.selectedYearIndex) {
-                                ForEach(viewModel.availableYears.indices) { yearIndex in
-                                    Text(String(viewModel.availableYears[yearIndex]))
+                                ForEach(viewModel.availableYears.indices, id: \.self) { yearIndex in
+                                    Text(
+                                        String(viewModel.availableYears[yearIndex])
+                                    )
                                         .foregroundColor(Color.appPrimary)
                                 }
                             }
                                 .pickerStyle(WheelPickerStyle())
                         ))
                         SectionView(title: R.string.customMovie.movieDurationTitle(), innerContent: AnyView(
-                            CustomTextField(text: $viewModel.movieLengthField, placeholder: R.string.customMovie.movieDurationPlaceholder())
-                                .keyboardType(.numberPad)
-                                .onReceive(Just(viewModel.movieLengthField)) { newValue in
-                                    let filtered = newValue.filter { "0123456789".contains($0) }
-                                    if newValue.count > 5 {
-                                        self.viewModel.movieLengthField = String(Array(newValue).prefix(5))
-                                    }
-                                    if filtered != newValue {
-                                        self.viewModel.movieLengthField = filtered
-                                    }
+                            CustomTextField(
+                                text: $viewModel.movieLengthField,
+                                placeholder: R.string.customMovie.movieDurationPlaceholder()
+                            )
+                            .keyboardType(.numberPad)
+                            .onReceive(Just(viewModel.movieLengthField)) { newValue in
+                                let filtered = newValue.filter { "0123456789".contains($0) }
+                                if newValue.count > 5 {
+                                    self.viewModel.movieLengthField = String(Array(newValue).prefix(5))
                                 }
+                                if filtered != newValue {
+                                    self.viewModel.movieLengthField = filtered
+                                }
+                            }
                         ))
                         GenreSelector(
                             genres: viewModel.genres,

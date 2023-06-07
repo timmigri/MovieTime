@@ -50,7 +50,11 @@ class VKWebViewCoordinator: NSObject, WKNavigationDelegate {
         self.authCompletion = authCompletion
     }
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationResponse: WKNavigationResponse,
+        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+    ) {
         guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment else {
             decisionHandler(.allow)
             return
@@ -58,7 +62,7 @@ class VKWebViewCoordinator: NSObject, WKNavigationDelegate {
 
         let params = fragment.components(separatedBy: "&")
             .map { $0.components(separatedBy: "=") }
-            .reduce([String:String]()) { res, param in
+            .reduce([String: String]()) { res, param in
                 var dict = res
                 let key = param[0]
                 let value = param[1]

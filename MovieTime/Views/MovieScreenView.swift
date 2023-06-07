@@ -98,6 +98,7 @@ struct MovieScreenView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
+                    .animation(nil)
             } else if case .network = viewModel.source, let url = viewModel.posterUrl {
                 AsyncImage(
                     url: url,

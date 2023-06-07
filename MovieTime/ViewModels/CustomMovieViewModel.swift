@@ -42,7 +42,7 @@ class CustomMovieViewModel: ObservableObject {
 
     init(mode: Mode) {
         let minYear = 1950
-        let currentYear = Calendar(identifier: .gregorian).dateComponents([.year], from: Date()).year ?? 2023
+        let currentYear = (Calendar(identifier: .gregorian).dateComponents([.year], from: Date()).year ?? 2023) + 7
         availableYears = Array(minYear...currentYear)
         selectedYearIndex = availableYears.firstIndex(where: { $0 == 2000 }) ?? availableYears.count / 2
     }
@@ -52,7 +52,7 @@ class CustomMovieViewModel: ObservableObject {
     }
 
     func createMovie(uiImagePoster: UIImage?) {
-        let _ = self.movieRepository.toggleMovie(movie: constructMovieDetailModel(uiImagePoster: uiImagePoster))
+        _ = self.movieRepository.toggleMovie(movie: constructMovieDetailModel(uiImagePoster: uiImagePoster))
     }
 
     private func constructMovieDetailModel(uiImagePoster: UIImage?) -> MovieDetailModel {

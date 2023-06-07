@@ -168,7 +168,11 @@ class SearchViewModel: ObservableObject {
         onStartLoadingMovies()
         let sortField = currentSortOptionIndex != nil ? sortOptions[currentSortOptionIndex!].key : nil
         let genres = selectedGenresIndexes.compactMap { self.genres[$0].searchKey }
-        networkManager.fetchMovies(query: query.lowercased(), sortField: sortField, genres: genres) { [weak self] result in
+        networkManager.fetchMovies(
+            query: query.lowercased(),
+            sortField: sortField,
+            genres: genres
+        ) { [weak self] result in
             guard let self else { return }
 
             switch result {

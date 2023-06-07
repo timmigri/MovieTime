@@ -35,12 +35,12 @@ class EntityConverter {
     static func convertFrom(_ movieEntity: MovieEntity) -> MovieDetailModel {
         var facts = [String]()
         var posterData: Data?
-        
-        var uuid: UUID? = nil
+
+        var uuid: UUID?
         if let uuidString = movieEntity.uuid {
             uuid = UUID(uuidString: uuidString)
         }
-        
+
         if let kpId = movieEntity.kpId {
             posterData = DeviceImage.getImageFromLocalPath(.moviePoster(movieId: kpId))
         } else if let uuid {
@@ -49,7 +49,7 @@ class EntityConverter {
         if let entityFacts = movieEntity.facts {
             facts = (try? JSONDecoder().decode([String].self, from: entityFacts)) ?? []
         }
-        
+
         return MovieDetailModel(
             kpId: movieEntity.kpId,
             uuid: uuid,

@@ -85,6 +85,7 @@
 		ACCC80262A31202E00E30881 /* VKAuthWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCC80252A31202E00E30881 /* VKAuthWebView.swift */; };
 		ACCC80282A31206B00E30881 /* WebCacheCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCC80272A31206B00E30881 /* WebCacheCleaner.swift */; };
 		ACCC802A2A31240B00E30881 /* CustomMovie.strings in Resources */ = {isa = PBXBuildFile; fileRef = ACCC80292A31240B00E30881 /* CustomMovie.strings */; };
+		ACCC802C2A31281D00E30881 /* ShowTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCC802B2A31281D00E30881 /* ShowTime.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -170,6 +171,7 @@
 		ACCC80252A31202E00E30881 /* VKAuthWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKAuthWebView.swift; sourceTree = "<group>"; };
 		ACCC80272A31206B00E30881 /* WebCacheCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebCacheCleaner.swift; sourceTree = "<group>"; };
 		ACCC80292A31240B00E30881 /* CustomMovie.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = CustomMovie.strings; sourceTree = "<group>"; };
+		ACCC802B2A31281D00E30881 /* ShowTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowTime.swift; sourceTree = "<group>"; };
 		E2F6AA47F525A4217418C67F /* Pods-MovieTime.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieTime.release.xcconfig"; path = "Target Support Files/Pods-MovieTime/Pods-MovieTime.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -319,6 +321,7 @@
 				AC8FB3C92A27C17C00F3E55F /* StringFormatter.swift */,
 				ACAD0CF02A28FDE1004B947D /* DeviceImage.swift */,
 				ACCC80272A31206B00E30881 /* WebCacheCleaner.swift */,
+				ACCC802B2A31281D00E30881 /* ShowTime.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -616,6 +619,7 @@
 				AC9D43AB2A261E6600E7F2F0 /* Protocols.swift in Sources */,
 				ACA2B6142A0D93810065CBB1 /* SearchScreenView.swift in Sources */,
 				AC91031B2A0EBBA000B76BB3 /* CustomButton.swift in Sources */,
+				ACCC802C2A31281D00E30881 /* ShowTime.swift in Sources */,
 				AC8FB3C82A27A64700F3E55F /* UIApplicationExtension.swift in Sources */,
 				AC95C3C02A267F0E009D4F2D /* R.swift in Sources */,
 				AC964BED2A24D47A00C886CC /* CustomSelect.swift in Sources */,
