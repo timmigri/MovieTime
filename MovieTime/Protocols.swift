@@ -19,6 +19,12 @@ protocol PaginatorProtocol {
     func reset(forKey: Key)
 }
 
+protocol AuthProviderProtocol {
+    func login(rootViewController: UIViewController, completion: @escaping (Bool) -> Void)
+    func logout()
+    func restoreAuth(completion: @escaping (Bool) -> Void)
+}
+
 // MARK: Network protocols
 protocol DTO: Decodable {
 

@@ -90,7 +90,8 @@ struct MovieScreenView: View {
     }
 
     func renderPosterPicture(_ movie: MovieDetailModel) -> some View {
-        Group {
+        ZStack {
+            Color.appPrimary200
             if case .database = viewModel.source,
                 let posterImage = movie.posterImage,
                 let uiImage = UIImage(data: posterImage) {

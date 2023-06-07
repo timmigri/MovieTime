@@ -10,8 +10,8 @@ import SwiftUI
 import Combine
 
 class SearchViewModel: ObservableObject {
-    @Injected private var networkManager: NetworkManager
-    @Injected private var paginator: NetworkPaginator
+    @AuthInjected private var networkManager: NetworkManager
+    @AuthInjected private var paginator: NetworkPaginator
 
     init() {
         $query

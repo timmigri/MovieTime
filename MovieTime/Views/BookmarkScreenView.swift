@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BookmarkScreenView: View {
-    @ObservedObject var viewModel = Injection.shared.container.resolve(BookmarkViewModel.self)!
+    @ObservedObject var viewModel = AuthInjection.shared.container.resolve(BookmarkViewModel.self)!
     @FocusState private var searchFieldFocused: Bool
 
     var body: some View {

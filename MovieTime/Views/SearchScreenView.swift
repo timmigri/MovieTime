@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchScreenView: View {
     @FocusState private var searchFieldFocused: Bool
-    @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
+    @ObservedObject var viewModel = AuthInjection.shared.container.resolve(SearchViewModel.self)!
 
     var body: some View {
         ZStack(alignment: .top) {

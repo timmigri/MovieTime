@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FilterScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel = Injection.shared.container.resolve(SearchViewModel.self)!
+    @ObservedObject var viewModel = AuthInjection.shared.container.resolve(SearchViewModel.self)!
 
     var body: some View {
         ZStack(alignment: .bottom) {

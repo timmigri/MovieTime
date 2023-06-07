@@ -27,6 +27,37 @@ final class Injection {
     private func buildContainer() -> Container {
         let container = Container()
 
+        // MARK: View models
+        container.register(AuthViewModel.self) { _ in
+            return AuthViewModel()
+        }.inObjectScope(.container)
+        return container
+    }
+}
+
+final class AuthInjection {
+    static let shared = AuthInjection()
+    private var mContainer: Container?
+
+    var container: Container {
+        get {
+            if mContainer == nil {
+                mContainer = buildContainer()
+            }
+            return mContainer!
+        }
+        set {
+            mContainer = newValue
+        }
+    }
+    
+    func clearContainer() {
+        mContainer = nil
+    }
+
+    private func buildContainer() -> Container {
+        let container = Container()
+
         // MARK: Network
         container.register(NetworkPaginator.self) { _ in
             return NetworkPaginator()
@@ -44,9 +75,6 @@ final class Injection {
         }.inObjectScope(.container)
 
         // MARK: View models
-        container.register(AuthViewModel.self) { _ in
-            return AuthViewModel()
-        }.inObjectScope(.container)
         container.register(BookmarkViewModel.self) { _ in
             return BookmarkViewModel()
         }.inObjectScope(.container)
@@ -68,5 +96,13 @@ final class Injection {
 
     init() {
         self.wrappedValue = Injection.shared.container.resolve(Dependency.self)!
+    }
+}
+
+@propertyWrapper struct AuthInjected<Dependency> {
+    let wrappedValue: Dependency
+
+    init() {
+        self.wrappedValue = AuthInjection.shared.container.resolve(Dependency.self)!
     }
 }

@@ -1,0 +1,17 @@
+/* 
+  CustomMovie.strings
+  MovieTime
+
+  Created by Артём Грищенко on 07.06.2023.
+  
+*/
+
+"addImageTitle" = "Нажмите, чтобы добавить изображение";
+"movieNameTitle" = "Название фильма*";
+"movieNamePlaceholder" = "Например, Шоу Трумана";
+"movieDescriptionTitle" = "Описание";
+"movieDescriptionPlaceholder" = "Пару слов о фильме";
+"movieYearTitle" = "Год";
+"movieDurationTitle" = "Продолжительность";
+"movieDurationPlaceholder" = "в минутах";
+"addMovieButton" = "Добавить фильм";

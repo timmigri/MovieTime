@@ -8,16 +8,13 @@
 import Foundation
 import SwiftUI
 
-
 class CustomMovieViewModel: ObservableObject {
     enum Mode {
         case create
     }
 
-    @Injected var movieRepository: MovieRepository
-    @Published var isShowPhotoLibrary = false
+    @AuthInjected var movieRepository: MovieRepository
     @Published var image: Image?
-    @Published var inputImage: UIImage?
     @Published var nameField: String = ""
     @Published var descriptionField: String = ""
     @Published var movieLengthField: String = ""
@@ -54,11 +51,11 @@ class CustomMovieViewModel: ObservableObject {
         selectedGenresIndexes = indexes
     }
 
-    func createMovie() {
-        self.movieRepository.toggleMovie(movie: constructMovieDetailModel())
+    func createMovie(uiImagePoster: UIImage?) {
+        let _ = self.movieRepository.toggleMovie(movie: constructMovieDetailModel(uiImagePoster: uiImagePoster))
     }
 
-    private func constructMovieDetailModel() -> MovieDetailModel {
+    private func constructMovieDetailModel(uiImagePoster: UIImage?) -> MovieDetailModel {
         return MovieDetailModel(
             kpId: nil,
             uuid: UUID(),
@@ -73,7 +70,7 @@ class CustomMovieViewModel: ObservableObject {
             posterUrl: nil,
             rating: nil,
             actors: [],
-            posterImage: inputImage?.pngData()
+            posterImage: uiImagePoster?.pngData()
         )
     }
 }

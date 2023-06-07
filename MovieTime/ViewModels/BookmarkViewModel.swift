@@ -24,7 +24,7 @@ class BookmarkViewModel: ObservableObject {
     ]
     @Published var sortOrderAscending = false
 
-    @Injected private var movieRepository: MovieRepository
+    @AuthInjected private var movieRepository: MovieRepository
     @Published var screenState: ScreenState = .success(movieList: [])
 
     var currentSortOptionIndex: Int? {

@@ -14,6 +14,8 @@ import Combine
 struct CustomMovieScreenView: View {
     @ObservedObject var viewModel: CustomMovieViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State var inputImage: UIImage?
+    @State var isShowPhotoLibrary = false
 
     init(mode: CustomMovieViewModel.Mode) {
         _viewModel = ObservedObject(wrappedValue: CustomMovieViewModel(mode: mode))
@@ -42,7 +44,7 @@ struct CustomMovieScreenView: View {
                                         Image(systemName: "camera")
                                             .foregroundColor(.white)
                                             .font(.system(size: 55))
-                                        Text("Нажмите, чтобы добавить изображение")
+                                        Text(R.string.customMovie.addImageTitle())
                                             .font(.sf(.regular, size: 24))
                                             .foregroundColor(.white)
                                             .multilineTextAlignment(.center)
@@ -51,23 +53,23 @@ struct CustomMovieScreenView: View {
                             }
                                 .contentShape(Rectangle())
                                 .onTapGesture {
-                                    viewModel.isShowPhotoLibrary = true
+                                    isShowPhotoLibrary = true
                                 }
                         ),
                         geometry: geometry
                     )
-                    .onChange(of: viewModel.inputImage) { _ in
-                        guard let inputImage = viewModel.inputImage else { return }
+                    .onChange(of: inputImage) { _ in
+                        guard let inputImage else { return }
                         viewModel.image = Image(uiImage: inputImage)
                     }
                     VStack(spacing: 0) {
-                        SectionView(title: "Название фильма*", innerContent: AnyView(
-                            CustomTextField(text: $viewModel.nameField, placeholder: "Например, Шоу Трумана")
+                        SectionView(title: R.string.customMovie.movieNameTitle(), innerContent: AnyView(
+                            CustomTextField(text: $viewModel.nameField, placeholder: R.string.customMovie.movieNamePlaceholder())
                         ))
-                        SectionView(title: "Описание", innerContent: AnyView(
-                            CustomTextField(text: $viewModel.descriptionField, placeholder: "Пару слов о фильме")
+                        SectionView(title: R.string.customMovie.movieDescriptionTitle(), innerContent: AnyView(
+                            CustomTextField(text: $viewModel.descriptionField, placeholder: R.string.customMovie.movieDescriptionPlaceholder())
                         ))
-                        SectionView(title: "Год", innerContent: AnyView(
+                        SectionView(title: R.string.customMovie.movieYearTitle(), innerContent: AnyView(
                             Picker("", selection: $viewModel.selectedYearIndex) {
                                 ForEach(viewModel.availableYears.indices) { yearIndex in
                                     Text(String(viewModel.availableYears[yearIndex]))
@@ -76,8 +78,8 @@ struct CustomMovieScreenView: View {
                             }
                                 .pickerStyle(WheelPickerStyle())
                         ))
-                        SectionView(title: "Продолжительность", innerContent: AnyView(
-                            CustomTextField(text: $viewModel.movieLengthField, placeholder: "в минутах")
+                        SectionView(title: R.string.customMovie.movieDurationTitle(), innerContent: AnyView(
+                            CustomTextField(text: $viewModel.movieLengthField, placeholder: R.string.customMovie.movieDurationPlaceholder())
                                 .keyboardType(.numberPad)
                                 .onReceive(Just(viewModel.movieLengthField)) { newValue in
                                     let filtered = newValue.filter { "0123456789".contains($0) }
@@ -99,9 +101,9 @@ struct CustomMovieScreenView: View {
                             CustomButton(
                                 action: {
                                     presentationMode.wrappedValue.dismiss()
-                                    viewModel.createMovie()
+                                    viewModel.createMovie(uiImagePoster: inputImage)
                                 },
-                                title: "Добавить фильм"
+                                title: R.string.customMovie.addMovieButton()
                             )
                             .padding(.top, 20)
                         }
@@ -123,8 +125,8 @@ struct CustomMovieScreenView: View {
                 }
         }
         .navigationBarHidden(true)
-        .sheet(isPresented: $viewModel.isShowPhotoLibrary) {
-            ImagePicker(image: $viewModel.inputImage)
+        .sheet(isPresented: $isShowPhotoLibrary) {
+            ImagePicker(image: $inputImage)
         }
     }
 }
@@ -132,46 +134,6 @@ struct CustomMovieScreenView: View {
 struct CustomMovieScreenView_Previews: PreviewProvider {
     static var previews: some View {
         CustomMovieScreenView(mode: .create)
-    }
-}
-
-struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var image: UIImage?
-
-    func makeUIViewController(context: Context) -> PHPickerViewController {
-        var config = PHPickerConfiguration()
-        config.filter = .images
-        let picker = PHPickerViewController(configuration: config)
-        picker.delegate = context.coordinator
-        return picker
-    }
-
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
-
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, PHPickerViewControllerDelegate {
-        let parent: ImagePicker
-
-        init(_ parent: ImagePicker) {
-            self.parent = parent
-        }
-
-        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            picker.dismiss(animated: true)
-
-            guard let provider = results.first?.itemProvider else { return }
-
-            if provider.canLoadObject(ofClass: UIImage.self) {
-                provider.loadObject(ofClass: UIImage.self) { image, _ in
-                    self.parent.image = image as? UIImage
-                }
-            }
-        }
     }
 }
 

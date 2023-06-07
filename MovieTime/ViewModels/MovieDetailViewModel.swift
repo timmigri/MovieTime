@@ -33,9 +33,9 @@ class MovieDetailViewModel: ObservableObject {
     @Published private(set) var screenState: ScreenState = .loading
     @Published private(set) var scrollViewOffset: CGFloat = 0.0
     @Published private(set) var userRating: Int = 0
-    @Injected private var movieRatingRepository: MovieRatingRepository
-    @Injected private var movieRepository: MovieRepository
-    @Injected private var networkManager: NetworkManager
+    @AuthInjected private var movieRatingRepository: MovieRatingRepository
+    @AuthInjected private var movieRepository: MovieRepository
+    @AuthInjected private var networkManager: NetworkManager
     @Published var isBookmarked: Bool = false
     let isCustomMovie: Bool
 
